@@ -11,11 +11,13 @@ type Environ struct {
 }
 
 func InitEnviron() *Environ {
-	db := orm.CreateDB()
+	db := orm.GetDB()
+	defer db.Close()
 
 	// TODO maps
 
 	return &Environ{
 		Db: db,
+		//Maps:
 	}
 }

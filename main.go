@@ -31,7 +31,8 @@ func main() {
 		}
 		log.Println("new connection: ", conn.RemoteAddr())
 
-		go proto.BytesToPacket(conn, packetChan)
+		go processPacket(conn, packetChan)
 		go handleClient(conn, env)
 	}
 }
+

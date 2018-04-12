@@ -1,7 +1,5 @@
 package proto
 
-import "net"
-
 type Packet struct {
 	IsServer bool
 	Index    int
@@ -20,6 +18,10 @@ const (
 	NEW_ACCOUNT
 )
 
-func BytesToPacket(client net.Conn, packetChan chan *Packet) {
+func ToPacket([]byte) *Packet {
+
+}
+
+func (pkg *Packet) ToBytes() []byte {
 
 }

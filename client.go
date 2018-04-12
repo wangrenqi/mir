@@ -17,6 +17,15 @@ type client struct {
 	env     *env.Environ
 }
 
+func processPacket(conn net.Conn, packetChan chan *p.Packet) {
+	// TODO
+	// get data from conn
+
+	// convert data to package
+	// pkg := p.ToPacket(data)
+	// packetChan <- pkg
+}
+
 func handleClient(conn net.Conn, env *env.Environ) {
 	client := &client{
 		id:      id,
@@ -69,8 +78,6 @@ func (c *client) keepalive(pkg *p.Packet) error {
 	return nil
 }
 func (c *client) newAccount(pkg *p.Packet) error {
-	pkg = &p.Packet{IsServer: true, Index: 1, Data: p.NewAccount{"1", "2"}}
-
 	// TODO check duplicate username
 	// if duplicate: return error
 
