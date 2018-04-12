@@ -8,6 +8,7 @@ import (
 	"mir-go/env"
 	"mir-go/orm"
 	p "mir-go/proto"
+	cp "mir-go/proto/client"
 )
 
 type client struct {
@@ -52,13 +53,13 @@ func (c *client) run() {
 
 func (c *client) process(pkg *p.Packet) (err error) {
 	switch pkg.Index {
-	case p.CLIENT_VERSION:
+	case cp.CLIENT_VERSION:
 		return c.clientVersion(pkg)
-	case p.DISCONNECT:
+	case cp.DISCONNECT:
 		return c.disconnect(pkg)
-	case p.KEEPALIVE:
+	case cp.KEEPALIVE:
 		return c.keepalive(pkg)
-	case p.NEW_ACCOUNT:
+	case cp.NEW_ACCOUNT:
 		return c.newAccount(pkg)
 	}
 	return errors.New("invalid package")
@@ -82,8 +83,8 @@ func (c *client) newAccount(pkg *p.Packet) error {
 	// if duplicate: return error
 
 	c.env.Db.Create(&orm.Account{
-		UserName: pkg.Data.(*p.NewAccount).UserName,
-		Password: pkg.Data.(*p.NewAccount).Password,
+		UserName: pkg.Data.(*cp.NewAccount).UserName,
+		Password: pkg.Data.(*cp.NewAccount).Password,
 	})
 
 	return nil
