@@ -11,6 +11,8 @@ type Packet struct {
 	Data     interface{}
 }
 
+type Null struct{}
+
 func getPacketInfo([]byte) (bool, int) {
 
 	return true, 0
@@ -18,20 +20,24 @@ func getPacketInfo([]byte) (bool, int) {
 
 func ToPacket(bytes []byte) *Packet {
 	isServer, index := getPacketInfo(bytes)
+	var data interface{}
 	if isServer {
 		switch index {
 		case sp.CONNECTED:
 		case sp.CLIENT_VERSION:
-			return &Packet{true, sp.CLIENT_VERSION, &sp.ClientVersion{}}
+			data = &sp.ClientVersion{}
+		default:
+			data = &Null{}
 		}
 	} else {
 		switch index {
 		case cp.CLIENT_VERSION:
-			return &Packet{false, cp.CLIENT_VERSION, &cp.ClientVersion{}}
 		case cp.DISCONNECT:
+		default:
+			data = &Null{}
 		}
 	}
-	return &Packet{}
+	return &Packet{isServer, index, data}
 }
 
 func (pkg *Packet) ToBytes() []byte {
