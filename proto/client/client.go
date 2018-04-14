@@ -17,6 +17,19 @@ const (
 	CHAT
 )
 
+type Direction byte
+
+const (
+	Up        Direction = iota
+	UpRight
+	Right
+	DownRight
+	Down
+	DownLeft
+	Left
+	UpLeft
+)
+
 type ClientVersion struct {
 	VersionHash string
 }
@@ -30,4 +43,29 @@ type Disconnect struct{}
 type NewAccount struct {
 	UserName string
 	Password string
+}
+
+type ChangePassword struct {
+	AccountId       string
+	CurrentPassword string
+	NewPassword     string
+}
+
+type Login struct {
+	AccountId string
+	Password  string
+}
+
+type StartGame struct {
+	CharacterIndex int
+}
+
+type Logout struct{}
+
+type Turn struct {
+	Dir Direction
+}
+
+type Walk struct {
+	Dir Direction
 }
