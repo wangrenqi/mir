@@ -8,20 +8,23 @@ import (
 	"time"
 )
 
+//var host = "192.168.0.111"
+var host = "127.0.0.1"
+
 func main() {
-	conn, err := net.Dial("tcp", "192.168.0.111:7000")
+	conn, err := net.Dial("tcp", host+":7000")
 	if err != nil {
 		fmt.Println(err)
 	}
 	defer conn.Close()
 
-	// client version
+	fmt.Println("client version")
 	pkg := &p.Packet{false, cp.CLIENT_VERSION, &cp.ClientVersion{}}
 	bytes := pkg.ToBytes()
 	conn.Write(bytes)
 	time.Sleep(time.Second)
 
-	// login
+	fmt.Println("login")
 	pkg = &p.Packet{false, cp.LOGIN, &cp.Login{"222", "222222"}}
 	bytes = pkg.ToBytes()
 	conn.Write(bytes)
@@ -29,7 +32,7 @@ func main() {
 
 	// TODO new character
 
-	// start game
+	fmt.Println("start game")
 	pkg = &p.Packet{false, cp.START_GAME, &cp.StartGame{}}
 	bytes = pkg.ToBytes()
 	conn.Write(bytes)
@@ -40,6 +43,7 @@ func main() {
 	//// in game
 
 	// walk
+	fmt.Println("walk")
 	dir := []cp.Direction{cp.Up, cp.Right, cp.Down, cp.Left}
 	for _, d := range dir {
 		//pkg = &p.Packet{false, cp.WALK, &cp.Walk{cp.Up}}
@@ -48,6 +52,11 @@ func main() {
 		conn.Write(bytes)
 		time.Sleep(time.Second)
 	}
+
+	time.Sleep(time.Second * 3)
+	pkg = &p.Packet{false, cp.WALK, &cp.Walk{cp.Up}}
+	bytes = pkg.ToBytes()
+	conn.Write(bytes)
 
 	// direction
 

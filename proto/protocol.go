@@ -3,6 +3,7 @@ package proto
 import (
 	cp "mir-go/proto/client"
 	sp "mir-go/proto/server"
+	"encoding/binary"
 )
 
 type Packet struct {
@@ -13,13 +14,29 @@ type Packet struct {
 
 type Null struct{}
 
-func getPacketInfo([]byte) (bool, int) {
-
-	return true, -1
+func GetBytesLength(bytes []byte) int {
+	if len(bytes) == 0 {
+		return 0
+	}
+	return int(bytes[1]<<8 + bytes[0])
 }
 
-func ToPacket(bytes []byte) *Packet {
-	isServer, index := getPacketInfo(bytes)
+func getPacketIndex(bytes []byte) (isServer bool, index int) {
+	length := GetBytesLength(bytes)
+	if length == 0 {
+		return false, -1
+	}
+	if length > len(bytes) || length < 2 {
+		return false, -1
+	}
+	index = int(binary.LittleEndian.Uint16(bytes[2:4]))
+	if index > 250 {
+		return false, -1
+	}
+	return false, index
+}
+
+func getPacketData(isServer bool, index int) interface{} {
 	var data interface{}
 	if isServer {
 		switch index {
@@ -37,7 +54,13 @@ func ToPacket(bytes []byte) *Packet {
 			data = &Null{}
 		}
 	}
-	return &Packet{isServer, index, data}
+	return data
+}
+
+func ToPacket(bytes []byte) *Packet {
+	isServer, index := getPacketIndex(bytes)
+	pkg := &Packet{isServer, index, getPacketData(isServer, index)}
+	return pkg
 }
 
 func (pkg *Packet) ToBytes() []byte {

@@ -1,10 +1,9 @@
-package main
+package server
 
 import (
 	"net"
 	"sync/atomic"
 	"log"
-	"errors"
 	"mir-go/env"
 	"mir-go/orm"
 	p "mir-go/proto"
@@ -18,16 +17,38 @@ type client struct {
 	env     *env.Environ
 }
 
-func processPacket(conn net.Conn, packetChan chan *p.Packet) {
-	// TODO
-	// get data from conn
+var id int32 = 0
+var packetChan = make(chan *p.Packet)
+var buf = make([]byte, 2048)
 
-	// convert data to package
-	// pkg := p.ToPacket(data)
-	// packetChan <- pkg
+func splite(bytes []byte) {
+	length := p.GetBytesLength(bytes)
+	if length < 2 {
+		return
+	}
+	// TODO BUG
+	pkg := p.ToPacket(bytes[:length])
+	if pkg != nil {
+		packetChan <- pkg
+	}
+	splite(bytes[length:])
 }
 
-func handleClient(conn net.Conn, env *env.Environ) {
+func ProcessPacket(conn net.Conn) {
+	for {
+		n, err := conn.Read(buf)
+		if n < 4 || err != nil {
+			break
+		}
+		length := p.GetBytesLength(buf[:n])
+		if length > len(buf) || length < 2 {
+			break
+		}
+		splite(buf)
+	}
+}
+
+func HandleClient(conn net.Conn, env *env.Environ) {
 	client := &client{
 		id:      id,
 		conn:    conn,
@@ -52,6 +73,10 @@ func (c *client) run() {
 }
 
 func (c *client) process(pkg *p.Packet) (err error) {
+	if pkg == nil || pkg.Index == -1 {
+		return nil
+	}
+	log.Printf("client packet index: %d", pkg.Index)
 	switch pkg.Index {
 	case cp.CLIENT_VERSION:
 		return c.clientVersion(pkg)
@@ -62,7 +87,7 @@ func (c *client) process(pkg *p.Packet) (err error) {
 	case cp.NEW_ACCOUNT:
 		return c.newAccount(pkg)
 	}
-	return errors.New("invalid package")
+	return nil
 }
 
 func (c *client) clientVersion(pkg *p.Packet) error {

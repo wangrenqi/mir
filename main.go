@@ -5,12 +5,10 @@ import (
 	"log"
 	"os"
 	"mir-go/env"
-	"mir-go/proto"
+	"mir-go/server"
 )
 
 var addr = "127.0.0.1:7000"
-var id int32 = 0
-var packetChan = make(chan *proto.Packet)
 
 func main() {
 
@@ -31,8 +29,7 @@ func main() {
 		}
 		log.Println("new connection: ", conn.RemoteAddr())
 
-		go processPacket(conn, packetChan)
-		go handleClient(conn, env)
+		go server.ProcessPacket(conn)
+		go server.HandleClient(conn, env)
 	}
 }
-
