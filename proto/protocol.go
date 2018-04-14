@@ -36,8 +36,10 @@ func getPacketIndex(bytes []byte) (isServer bool, index int) {
 	return false, index
 }
 
-func getPacketData(isServer bool, index int) interface{} {
+func ToPacket(bytes []byte) *Packet {
 	var data interface{}
+
+	isServer, index := getPacketIndex(bytes)
 	if isServer {
 		switch index {
 		case sp.CONNECTED:
@@ -54,12 +56,7 @@ func getPacketData(isServer bool, index int) interface{} {
 			data = &Null{}
 		}
 	}
-	return data
-}
-
-func ToPacket(bytes []byte) *Packet {
-	isServer, index := getPacketIndex(bytes)
-	pkg := &Packet{isServer, index, getPacketData(isServer, index)}
+	pkg := &Packet{isServer, index, data}
 	return pkg
 }
 
