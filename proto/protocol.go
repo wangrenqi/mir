@@ -15,7 +15,7 @@ type Null struct{}
 
 func getPacketInfo([]byte) (bool, int) {
 
-	return true, 0
+	return true, -1
 }
 
 func ToPacket(bytes []byte) *Packet {
@@ -49,6 +49,7 @@ func (pkg *Packet) ToBytes() []byte {
 	} else {
 		switch pkg.Index {
 		case cp.CLIENT_VERSION:
+			return []byte{24, 0, 0, 0, 16, 0, 0, 0, 196, 46, 198, 6, 217, 38, 102, 128, 242, 128, 185, 164, 66, 146, 36, 34}
 		case cp.DISCONNECT:
 		}
 	}
