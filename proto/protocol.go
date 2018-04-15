@@ -51,7 +51,33 @@ func ToPacket(bytes []byte) *Packet {
 	} else {
 		switch index {
 		case cp.CLIENT_VERSION:
+			data = &cp.ClientVersion{}
 		case cp.DISCONNECT:
+			data = &cp.Disconnect{}
+		case cp.KEEPALIVE:
+			data = &cp.KeepAlive{}
+		case cp.NEW_ACCOUNT:
+			data = &cp.NewAccount{}
+		case cp.CHANGE_PASSWORD:
+			data = &cp.ChangePassword{}
+		case cp.LOGIN:
+			data = &cp.Login{}
+		case cp.NEW_CHARACTER:
+			data = &cp.NewCharacter{}
+		case cp.DELETE_CHARACTER:
+			data = &cp.DeleteCharacter{}
+		case cp.START_GAME:
+			data = &cp.StartGame{}
+		case cp.LOGOUT:
+			data = &cp.Logout{}
+		case cp.TURN:
+			data = &cp.Turn{}
+		case cp.WALK:
+			data = &cp.Walk{}
+		case cp.RUN:
+			data = &cp.Run{}
+		case cp.CHAT:
+			data = &cp.Chat{}
 		default:
 			data = &Null{}
 		}
@@ -90,6 +116,7 @@ func (pkg *Packet) ToBytes() []byte {
 			return []byte{5, 0, 11, 0, byte(data.Dir)}
 		case cp.RUN:
 		case cp.CHAT:
+			return []byte{20, 0, 13, 0, 15, 228, 189, 160, 229, 165, 189, 229, 149, 138, 54, 54, 54, 239, 189, 129}
 		}
 	}
 	return nil

@@ -36,9 +36,9 @@ type ClientVersion struct {
 
 type Disconnect struct{}
 
-//type KeepAlive struct {
-//	time time.Time
-//}
+type KeepAlive struct {
+	//time time.Time
+}
 
 type NewAccount struct {
 	UserName string
@@ -56,6 +56,15 @@ type Login struct {
 	Password  string
 }
 
+type NewCharacter struct {
+	//Gender MirGender
+	//Class  MirClass
+}
+
+type DeleteCharacter struct {
+	CharacterIndex int
+}
+
 type StartGame struct {
 	CharacterIndex int
 }
@@ -68,4 +77,12 @@ type Turn struct {
 
 type Walk struct {
 	Dir Direction
+}
+
+type Run struct {
+	Dir Direction
+}
+
+type Chat struct {
+	Message string
 }

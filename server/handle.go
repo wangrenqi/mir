@@ -5,7 +5,6 @@ import (
 	"sync/atomic"
 	"log"
 	"mir-go/env"
-	"mir-go/orm"
 	p "mir-go/proto"
 	cp "mir-go/proto/client"
 )
@@ -79,38 +78,33 @@ func (c *client) process(pkg *p.Packet) (err error) {
 	log.Printf("client packet index: %d", pkg.Index)
 	switch pkg.Index {
 	case cp.CLIENT_VERSION:
-		return c.clientVersion(pkg)
+		return c.ClientVersion(pkg)
 	case cp.DISCONNECT:
-		return c.disconnect(pkg)
+		return c.Disconnect(pkg)
 	case cp.KEEPALIVE:
-		return c.keepalive(pkg)
+		return c.Keepalive(pkg)
 	case cp.NEW_ACCOUNT:
-		return c.newAccount(pkg)
+		return c.NewAccount(pkg)
+	case cp.CHANGE_PASSWORD:
+		return c.ChangePassword(pkg)
+	case cp.LOGIN:
+		return c.Login(pkg)
+	case cp.NEW_CHARACTER:
+		return c.NewCharacter(pkg)
+	case cp.DELETE_CHARACTER:
+		return c.DeleteCharacter(pkg)
+	case cp.START_GAME:
+		return c.StartGame(pkg)
+	case cp.LOGOUT:
+		return c.Logout(pkg)
+	case cp.TURN:
+		return c.Turn(pkg)
+	case cp.WALK:
+		return c.Walk(pkg)
+	case cp.RUN:
+		return c.Run(pkg)
+	case cp.CHAT:
+		return c.Chat(pkg)
 	}
-	return nil
-}
-
-func (c *client) clientVersion(pkg *p.Packet) error {
-
-	return nil
-}
-
-func (c *client) disconnect(pkg *p.Packet) error {
-
-	return nil
-}
-func (c *client) keepalive(pkg *p.Packet) error {
-
-	return nil
-}
-func (c *client) newAccount(pkg *p.Packet) error {
-	// TODO check duplicate username
-	// if duplicate: return error
-
-	c.env.Db.Create(&orm.Account{
-		UserName: pkg.Data.(*cp.NewAccount).UserName,
-		Password: pkg.Data.(*cp.NewAccount).Password,
-	})
-
 	return nil
 }
