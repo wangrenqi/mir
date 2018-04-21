@@ -3,8 +3,8 @@ package main
 import (
 	"net"
 	"fmt"
-	p "mir-go/proto"
-	cp "mir-go/proto/client"
+	p "mir/proto"
+	cp "mir/proto/client"
 	"time"
 )
 

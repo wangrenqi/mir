@@ -1,7 +1,7 @@
 package env
 
 import (
-	"mir-go/orm"
+	"mir/orm"
 	"github.com/jinzhu/gorm"
 )
 

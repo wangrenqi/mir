@@ -4,8 +4,8 @@ import (
 	"net"
 	"log"
 	"os"
-	"mir-go/env"
-	"mir-go/server"
+	"mir/env"
+	"mir/server"
 )
 
 var addr = "127.0.0.1:7000"

@@ -4,9 +4,9 @@ import (
 	"net"
 	"sync/atomic"
 	"log"
-	"mir-go/env"
-	p "mir-go/proto"
-	cp "mir-go/proto/client"
+	"mir/env"
+	p "mir/proto"
+	cp "mir/proto/client"
 )
 
 type client struct {

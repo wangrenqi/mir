@@ -1,9 +1,9 @@
 package server
 
 import (
-	"mir-go/orm"
-	p "mir-go/proto"
-	cp "mir-go/proto/client"
+	"mir/orm"
+	p "mir/proto"
+	cp "mir/proto/client"
 	"log"
 )
 

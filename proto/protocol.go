@@ -1,8 +1,8 @@
 package proto
 
 import (
-	cp "mir-go/proto/client"
-	sp "mir-go/proto/server"
+	cp "mir/proto/client"
+	sp "mir/proto/server"
 	"encoding/binary"
 	"log"
 )
