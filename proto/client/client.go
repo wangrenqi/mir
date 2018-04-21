@@ -1,5 +1,7 @@
 package client
 
+import "log"
+
 const (
 	CLIENT_VERSION   = iota
 	DISCONNECT
@@ -36,12 +38,23 @@ type ClientVersion struct {
 
 func GetClientVersion(bytes []byte) *ClientVersion {
 
+	return nil
+}
+
+func (self *ClientVersion) ToBytes() []byte {
+	//24, 0 (22 + 2)
+	return []byte{0, 0, 16, 0, 0, 0, 196, 46, 198, 6, 217, 38, 102, 128, 242, 128, 185, 164, 66, 146, 36, 34}
 }
 
 type Disconnect struct{}
 
 func GetDisconnect(bytes []byte) *Disconnect {
 
+	return nil
+}
+
+func (self *Disconnect) ToBytes() []byte {
+	return nil
 }
 
 type KeepAlive struct {
@@ -50,6 +63,11 @@ type KeepAlive struct {
 
 func GetKeepAlive(bytes []byte) *KeepAlive {
 
+	return nil
+}
+
+func (self *KeepAlive) ToBytes() []byte {
+	return nil
 }
 
 type NewAccount struct {
@@ -59,6 +77,11 @@ type NewAccount struct {
 
 func GetNewAccount(bytes []byte) *NewAccount {
 
+	return nil
+}
+
+func (self *NewAccount) ToBytes() []byte {
+	return nil
 }
 
 type ChangePassword struct {
@@ -69,6 +92,11 @@ type ChangePassword struct {
 
 func GetChangePassword(bytes []byte) *ChangePassword {
 
+	return nil
+}
+
+func (self *ChangePassword) ToBytes() []byte {
+	return nil
 }
 
 type Login struct {
@@ -78,6 +106,13 @@ type Login struct {
 
 func GetLogin(bytes []byte) *Login {
 
+	return nil
+}
+
+func (self *Login) ToBytes() []byte {
+	//data := pkg.Data.(*cp.Login)
+	// 15, 0 (13 + 2)
+	return []byte{5, 0, 3, 50, 50, 50, 6, 50, 50, 50, 50, 50, 50}
 }
 
 type NewCharacter struct {
@@ -87,6 +122,11 @@ type NewCharacter struct {
 
 func GetNewCharacter(bytes []byte) *NewCharacter {
 
+	return nil
+}
+
+func (self *NewCharacter) ToBytes() []byte {
+	return nil
 }
 
 type DeleteCharacter struct {
@@ -95,6 +135,11 @@ type DeleteCharacter struct {
 
 func GetDeleteCharacter(bytes []byte) *DeleteCharacter {
 
+	return nil
+}
+
+func (self *DeleteCharacter) ToBytes() []byte {
+	return nil
 }
 
 type StartGame struct {
@@ -103,12 +148,24 @@ type StartGame struct {
 
 func GetStartGame(bytes []byte) *StartGame {
 
+	return nil
+}
+
+func (self *StartGame) ToBytes() []byte {
+	// 8, 0 (6 + 2)
+	return []byte{8, 0, 2, 0, 0, 0}
 }
 
 type Logout struct{}
 
 func GetLogout(bytes []byte) *Logout {
 
+	return nil
+}
+
+func (self *Logout) ToBytes() []byte {
+
+	return nil
 }
 
 type Turn struct {
@@ -117,6 +174,11 @@ type Turn struct {
 
 func GetTurn(bytes []byte) *Turn {
 
+	return nil
+}
+
+func (self *Turn) ToBytes() []byte {
+	return nil
 }
 
 type Walk struct {
@@ -125,6 +187,13 @@ type Walk struct {
 
 func GetWalk(bytes []byte) *Walk {
 
+	return nil
+}
+
+func (self *Walk) ToBytes() []byte {
+	// up upright right downright down downleft left upleft
+	// 5, 0 (3 + 2)
+	return []byte{11, 0, byte(self.Dir)}
 }
 
 type Run struct {
@@ -133,6 +202,11 @@ type Run struct {
 
 func GetRun(bytes []byte) *Run {
 
+	return nil
+}
+
+func (self *Run) ToBytes() []byte {
+	return nil
 }
 
 type Chat struct {
@@ -140,5 +214,12 @@ type Chat struct {
 }
 
 func GetChat(bytes []byte) *Chat {
+	msg := string(bytes)
+	log.Println(bytes, "to string:", msg)
+	return &Chat{Message: msg}
+}
 
+func (self *Chat) ToBytes() []byte {
+	// 20, 0 (18 + 2)
+	return []byte{13, 0, 15, 228, 189, 160, 229, 165, 189, 229, 149, 138, 54, 54, 54, 239, 189, 129}
 }

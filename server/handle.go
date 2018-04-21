@@ -58,7 +58,6 @@ func (c *client) process(pkg *p.Packet) (err error) {
 	if pkg == nil || pkg.Index == -1 {
 		return nil
 	}
-	log.Printf("client packet index: %d", pkg.Index)
 	switch pkg.Index {
 	case cp.CLIENT_VERSION:
 		return c.ClientVersion(pkg)

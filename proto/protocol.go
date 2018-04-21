@@ -14,12 +14,16 @@ type Packet struct {
 
 type Null struct{}
 
+func (self *Null) ToBytes() []byte {
+	return make([]byte, 0)
+}
+
 func BytesToStruct(bytes []byte, isServer bool) (int, interface{}) {
-	log.Println(bytes)
 	var data interface{}
 	index := int(binary.LittleEndian.Uint16(bytes[0:2]))
-
 	bytes = bytes[2:]
+	log.Println("BytesToStruct bytes ->", bytes)
+
 	if isServer {
 		switch index {
 		case sp.CONNECTED:
@@ -64,7 +68,13 @@ func BytesToStruct(bytes []byte, isServer bool) (int, interface{}) {
 	}
 	return index, data
 }
+
+type Parser interface {
+	ToBytes() []byte
+}
+
 func (pkg *Packet) ToBytes(isServer bool) []byte {
+	var parser Parser
 	if isServer {
 		switch pkg.Index {
 		case sp.CONNECTED:
@@ -73,35 +83,38 @@ func (pkg *Packet) ToBytes(isServer bool) []byte {
 	} else {
 		switch pkg.Index {
 		case cp.CLIENT_VERSION:
-			//24, 0 (22 + 2)
-			return []byte{0, 0, 16, 0, 0, 0, 196, 46, 198, 6, 217, 38, 102, 128, 242, 128, 185, 164, 66, 146, 36, 34}
+			parser = pkg.Data.(*cp.ClientVersion)
 		case cp.DISCONNECT:
+			parser = pkg.Data.(*cp.Disconnect)
 		case cp.KEEPALIVE:
+			parser = pkg.Data.(*cp.KeepAlive)
 		case cp.NEW_ACCOUNT:
+			parser = pkg.Data.(*cp.NewAccount)
 		case cp.CHANGE_PASSWORD:
+			parser = pkg.Data.(*cp.ChangePassword)
 		case cp.LOGIN:
-			//data := pkg.Data.(*cp.Login)
-			// 15, 0 (13 + 2)
-			return []byte{5, 0, 3, 50, 50, 50, 6, 50, 50, 50, 50, 50, 50}
+			parser = pkg.Data.(*cp.Login)
 		case cp.NEW_CHARACTER:
+			parser = pkg.Data.(*cp.NewCharacter)
 		case cp.DELETE_CHARACTER:
+			parser = pkg.Data.(*cp.DeleteCharacter)
 		case cp.START_GAME:
-			// 8, 0 (6 + 2)
-			return []byte{8, 0, 2, 0, 0, 0}
+			parser = pkg.Data.(*cp.StartGame)
 		case cp.LOGOUT:
+			parser = pkg.Data.(*cp.Logout)
 		case cp.TURN:
+			parser = pkg.Data.(*cp.Turn)
 		case cp.WALK:
-			data := pkg.Data.(*cp.Walk)
-			// up upright right downright down downleft left upleft
-			// 5, 0 (3 + 2)
-			return []byte{11, 0, byte(data.Dir)}
+			parser = pkg.Data.(*cp.Walk)
 		case cp.RUN:
+			parser = pkg.Data.(*cp.Run)
 		case cp.CHAT:
-			// 20, 0 (18 + 2)
-			return []byte{13, 0, 15, 228, 189, 160, 229, 165, 189, 229, 149, 138, 54, 54, 54, 239, 189, 129}
+			parser = pkg.Data.(*cp.Chat)
+		default:
+			parser = &Null{}
 		}
 	}
-	return nil
+	return parser.ToBytes()
 }
 
 // 封包
