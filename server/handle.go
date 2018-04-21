@@ -44,7 +44,6 @@ func (c *client) run() {
 	for {
 		select {
 		case bytes := <-c.reqChan:
-			log.Println(bytes)
 			index, structData := p.BytesToStruct(bytes, false)
 
 			err := c.process(&p.Packet{index, structData})

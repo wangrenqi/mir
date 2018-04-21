@@ -4,7 +4,7 @@ import (
 	cp "mir-go/proto/client"
 	sp "mir-go/proto/server"
 	"encoding/binary"
-	"bytes"
+	"log"
 )
 
 type Packet struct {
@@ -14,25 +14,12 @@ type Packet struct {
 
 type Null struct{}
 
-//func getPacketIndex(bytes []byte) (isServer bool, index int) {
-//	length := GetBytesLength(bytes)
-//	if length == 0 {
-//		return false, -1
-//	}
-//	if length > len(bytes) || length < 2 {
-//		return false, -1
-//	}
-//	index = int(binary.LittleEndian.Uint16(bytes[2:4]))
-//	if index > 250 {
-//		return false, -1
-//	}
-//	return false, index
-//}
-
 func BytesToStruct(bytes []byte, isServer bool) (int, interface{}) {
+	log.Println(bytes)
 	var data interface{}
 	index := int(binary.LittleEndian.Uint16(bytes[0:2]))
 
+	bytes = bytes[2:]
 	if isServer {
 		switch index {
 		case sp.CONNECTED:
@@ -44,40 +31,39 @@ func BytesToStruct(bytes []byte, isServer bool) (int, interface{}) {
 	} else {
 		switch index {
 		case cp.CLIENT_VERSION:
-			data = &cp.ClientVersion{}
+			data = cp.GetClientVersion(bytes)
 		case cp.DISCONNECT:
-			data = &cp.Disconnect{}
+			data = cp.GetDisconnect(bytes)
 		case cp.KEEPALIVE:
-			data = &cp.KeepAlive{}
+			data = cp.GetKeepAlive(bytes)
 		case cp.NEW_ACCOUNT:
-			data = &cp.NewAccount{}
+			data = cp.GetNewAccount(bytes)
 		case cp.CHANGE_PASSWORD:
-			data = &cp.ChangePassword{}
+			data = cp.GetChangePassword(bytes)
 		case cp.LOGIN:
-			data = &cp.Login{}
+			data = cp.GetLogin(bytes)
 		case cp.NEW_CHARACTER:
-			data = &cp.NewCharacter{}
+			data = cp.GetNewCharacter(bytes)
 		case cp.DELETE_CHARACTER:
-			data = &cp.DeleteCharacter{}
+			data = cp.GetDeleteCharacter(bytes)
 		case cp.START_GAME:
-			data = &cp.StartGame{}
+			data = cp.GetStartGame(bytes)
 		case cp.LOGOUT:
-			data = &cp.Logout{}
+			data = cp.GetLogout(bytes)
 		case cp.TURN:
-			data = &cp.Turn{}
+			data = cp.GetTurn(bytes)
 		case cp.WALK:
-			data = &cp.Walk{}
+			data = cp.GetWalk(bytes)
 		case cp.RUN:
-			data = &cp.Run{}
+			data = cp.GetRun(bytes)
 		case cp.CHAT:
-			data = &cp.Chat{}
+			data = cp.GetChat(bytes)
 		default:
 			data = &Null{}
 		}
 	}
 	return index, data
 }
-
 func (pkg *Packet) ToBytes(isServer bool) []byte {
 	if isServer {
 		switch pkg.Index {
@@ -143,17 +129,4 @@ func UnPack(buffer []byte, readerChan chan []byte) []byte {
 		return make([]byte, 0)
 	}
 	return buffer[i:]
-}
-
-//字节转换成整形
-func ByteToInt(n []byte) int {
-
-	return 0
-}
-
-//整数转换成字节
-func IntToBytes(n int) []byte {
-	bytesBuffer := bytes.NewBuffer([]byte{})
-	binary.Write(bytesBuffer, binary.BigEndian, n)
-	return bytesBuffer.Bytes()
 }
