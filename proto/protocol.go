@@ -4,6 +4,7 @@ import (
 	cp "mir-go/proto/client"
 	sp "mir-go/proto/server"
 	"encoding/binary"
+	"bytes"
 )
 
 type Packet struct {
@@ -93,37 +94,43 @@ func (pkg *Packet) ToBytes(isServer bool) []byte {
 	} else {
 		switch pkg.Index {
 		case cp.CLIENT_VERSION:
-			return []byte{24, 0, 0, 0, 16, 0, 0, 0, 196, 46, 198, 6, 217, 38, 102, 128, 242, 128, 185, 164, 66, 146, 36, 34}
+			//24, 0 (22 + 2)
+			return []byte{0, 0, 16, 0, 0, 0, 196, 46, 198, 6, 217, 38, 102, 128, 242, 128, 185, 164, 66, 146, 36, 34}
 		case cp.DISCONNECT:
 		case cp.KEEPALIVE:
 		case cp.NEW_ACCOUNT:
 		case cp.CHANGE_PASSWORD:
 		case cp.LOGIN:
 			//data := pkg.Data.(*cp.Login)
-			return []byte{15, 0, 5, 0, 3, 50, 50, 50, 6, 50, 50, 50, 50, 50, 50}
+			// 15, 0 (13 + 2)
+			return []byte{5, 0, 3, 50, 50, 50, 6, 50, 50, 50, 50, 50, 50}
 		case cp.NEW_CHARACTER:
 		case cp.DELETE_CHARACTER:
 		case cp.START_GAME:
-			return []byte{8, 0, 8, 0, 2, 0, 0, 0}
+			// 8, 0 (6 + 2)
+			return []byte{8, 0, 2, 0, 0, 0}
 		case cp.LOGOUT:
 		case cp.TURN:
 		case cp.WALK:
 			data := pkg.Data.(*cp.Walk)
 			// up upright right downright down downleft left upleft
-			// 0 ~ 7
-			return []byte{5, 0, 11, 0, byte(data.Dir)}
+			// 5, 0 (3 + 2)
+			return []byte{11, 0, byte(data.Dir)}
 		case cp.RUN:
 		case cp.CHAT:
-			return []byte{20, 0, 13, 0, 15, 228, 189, 160, 229, 165, 189, 229, 149, 138, 54, 54, 54, 239, 189, 129}
+			// 20, 0 (18 + 2)
+			return []byte{13, 0, 15, 228, 189, 160, 229, 165, 189, 229, 149, 138, 54, 54, 54, 239, 189, 129}
 		}
 	}
 	return nil
 }
 
 // 封包
-func Pack(message []byte) []byte {
-	// TODO
-	return nil
+func Pack(data []byte) []byte {
+	length := len(data) + 2
+	header := make([]byte, 2)
+	binary.LittleEndian.PutUint16(header, uint16(length))
+	return append(header, data...)
 }
 
 // 解包
@@ -133,4 +140,17 @@ func UnPack(buffer []byte, readerChan chan []byte) []byte {
 	readerChan <- data
 
 	return nil
+}
+
+//字节转换成整形
+func ByteToInt(n []byte) int {
+
+	return 0
+}
+
+//整数转换成字节
+func IntToBytes(n int) []byte {
+	bytesBuffer := bytes.NewBuffer([]byte{})
+	binary.Write(bytesBuffer, binary.BigEndian, n)
+	return bytesBuffer.Bytes()
 }
