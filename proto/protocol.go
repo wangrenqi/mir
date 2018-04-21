@@ -14,13 +14,6 @@ type Packet struct {
 
 type Null struct{}
 
-//func GetBytesLength(bytes []byte) int {
-//	if len(bytes) == 0 {
-//		return 0
-//	}
-//	return int(bytes[1]<<8 + bytes[0])
-//}
-
 //func getPacketIndex(bytes []byte) (isServer bool, index int) {
 //	length := GetBytesLength(bytes)
 //	if length == 0 {
@@ -135,11 +128,21 @@ func Pack(data []byte) []byte {
 
 // 解包
 func UnPack(buffer []byte, readerChan chan []byte) []byte {
-	// TODO
-	data := buffer[:]
-	readerChan <- data
+	bufLen := len(buffer)
 
-	return nil
+	var i int
+	for i = 0; i < bufLen; i = i + 1 {
+		if bufLen < 4 {
+			break
+		}
+		dataLen := int(buffer[i+1]<<8 + buffer[i])
+		readerChan <- buffer[2+i : dataLen+i]
+		i = i + dataLen - 1
+	}
+	if i >= bufLen {
+		return make([]byte, 0)
+	}
+	return buffer[i:]
 }
 
 //字节转换成整形

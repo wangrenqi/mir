@@ -15,7 +15,7 @@ func send(conn net.Conn, pkg *p.Packet) {
 	bytes := pkg.ToBytes(false)
 	fmt.Println("raw bytes: ", bytes)
 	data := p.Pack(bytes)
-	//conn.Write(data)
+	conn.Write(data)
 	fmt.Println("after pack: ", data)
 }
 
@@ -26,8 +26,10 @@ func main() {
 	}
 	defer conn.Close()
 
+	pkg := &p.Packet{}
+
 	fmt.Println("client version")
-	pkg := &p.Packet{cp.CLIENT_VERSION, &cp.ClientVersion{}}
+	pkg = &p.Packet{cp.CLIENT_VERSION, &cp.ClientVersion{}}
 	send(conn, pkg)
 	time.Sleep(time.Second)
 
@@ -48,14 +50,14 @@ func main() {
 	////// in game
 	//
 	//// walk
-	//fmt.Println("walk")
-	//dir := []cp.Direction{cp.Up, cp.Right, cp.Down, cp.Left}
-	//for _, d := range dir {
-	//	//pkg = &p.Packet{cp.WALK, &cp.Walk{cp.Up}}
-	//	pkg = &p.Packet{cp.WALK, &cp.Walk{d}}
-	//	send(conn, pkg)
-	//	time.Sleep(time.Second)
-	//}
+	fmt.Println("walk")
+	dir := []cp.Direction{cp.Up, cp.Right, cp.Down, cp.Left}
+	for _, d := range dir {
+		//pkg = &p.Packet{cp.WALK, &cp.Walk{cp.Up}}
+		pkg = &p.Packet{cp.WALK, &cp.Walk{d}}
+		send(conn, pkg)
+		time.Sleep(time.Second)
+	}
 
 	// direction
 
