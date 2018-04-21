@@ -12,60 +12,43 @@ import (
 type client struct {
 	id      int32
 	conn    net.Conn
-	reqChan <-chan *p.Packet
+	reqChan <-chan []byte
 	env     *env.Environ
 }
 
 var id int32 = 0
-var packetChan = make(chan *p.Packet)
-var buf = make([]byte, 2048)
-
-func splite(bytes []byte) {
-	length := p.GetBytesLength(bytes)
-	if length < 2 {
-		return
-	}
-	// TODO BUG
-	pkg := p.ToPacket(bytes[:length])
-	if pkg != nil {
-		packetChan <- pkg
-	}
-	splite(bytes[length:])
-}
-
-func ProcessPacket(conn net.Conn) {
-	for {
-		n, err := conn.Read(buf)
-		if n < 4 || err != nil {
-			break
-		}
-		length := p.GetBytesLength(buf[:n])
-		if length > len(buf) || length < 2 {
-			break
-		}
-		splite(buf)
-	}
-}
 
 func HandleClient(conn net.Conn, env *env.Environ) {
+	reqChan := make(chan []byte, 1024)
 	client := &client{
 		id:      id,
 		conn:    conn,
-		reqChan: packetChan,
+		reqChan: reqChan,
 		env:     env,
 	}
 	atomic.AddInt32(&id, 1)
+	go client.run()
 
-	client.run()
+	tmpBuffer := make([]byte, 0)
+	buffer := make([]byte, 1024)
+	for {
+		n, err := conn.Read(buffer)
+		if err != nil {
+			return
+		}
+		tmpBuffer = p.UnPack(append(tmpBuffer, buffer[:n]...), reqChan)
+	}
 }
 
 func (c *client) run() {
 	for {
 		select {
-		case pkg := <-c.reqChan:
-			err := c.process(pkg)
+		case bytes := <-c.reqChan:
+			index, structData := p.BytesToStruct(bytes, false)
+
+			err := c.process(&p.Packet{index, structData})
 			if err != nil {
-				log.Printf("client process packet %v return err: %v\n", pkg, err)
+				log.Printf("client process packet return err: %v\n", err)
 			}
 		}
 	}

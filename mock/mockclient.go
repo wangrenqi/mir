@@ -12,7 +12,8 @@ var host = "192.168.0.111"
 //var host = "127.0.0.1"
 
 func send(conn net.Conn, pkg *p.Packet) {
-	conn.Write(pkg.ToBytes())
+	data := p.Pack(pkg.ToBytes(false))
+	conn.Write(data)
 }
 
 func main() {
@@ -23,19 +24,19 @@ func main() {
 	defer conn.Close()
 
 	fmt.Println("client version")
-	pkg := &p.Packet{false, cp.CLIENT_VERSION, &cp.ClientVersion{}}
+	pkg := &p.Packet{cp.CLIENT_VERSION, &cp.ClientVersion{}}
 	send(conn, pkg)
 	time.Sleep(time.Second)
 
 	fmt.Println("login")
-	pkg = &p.Packet{false, cp.LOGIN, &cp.Login{"222", "222222"}}
+	pkg = &p.Packet{cp.LOGIN, &cp.Login{"222", "222222"}}
 	send(conn, pkg)
 	time.Sleep(time.Second)
 
 	// TODO new character
 
 	fmt.Println("start game")
-	pkg = &p.Packet{false, cp.START_GAME, &cp.StartGame{}}
+	pkg = &p.Packet{cp.START_GAME, &cp.StartGame{}}
 	send(conn, pkg)
 	time.Sleep(time.Second)
 	//
@@ -47,8 +48,8 @@ func main() {
 	//fmt.Println("walk")
 	//dir := []cp.Direction{cp.Up, cp.Right, cp.Down, cp.Left}
 	//for _, d := range dir {
-	//	//pkg = &p.Packet{false, cp.WALK, &cp.Walk{cp.Up}}
-	//	pkg = &p.Packet{false, cp.WALK, &cp.Walk{d}}
+	//	//pkg = &p.Packet{cp.WALK, &cp.Walk{cp.Up}}
+	//	pkg = &p.Packet{cp.WALK, &cp.Walk{d}}
 	//	send(conn, pkg)
 	//	time.Sleep(time.Second)
 	//}
@@ -57,7 +58,7 @@ func main() {
 
 	// chat
 	fmt.Println("chat")
-	pkg = &p.Packet{false, cp.CHAT, &cp.Chat{"this is a mockclient message"}}
+	pkg = &p.Packet{cp.CHAT, &cp.Chat{"this is a mockclient message"}}
 	send(conn, pkg)
 	time.Sleep(time.Second)
 

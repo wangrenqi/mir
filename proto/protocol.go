@@ -7,39 +7,38 @@ import (
 )
 
 type Packet struct {
-	IsServer bool
-	Index    int
-	Data     interface{}
+	Index int
+	Data  interface{}
 }
 
 type Null struct{}
 
-func GetBytesLength(bytes []byte) int {
-	if len(bytes) == 0 {
-		return 0
-	}
-	return int(bytes[1]<<8 + bytes[0])
-}
+//func GetBytesLength(bytes []byte) int {
+//	if len(bytes) == 0 {
+//		return 0
+//	}
+//	return int(bytes[1]<<8 + bytes[0])
+//}
 
-func getPacketIndex(bytes []byte) (isServer bool, index int) {
-	length := GetBytesLength(bytes)
-	if length == 0 {
-		return false, -1
-	}
-	if length > len(bytes) || length < 2 {
-		return false, -1
-	}
-	index = int(binary.LittleEndian.Uint16(bytes[2:4]))
-	if index > 250 {
-		return false, -1
-	}
-	return false, index
-}
+//func getPacketIndex(bytes []byte) (isServer bool, index int) {
+//	length := GetBytesLength(bytes)
+//	if length == 0 {
+//		return false, -1
+//	}
+//	if length > len(bytes) || length < 2 {
+//		return false, -1
+//	}
+//	index = int(binary.LittleEndian.Uint16(bytes[2:4]))
+//	if index > 250 {
+//		return false, -1
+//	}
+//	return false, index
+//}
 
-func ToPacket(bytes []byte) *Packet {
+func BytesToStruct(bytes []byte, isServer bool) (int, interface{}) {
 	var data interface{}
+	index := int(binary.LittleEndian.Uint16(bytes[0:2]))
 
-	isServer, index := getPacketIndex(bytes)
 	if isServer {
 		switch index {
 		case sp.CONNECTED:
@@ -82,12 +81,11 @@ func ToPacket(bytes []byte) *Packet {
 			data = &Null{}
 		}
 	}
-	pkg := &Packet{isServer, index, data}
-	return pkg
+	return index, data
 }
 
-func (pkg *Packet) ToBytes() []byte {
-	if pkg.IsServer {
+func (pkg *Packet) ToBytes(isServer bool) []byte {
+	if isServer {
 		switch pkg.Index {
 		case sp.CONNECTED:
 		case sp.CLIENT_VERSION:
@@ -119,5 +117,20 @@ func (pkg *Packet) ToBytes() []byte {
 			return []byte{20, 0, 13, 0, 15, 228, 189, 160, 229, 165, 189, 229, 149, 138, 54, 54, 54, 239, 189, 129}
 		}
 	}
+	return nil
+}
+
+// 封包
+func Pack(message []byte) []byte {
+	// TODO
+	return nil
+}
+
+// 解包
+func UnPack(buffer []byte, readerChan chan []byte) []byte {
+	// TODO
+	data := buffer[:]
+	readerChan <- data
+
 	return nil
 }

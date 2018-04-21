@@ -29,7 +29,6 @@ func main() {
 		}
 		log.Println("new connection: ", conn.RemoteAddr())
 
-		go server.ProcessPacket(conn)
 		go server.HandleClient(conn, env)
 	}
 }
