@@ -13,10 +13,10 @@ var host = "127.0.0.1"
 
 func send(conn net.Conn, pkg *p.Packet) {
 	bytes := pkg.ToBytes(false)
-	fmt.Println("raw bytes: ", bytes)
+	// fmt.Println("raw bytes: ", bytes, "len", len(bytes))
 	data := p.Pack(bytes)
 	conn.Write(data)
-	fmt.Println("after pack: ", data)
+	// fmt.Println("after pack: ", data, "len", len(data))
 }
 
 func main() {
@@ -32,7 +32,7 @@ func main() {
 	pkg = &p.Packet{cp.CLIENT_VERSION, &cp.ClientVersion{}}
 	send(conn, pkg)
 	time.Sleep(time.Second)
-
+	
 	fmt.Println("login")
 	pkg = &p.Packet{cp.LOGIN, &cp.Login{"222", "222222"}}
 	send(conn, pkg)
@@ -63,7 +63,9 @@ func main() {
 
 	// chat
 	fmt.Println("chat")
-	pkg = &p.Packet{cp.CHAT, &cp.Chat{"this is a mockclient message"}}
+	pkg = &p.Packet{cp.CHAT, &cp.Chat{"测试消息1"}}
+	//send(conn, pkg)
+	pkg = &p.Packet{cp.CHAT, &cp.Chat{"^测试消息2abc"}}
 	send(conn, pkg)
 	time.Sleep(time.Second)
 

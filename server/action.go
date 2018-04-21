@@ -4,6 +4,7 @@ import (
 	"mir-go/orm"
 	p "mir-go/proto"
 	cp "mir-go/proto/client"
+	"log"
 )
 
 func (c *client) ClientVersion(pkg *p.Packet) error {
@@ -69,5 +70,7 @@ func (c *client) Run(packet *p.Packet) error {
 
 }
 func (c *client) Chat(packet *p.Packet) error {
+	chat := packet.Data.(*cp.Chat).Message
+	log.Println("receive client chat message:", chat)
 	return nil
 }

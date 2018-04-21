@@ -1,6 +1,9 @@
 package client
 
-import "log"
+import (
+	"log"
+	"encoding/binary"
+)
 
 const (
 	CLIENT_VERSION   = iota
@@ -31,6 +34,12 @@ const (
 	Left
 	UpLeft
 )
+
+func IndexToBytes(index int) []byte {
+	bytes := make([]byte, 2)
+	binary.LittleEndian.PutUint16(bytes, uint16(index))
+	return bytes
+}
 
 type ClientVersion struct {
 	VersionHash string
@@ -214,12 +223,19 @@ type Chat struct {
 }
 
 func GetChat(bytes []byte) *Chat {
-	msg := string(bytes)
+	if len(bytes) == 0 {
+		return &Chat{Message: ""}
+	}
+	msgLen := bytes[0]
+	msg := string(bytes[1:msgLen])
 	log.Println(bytes, "to string:", msg)
 	return &Chat{Message: msg}
 }
 
 func (self *Chat) ToBytes() []byte {
-	// 20, 0 (18 + 2)
-	return []byte{13, 0, 15, 228, 189, 160, 229, 165, 189, 229, 149, 138, 54, 54, 54, 239, 189, 129}
+	msgBytes := []byte(self.Message)
+	index := IndexToBytes(CHAT)
+	index = append(index, byte(len(msgBytes)))
+	bytes := append(index, msgBytes...)
+	return bytes
 }
