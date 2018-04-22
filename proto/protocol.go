@@ -18,54 +18,42 @@ func (self *Null) ToBytes() []byte {
 	return make([]byte, 0)
 }
 
-func BytesToStruct(bytes []byte, isServer bool) (int, interface{}) {
+func BytesToStruct(bytes []byte) (int, interface{}) {
 	var data interface{}
 	index := int(binary.LittleEndian.Uint16(bytes[0:2]))
 	log.Println("BytesToStruct bytes ->", bytes, "index ->", index)
 	bytes = bytes[2:]
-
-	if isServer {
-		switch index {
-		case sp.CONNECTED:
-			data = sp.GetConnected(bytes)
-		case sp.CLIENT_VERSION:
-			data = sp.GetClientVersion(bytes)
-		default:
-			data = &Null{}
-		}
-	} else {
-		switch index {
-		case cp.CLIENT_VERSION:
-			data = cp.GetClientVersion(bytes)
-		case cp.DISCONNECT:
-			data = cp.GetDisconnect(bytes)
-		case cp.KEEPALIVE:
-			data = cp.GetKeepAlive(bytes)
-		case cp.NEW_ACCOUNT:
-			data = cp.GetNewAccount(bytes)
-		case cp.CHANGE_PASSWORD:
-			data = cp.GetChangePassword(bytes)
-		case cp.LOGIN:
-			data = cp.GetLogin(bytes)
-		case cp.NEW_CHARACTER:
-			data = cp.GetNewCharacter(bytes)
-		case cp.DELETE_CHARACTER:
-			data = cp.GetDeleteCharacter(bytes)
-		case cp.START_GAME:
-			data = cp.GetStartGame(bytes)
-		case cp.LOGOUT:
-			data = cp.GetLogout(bytes)
-		case cp.TURN:
-			data = cp.GetTurn(bytes)
-		case cp.WALK:
-			data = cp.GetWalk(bytes)
-		case cp.RUN:
-			data = cp.GetRun(bytes)
-		case cp.CHAT:
-			data = cp.GetChat(bytes)
-		default:
-			data = &Null{}
-		}
+	switch index {
+	case cp.CLIENT_VERSION:
+		data = cp.GetClientVersion(bytes)
+	case cp.DISCONNECT:
+		data = cp.GetDisconnect(bytes)
+	case cp.KEEPALIVE:
+		data = cp.GetKeepAlive(bytes)
+	case cp.NEW_ACCOUNT:
+		data = cp.GetNewAccount(bytes)
+	case cp.CHANGE_PASSWORD:
+		data = cp.GetChangePassword(bytes)
+	case cp.LOGIN:
+		data = cp.GetLogin(bytes)
+	case cp.NEW_CHARACTER:
+		data = cp.GetNewCharacter(bytes)
+	case cp.DELETE_CHARACTER:
+		data = cp.GetDeleteCharacter(bytes)
+	case cp.START_GAME:
+		data = cp.GetStartGame(bytes)
+	case cp.LOGOUT:
+		data = cp.GetLogout(bytes)
+	case cp.TURN:
+		data = cp.GetTurn(bytes)
+	case cp.WALK:
+		data = cp.GetWalk(bytes)
+	case cp.RUN:
+		data = cp.GetRun(bytes)
+	case cp.CHAT:
+		data = cp.GetChat(bytes)
+	default:
+		data = &Null{}
 	}
 	return index, data
 }

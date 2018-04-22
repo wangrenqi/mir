@@ -35,23 +35,19 @@ const (
 
 type Connected struct{}
 
-func GetConnected(bytes []byte) *Connected {
-	return &Connected{}
-}
-
 func (self *Connected) ToBytes() []byte {
 	bytes := util.IndexToBytes(CONNECTED)
 	return bytes
 }
 
-type ClientVersion struct{}
-
-func GetClientVersion(bytes []byte) *ClientVersion {
-	return &ClientVersion{}
+type ClientVersion struct {
+	// 0 wrong version
+	// 1 correct version
+	Result byte
 }
 
 func (self *ClientVersion) ToBytes() []byte {
 	bytes := util.IndexToBytes(CLIENT_VERSION)
-	bytes = append(bytes, byte(1))
+	bytes = append(bytes, self.Result)
 	return bytes
 }
