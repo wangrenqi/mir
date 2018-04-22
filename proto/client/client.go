@@ -2,7 +2,7 @@ package client
 
 import (
 	"log"
-	"encoding/binary"
+	"mir/util"
 )
 
 const (
@@ -35,10 +35,18 @@ const (
 	UpLeft
 )
 
-func IndexToBytes(index int) []byte {
-	bytes := make([]byte, 2)
-	binary.LittleEndian.PutUint16(bytes, uint16(index))
-	return bytes
+
+
+// 根据传入的索引 返回读完string后所在bytes 的下一个索引 及string
+func ReadString(bytes []byte, index int) (int, string) {
+	//[0, 1, 2, 5, 9, 10, 11, 12, 50, 23, 77, 99]
+	if len(bytes) == 0 {
+		return -1, ""
+	}
+	strLen := int(bytes[index])
+	lastIndex := index + strLen + 1
+	msg := string(bytes[index+1 : lastIndex])
+	return lastIndex, msg
 }
 
 type ClientVersion struct {
@@ -82,6 +90,10 @@ func (self *KeepAlive) ToBytes() []byte {
 type NewAccount struct {
 	UserName string
 	Password string
+	//BirthDate      datetime
+	SecretQuestion string
+	SecretAnswer   string
+	EMailAddress   string
 }
 
 func GetNewAccount(bytes []byte) *NewAccount {
@@ -223,18 +235,14 @@ type Chat struct {
 }
 
 func GetChat(bytes []byte) *Chat {
-	if len(bytes) == 0 {
-		return &Chat{Message: ""}
-	}
-	msgLen := bytes[0]
-	msg := string(bytes[1:msgLen])
+	_, msg := ReadString(bytes, 0)
 	log.Println(bytes, "to string:", msg)
 	return &Chat{Message: msg}
 }
 
 func (self *Chat) ToBytes() []byte {
 	msgBytes := []byte(self.Message)
-	index := IndexToBytes(CHAT)
+	index := util.IndexToBytes(CHAT)
 	index = append(index, byte(len(msgBytes)))
 	bytes := append(index, msgBytes...)
 	return bytes

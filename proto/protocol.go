@@ -27,8 +27,9 @@ func BytesToStruct(bytes []byte, isServer bool) (int, interface{}) {
 	if isServer {
 		switch index {
 		case sp.CONNECTED:
+			data = sp.GetConnected(bytes)
 		case sp.CLIENT_VERSION:
-			data = &sp.ClientVersion{}
+			data = sp.GetClientVersion(bytes)
 		default:
 			data = &Null{}
 		}

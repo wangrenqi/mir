@@ -1,5 +1,9 @@
 package server
 
+import (
+	"mir/util"
+)
+
 const (
 	CONNECTED                = iota
 	CLIENT_VERSION
@@ -29,6 +33,26 @@ const (
 	CHAT
 )
 
-type ClientVersion struct {
+type Connected struct{}
 
+func GetConnected(bytes []byte) *Connected {
+	return nil
+}
+
+func (self *Connected) ToBytes() []byte {
+	bytes := util.IndexToBytes(CONNECTED)
+	return bytes
+}
+
+type ClientVersion struct {
+}
+
+func GetClientVersion(bytes []byte) *ClientVersion {
+	return nil
+}
+
+func (self *ClientVersion) ToBytes() []byte {
+	bytes := util.IndexToBytes(CLIENT_VERSION)
+	bytes = append(bytes, byte(1))
+	return bytes
 }

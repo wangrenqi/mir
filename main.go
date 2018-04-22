@@ -5,10 +5,11 @@ import (
 	"log"
 	"os"
 	"mir/env"
-	"mir/server"
+	"mir/srv"
 )
 
-var addr = "127.0.0.1:7000"
+//var addr = "127.0.0.1:7000"
+var addr = "192.168.0.105:7000"
 
 func main() {
 
@@ -29,6 +30,6 @@ func main() {
 		}
 		log.Println("new connection: ", conn.RemoteAddr())
 
-		go server.HandleClient(conn, env)
+		go srv.HandleClient(conn, env)
 	}
 }

@@ -1,14 +1,16 @@
-package server
+package srv
 
 import (
 	"mir/orm"
 	p "mir/proto"
 	cp "mir/proto/client"
+	sp "mir/proto/server"
 	"log"
 )
 
 func (c *client) ClientVersion(pkg *p.Packet) error {
-
+	// TODO check client version
+	c.conn.Write(p.Pack((&sp.ClientVersion{}).ToBytes()))
 	return nil
 }
 

@@ -1,4 +1,4 @@
-package server
+package srv
 
 import (
 	"net"
@@ -7,6 +7,7 @@ import (
 	"mir/env"
 	p "mir/proto"
 	cp "mir/proto/client"
+	sp "mir/proto/server"
 )
 
 type client struct {
@@ -28,6 +29,8 @@ func HandleClient(conn net.Conn, env *env.Environ) {
 	}
 	atomic.AddInt32(&id, 1)
 	go client.run()
+
+	conn.Write(p.Pack((&sp.Connected{}).ToBytes()))
 
 	tmpBuffer := make([]byte, 0)
 	buffer := make([]byte, 1024)
