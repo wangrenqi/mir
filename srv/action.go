@@ -10,7 +10,7 @@ import (
 
 func (c *client) ClientVersion(pkg *p.Packet) error {
 	// TODO check client version
-	c.conn.Write(p.Pack((&sp.ClientVersion{byte(1)}).ToBytes()))
+	c.conn.Write(p.Pack((&sp.ClientVersion{Result: byte(1)}).ToBytes()))
 	return nil
 }
 

@@ -29,19 +29,19 @@ func main() {
 	pkg := &p.Packet{}
 
 	fmt.Println("client version")
-	pkg = &p.Packet{cp.CLIENT_VERSION, &cp.ClientVersion{}}
+	pkg = &p.Packet{Index: cp.CLIENT_VERSION, Data: &cp.ClientVersion{}}
 	send(conn, pkg)
 	time.Sleep(time.Second)
-	
+
 	fmt.Println("login")
-	pkg = &p.Packet{cp.LOGIN, &cp.Login{"222", "222222"}}
+	pkg = &p.Packet{Index: cp.LOGIN, Data: &cp.Login{"222", "222222"}}
 	send(conn, pkg)
 	time.Sleep(time.Second)
 
 	// TODO new character
 
 	fmt.Println("start game")
-	pkg = &p.Packet{cp.START_GAME, &cp.StartGame{}}
+	pkg = &p.Packet{Index: cp.START_GAME, Data: &cp.StartGame{}}
 	send(conn, pkg)
 	time.Sleep(time.Second)
 	//
@@ -54,7 +54,7 @@ func main() {
 	dir := []cp.Direction{cp.Up, cp.Right, cp.Down, cp.Left}
 	for _, d := range dir {
 		//pkg = &p.Packet{cp.WALK, &cp.Walk{cp.Up}}
-		pkg = &p.Packet{cp.WALK, &cp.Walk{d}}
+		pkg = &p.Packet{Index: cp.WALK, Data: &cp.Walk{d}}
 		send(conn, pkg)
 		time.Sleep(time.Second)
 	}
@@ -63,9 +63,9 @@ func main() {
 
 	// chat
 	fmt.Println("chat")
-	pkg = &p.Packet{cp.CHAT, &cp.Chat{"测试消息1"}}
+	pkg = &p.Packet{Index: cp.CHAT, Data: &cp.Chat{"测试消息1"}}
 	//send(conn, pkg)
-	pkg = &p.Packet{cp.CHAT, &cp.Chat{"^测试消息2abc"}}
+	pkg = &p.Packet{Index: cp.CHAT, Data: &cp.Chat{"^测试消息2abc"}}
 	send(conn, pkg)
 	time.Sleep(time.Second)
 
