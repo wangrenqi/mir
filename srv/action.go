@@ -6,6 +6,7 @@ import (
 	cp "mir/proto/client"
 	sp "mir/proto/server"
 	"log"
+	"net"
 )
 
 const (
@@ -16,9 +17,17 @@ const (
 	DISCONNECTED
 )
 
+type Packet interface {
+	ToBytes() []byte
+}
+
+func SendTo(conn net.Conn, pkg Packet) {
+	conn.Write(p.Pack(pkg.ToBytes()))
+}
+
 func (c *client) ClientVersion(pkg *p.Packet) error {
 	// TODO check client version
-	c.conn.Write(p.Pack((&sp.ClientVersion{Result: byte(1)}).ToBytes()))
+	SendTo(c.conn, &sp.ClientVersion{Result: byte(1)})
 	c.status = LOGIN
 	return nil
 }
@@ -39,14 +48,14 @@ func (c *client) NewAccount(pkg *p.Packet) error {
 		var account orm.Account
 		c.env.Db.First(&account, "user_name = ?", username)
 		if account.UserName == username {
-			c.conn.Write(p.Pack((&sp.NewAccount{Result: byte(7)}).ToBytes()))
+			SendTo(c.conn, &sp.NewAccount{Result: byte(7)})
 			return nil
 		}
 		c.env.Db.Create(&orm.Account{
 			UserName: username,
 			Password: password,
 		})
-		c.conn.Write(p.Pack((&sp.NewAccount{Result: byte(8)}).ToBytes()))
+		SendTo(c.conn, &sp.NewAccount{Result: byte(8)})
 	}
 	return nil
 }
