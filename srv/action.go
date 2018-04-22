@@ -72,7 +72,7 @@ func (c *client) Run(packet *p.Packet) error {
 
 }
 func (c *client) Chat(packet *p.Packet) error {
-	chat := packet.Data.(*cp.Chat).Message
-	log.Println("receive client chat message:", chat)
+	msg := packet.Data.(*cp.Chat).Message
+	log.Println("received client message:", msg)
 	return nil
 }

@@ -21,8 +21,8 @@ func (self *Null) ToBytes() []byte {
 func BytesToStruct(bytes []byte, isServer bool) (int, interface{}) {
 	var data interface{}
 	index := int(binary.LittleEndian.Uint16(bytes[0:2]))
+	log.Println("BytesToStruct bytes ->", bytes, "index ->", index)
 	bytes = bytes[2:]
-	log.Println("BytesToStruct bytes ->", bytes)
 
 	if isServer {
 		switch index {

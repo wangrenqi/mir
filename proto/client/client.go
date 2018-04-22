@@ -1,7 +1,6 @@
 package client
 
 import (
-	"log"
 	"mir/util"
 )
 
@@ -34,20 +33,6 @@ const (
 	Left
 	UpLeft
 )
-
-
-
-// 根据传入的索引 返回读完string后所在bytes 的下一个索引 及string
-func ReadString(bytes []byte, index int) (int, string) {
-	//[0, 1, 2, 5, 9, 10, 11, 12, 50, 23, 77, 99]
-	if len(bytes) == 0 {
-		return -1, ""
-	}
-	strLen := int(bytes[index])
-	lastIndex := index + strLen + 1
-	msg := string(bytes[index+1 : lastIndex])
-	return lastIndex, msg
-}
 
 type ClientVersion struct {
 	VersionHash string
@@ -235,8 +220,7 @@ type Chat struct {
 }
 
 func GetChat(bytes []byte) *Chat {
-	_, msg := ReadString(bytes, 0)
-	log.Println(bytes, "to string:", msg)
+	_, msg := util.ReadString(bytes, 0)
 	return &Chat{Message: msg}
 }
 
