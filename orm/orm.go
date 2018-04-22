@@ -17,14 +17,25 @@ type Account struct {
 	//AccountID string
 	Password string
 	UserName string
+
+	Characters []SelectInfo
 }
 
-type CharacterInfo struct {
+type SelectInfo struct {
 	gorm.Model
-	Name   string
-	Level  int
-	Class  int
-	Gender int
+	//Index      int32 `gorm:"primary_key"`  replace as gorm.Model Id
+	Name       string
+	Level      int16
+	Class      byte
+	Gender     byte
+	LastAccess int64
+
+	AccountID uint
+}
+
+func (self *SelectInfo) ToBytes() []byte {
+	// TODO 把select info (character info)转成bytes
+	return make([]byte, 0)
 }
 
 func GetDB() *gorm.DB {

@@ -51,7 +51,7 @@ func main() {
 	//
 	//// walk
 	fmt.Println("walk")
-	dir := []cp.Direction{cp.Up, cp.Right, cp.Down, cp.Left}
+	dir := []cp.Direction{cp.UP, cp.RIGHT, cp.DOWN, cp.LEFT}
 	for _, d := range dir {
 		//pkg = &p.Packet{cp.WALK, &cp.Walk{cp.Up}}
 		pkg = &p.Packet{Index: cp.WALK, Data: &cp.Walk{d}}

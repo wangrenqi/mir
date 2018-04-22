@@ -13,6 +13,8 @@ type Environ struct {
 func InitEnviron() *Environ {
 	db := orm.GetDB()
 
+	db.AutoMigrate(&orm.Account{}, &orm.SelectInfo{})
+
 	// TODO maps
 
 	return &Environ{

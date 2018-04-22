@@ -24,14 +24,14 @@ const (
 type Direction byte
 
 const (
-	Up        Direction = iota
-	UpRight
-	Right
-	DownRight
-	Down
-	DownLeft
-	Left
-	UpLeft
+	UP         Direction = iota
+	UP_RIGHT
+	RIGHT
+	DOWN_RIGHT
+	DOWN
+	DOWN_LEFT
+	LEFT
+	UP_LEFT
 )
 
 type ClientVersion struct {
@@ -124,14 +124,25 @@ func (self *Login) ToBytes() []byte {
 	return []byte{5, 0, 3, 50, 50, 50, 6, 50, 50, 50, 50, 50, 50}
 }
 
+type MirGender byte
+type MirClass byte
+
 type NewCharacter struct {
-	//Gender MirGender
-	//Class  MirClass
+	Name   string
+	Gender MirGender
+	Class  MirClass
 }
 
-func GetNewCharacter(bytes []byte) *NewCharacter {
+const (
+	MALE   MirGender = iota
+	FEMALE
+)
 
-	return nil
+func GetNewCharacter(bytes []byte) *NewCharacter {
+	index, name := util.ReadString(bytes, 0)
+	gender := bytes[index]
+	class := bytes[index+1]
+	return &NewCharacter{Name: name, Gender: MirGender(gender), Class: MirClass(class)}
 }
 
 func (self *NewCharacter) ToBytes() []byte {
