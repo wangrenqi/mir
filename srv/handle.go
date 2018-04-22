@@ -8,6 +8,7 @@ import (
 	p "mir/proto"
 	cp "mir/proto/client"
 	sp "mir/proto/server"
+	"fmt"
 )
 
 type client struct {
@@ -91,5 +92,5 @@ func (c *client) process(pkg *p.Packet) (err error) {
 	case cp.CHAT:
 		return c.Chat(pkg)
 	}
-	return nil
+	return fmt.Errorf("unknow pkg index")
 }

@@ -82,8 +82,10 @@ type NewAccount struct {
 }
 
 func GetNewAccount(bytes []byte) *NewAccount {
-
-	return nil
+	index, username := util.ReadString(bytes, 0)
+	index, password := util.ReadString(bytes, index)
+	// TODO birthday datetime from binary int64
+	return &NewAccount{UserName: username, Password: password}
 }
 
 func (self *NewAccount) ToBytes() []byte {
@@ -111,8 +113,9 @@ type Login struct {
 }
 
 func GetLogin(bytes []byte) *Login {
-
-	return nil
+	index, username := util.ReadString(bytes, 0)
+	index, password := util.ReadString(bytes, index)
+	return &Login{AccountId: username, Password: password}
 }
 
 func (self *Login) ToBytes() []byte {

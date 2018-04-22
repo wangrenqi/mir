@@ -53,6 +53,7 @@ func BytesToStruct(bytes []byte) (int, interface{}) {
 		data = cp.GetChat(bytes)
 	default:
 		data = &Null{}
+		log.Println("未知的client packet index:", index)
 	}
 	return index, data
 }
