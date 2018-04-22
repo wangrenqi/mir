@@ -27,7 +27,7 @@ type CharacterInfo struct {
 	Gender int
 }
 
-func GetDB() (*gorm.DB) {
+func GetDB() *gorm.DB {
 	db, err := gorm.Open("mysql", dbUser+":"+dbPassword+"@tcp("+dbAddr+")/"+dbName+"?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
 		panic("failed to connect database")

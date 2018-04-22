@@ -8,9 +8,18 @@ import (
 	"log"
 )
 
+const (
+	NONE         = iota
+	LOGIN
+	SELECT
+	GAME
+	DISCONNECTED
+)
+
 func (c *client) ClientVersion(pkg *p.Packet) error {
 	// TODO check client version
 	c.conn.Write(p.Pack((&sp.ClientVersion{Result: byte(1)}).ToBytes()))
+	c.status = LOGIN
 	return nil
 }
 
@@ -23,14 +32,22 @@ func (c *client) Keepalive(pkg *p.Packet) error {
 	return nil
 }
 func (c *client) NewAccount(pkg *p.Packet) error {
-	// TODO check duplicate username
-	// if duplicate: return error
+	if c.status == LOGIN {
+		username := pkg.Data.(*cp.NewAccount).UserName
+		password := pkg.Data.(*cp.NewAccount).Password
 
-	c.env.Db.Create(&orm.Account{
-		UserName: pkg.Data.(*cp.NewAccount).UserName,
-		Password: pkg.Data.(*cp.NewAccount).Password,
-	})
-
+		var account orm.Account
+		c.env.Db.First(&account, "user_name = ?", username)
+		if account.UserName == username {
+			c.conn.Write(p.Pack((&sp.NewAccount{Result: byte(7)}).ToBytes()))
+			return nil
+		}
+		c.env.Db.Create(&orm.Account{
+			UserName: username,
+			Password: password,
+		})
+		c.conn.Write(p.Pack((&sp.NewAccount{Result: byte(8)}).ToBytes()))
+	}
 	return nil
 }
 
@@ -40,6 +57,10 @@ func (c *client) ChangePassword(packet *p.Packet) error {
 }
 
 func (c *client) Login(packet *p.Packet) error {
+	if c.status == LOGIN {
+		// check username and password
+		c.status = SELECT
+	}
 	return nil
 }
 

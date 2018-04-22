@@ -14,6 +14,7 @@ var addr = "192.168.0.105:7000"
 func main() {
 
 	env := env.InitEnviron()
+	defer env.Db.Close()
 
 	listener, err := net.Listen("tcp", addr)
 	defer listener.Close()

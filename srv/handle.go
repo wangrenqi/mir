@@ -16,6 +16,7 @@ type client struct {
 	conn    net.Conn
 	reqChan <-chan []byte
 	env     *env.Environ
+	status  int
 }
 
 var id int32 = 0
@@ -27,6 +28,7 @@ func HandleClient(conn net.Conn, env *env.Environ) {
 		conn:    conn,
 		reqChan: reqChan,
 		env:     env,
+		status:  0,
 	}
 	atomic.AddInt32(&id, 1)
 	go client.run()

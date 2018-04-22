@@ -12,7 +12,6 @@ type Environ struct {
 
 func InitEnviron() *Environ {
 	db := orm.GetDB()
-	defer db.Close()
 
 	// TODO maps
 

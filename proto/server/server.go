@@ -51,3 +51,26 @@ func (self *ClientVersion) ToBytes() []byte {
 	bytes = append(bytes, self.Result)
 	return bytes
 }
+
+type Disconnect struct{}
+
+type NewAccount struct {
+	/*
+ 	* 0: Disabled
+ 	* 1: Bad AccountID
+ 	* 2: Bad Password
+ 	* 3: Bad Email
+ 	* 4: Bad Name
+ 	* 5: Bad Question
+ 	* 6: Bad Answer
+ 	* 7: Account Exists.
+ 	* 8: Success
+ 	*/
+	Result byte
+}
+
+func (self *NewAccount) ToBytes() []byte {
+	bytes := util.IndexToBytes(NEW_ACCOUNT)
+	bytes = append(bytes, self.Result)
+	return bytes
+}
