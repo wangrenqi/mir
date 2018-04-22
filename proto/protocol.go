@@ -2,7 +2,6 @@ package proto
 
 import (
 	cp "mir/proto/client"
-	sp "mir/proto/server"
 	"encoding/binary"
 	"log"
 )
@@ -62,46 +61,39 @@ type Parser interface {
 	ToBytes() []byte
 }
 
-func (pkg *Packet) ToBytes(isServer bool) []byte {
+func (pkg *Packet) ToBytes() []byte {
 	var parser Parser
-	if isServer {
-		switch pkg.Index {
-		case sp.CONNECTED:
-		case sp.CLIENT_VERSION:
-		}
-	} else {
-		switch pkg.Index {
-		case cp.CLIENT_VERSION:
-			parser = pkg.Data.(*cp.ClientVersion)
-		case cp.DISCONNECT:
-			parser = pkg.Data.(*cp.Disconnect)
-		case cp.KEEPALIVE:
-			parser = pkg.Data.(*cp.KeepAlive)
-		case cp.NEW_ACCOUNT:
-			parser = pkg.Data.(*cp.NewAccount)
-		case cp.CHANGE_PASSWORD:
-			parser = pkg.Data.(*cp.ChangePassword)
-		case cp.LOGIN:
-			parser = pkg.Data.(*cp.Login)
-		case cp.NEW_CHARACTER:
-			parser = pkg.Data.(*cp.NewCharacter)
-		case cp.DELETE_CHARACTER:
-			parser = pkg.Data.(*cp.DeleteCharacter)
-		case cp.START_GAME:
-			parser = pkg.Data.(*cp.StartGame)
-		case cp.LOGOUT:
-			parser = pkg.Data.(*cp.Logout)
-		case cp.TURN:
-			parser = pkg.Data.(*cp.Turn)
-		case cp.WALK:
-			parser = pkg.Data.(*cp.Walk)
-		case cp.RUN:
-			parser = pkg.Data.(*cp.Run)
-		case cp.CHAT:
-			parser = pkg.Data.(*cp.Chat)
-		default:
-			parser = &Null{}
-		}
+	switch pkg.Index {
+	case cp.CLIENT_VERSION:
+		parser = pkg.Data.(*cp.ClientVersion)
+	case cp.DISCONNECT:
+		parser = pkg.Data.(*cp.Disconnect)
+	case cp.KEEPALIVE:
+		parser = pkg.Data.(*cp.KeepAlive)
+	case cp.NEW_ACCOUNT:
+		parser = pkg.Data.(*cp.NewAccount)
+	case cp.CHANGE_PASSWORD:
+		parser = pkg.Data.(*cp.ChangePassword)
+	case cp.LOGIN:
+		parser = pkg.Data.(*cp.Login)
+	case cp.NEW_CHARACTER:
+		parser = pkg.Data.(*cp.NewCharacter)
+	case cp.DELETE_CHARACTER:
+		parser = pkg.Data.(*cp.DeleteCharacter)
+	case cp.START_GAME:
+		parser = pkg.Data.(*cp.StartGame)
+	case cp.LOGOUT:
+		parser = pkg.Data.(*cp.Logout)
+	case cp.TURN:
+		parser = pkg.Data.(*cp.Turn)
+	case cp.WALK:
+		parser = pkg.Data.(*cp.Walk)
+	case cp.RUN:
+		parser = pkg.Data.(*cp.Run)
+	case cp.CHAT:
+		parser = pkg.Data.(*cp.Chat)
+	default:
+		parser = &Null{}
 	}
 	return parser.ToBytes()
 }

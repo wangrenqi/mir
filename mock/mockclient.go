@@ -8,11 +8,11 @@ import (
 	"time"
 )
 
-//var host = "192.168.0.111"
-var host = "127.0.0.1"
+var host = "192.168.0.105"
+//var host = "127.0.0.1"
 
 func send(conn net.Conn, pkg *p.Packet) {
-	bytes := pkg.ToBytes(false)
+	bytes := pkg.ToBytes()
 	// fmt.Println("raw bytes: ", bytes, "len", len(bytes))
 	data := p.Pack(bytes)
 	conn.Write(data)
