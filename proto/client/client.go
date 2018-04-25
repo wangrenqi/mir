@@ -1,7 +1,7 @@
 package client
 
 import (
-	"mir/util"
+	cm "mir/common"
 )
 
 const (
@@ -19,19 +19,6 @@ const (
 	WALK
 	RUN
 	CHAT
-)
-
-type Direction byte
-
-const (
-	UP         Direction = iota
-	UP_RIGHT
-	RIGHT
-	DOWN_RIGHT
-	DOWN
-	DOWN_LEFT
-	LEFT
-	UP_LEFT
 )
 
 type ClientVersion struct {
@@ -82,8 +69,8 @@ type NewAccount struct {
 }
 
 func GetNewAccount(bytes []byte) *NewAccount {
-	index, username := util.ReadString(bytes, 0)
-	index, password := util.ReadString(bytes, index)
+	index, username := cm.ReadString(bytes, 0)
+	index, password := cm.ReadString(bytes, index)
 	// TODO birthday datetime from binary int64
 	return &NewAccount{UserName: username, Password: password}
 }
@@ -113,8 +100,8 @@ type Login struct {
 }
 
 func GetLogin(bytes []byte) *Login {
-	index, username := util.ReadString(bytes, 0)
-	index, password := util.ReadString(bytes, index)
+	index, username := cm.ReadString(bytes, 0)
+	index, password := cm.ReadString(bytes, index)
 	return &Login{AccountId: username, Password: password}
 }
 
@@ -124,25 +111,17 @@ func (self *Login) ToBytes() []byte {
 	return []byte{5, 0, 3, 50, 50, 50, 6, 50, 50, 50, 50, 50, 50}
 }
 
-type MirGender byte
-type MirClass byte
-
 type NewCharacter struct {
 	Name   string
-	Gender MirGender
-	Class  MirClass
+	Gender cm.MirGender
+	Class  cm.MirClass
 }
 
-const (
-	MALE   MirGender = iota
-	FEMALE
-)
-
 func GetNewCharacter(bytes []byte) *NewCharacter {
-	index, name := util.ReadString(bytes, 0)
+	index, name := cm.ReadString(bytes, 0)
 	gender := bytes[index]
 	class := bytes[index+1]
-	return &NewCharacter{Name: name, Gender: MirGender(gender), Class: MirClass(class)}
+	return &NewCharacter{Name: name, Gender: cm.MirGender(gender), Class: cm.MirClass(class)}
 }
 
 func (self *NewCharacter) ToBytes() []byte {
@@ -189,7 +168,7 @@ func (self *Logout) ToBytes() []byte {
 }
 
 type Turn struct {
-	Dir Direction
+	Dir cm.MirDirection
 }
 
 func GetTurn(bytes []byte) *Turn {
@@ -202,7 +181,7 @@ func (self *Turn) ToBytes() []byte {
 }
 
 type Walk struct {
-	Dir Direction
+	Dir cm.MirDirection
 }
 
 func GetWalk(bytes []byte) *Walk {
@@ -217,7 +196,7 @@ func (self *Walk) ToBytes() []byte {
 }
 
 type Run struct {
-	Dir Direction
+	Dir cm.MirDirection
 }
 
 func GetRun(bytes []byte) *Run {
@@ -234,13 +213,13 @@ type Chat struct {
 }
 
 func GetChat(bytes []byte) *Chat {
-	_, msg := util.ReadString(bytes, 0)
+	_, msg := cm.ReadString(bytes, 0)
 	return &Chat{Message: msg}
 }
 
 func (self *Chat) ToBytes() []byte {
 	msgBytes := []byte(self.Message)
-	index := util.IndexToBytes(CHAT)
+	index := cm.IndexToBytes(CHAT)
 	index = append(index, byte(len(msgBytes)))
 	bytes := append(index, msgBytes...)
 	return bytes

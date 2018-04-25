@@ -109,8 +109,8 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 	characterInfo := &orm.SelectInfo{
 		Name:   name,
 		Level:  1,
-		Class:  byte(class),
-		Gender: byte(gender),
+		Class:  class,
+		Gender: gender,
 		//LastAccess int64
 		AccountID: c.info["accountId"].(uint),
 	}

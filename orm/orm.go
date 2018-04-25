@@ -4,6 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"encoding/binary"
+	cm "mir/common"
 )
 
 var dialect = "mysql"
@@ -27,8 +28,8 @@ type SelectInfo struct {
 	//Index      int32 `gorm:"primary_key"`  replace as gorm.Model Id
 	Name       string
 	Level      int16
-	Class      byte
-	Gender     byte
+	Class      cm.MirClass
+	Gender     cm.MirGender
 	LastAccess int64
 
 	AccountID uint
@@ -51,10 +52,10 @@ func (self *SelectInfo) ToBytes() []byte {
 	binary.LittleEndian.PutUint16(levelBytes, level)
 	// class (byte)
 	class := self.Class
-	classBytes := []byte{class}
+	classBytes := []byte{byte(class)}
 	// gender (byte)
 	gender := self.Gender
-	genderBytes := []byte{gender}
+	genderBytes := []byte{byte(gender)}
 	// lastAccess (int64 8byte)
 	lastAccess := uint64(0)
 	lastAccessBytes := make([]byte, 8)

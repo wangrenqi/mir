@@ -1,8 +1,8 @@
 package server
 
 import (
-	"mir/util"
 	"mir/orm"
+	cm "mir/common"
 )
 
 const (
@@ -37,7 +37,7 @@ const (
 type Connected struct{}
 
 func (self *Connected) ToBytes() []byte {
-	bytes := util.IndexToBytes(CONNECTED)
+	bytes := cm.IndexToBytes(CONNECTED)
 	return bytes
 }
 
@@ -48,7 +48,7 @@ type ClientVersion struct {
 }
 
 func (self *ClientVersion) ToBytes() []byte {
-	bytes := util.IndexToBytes(CLIENT_VERSION)
+	bytes := cm.IndexToBytes(CLIENT_VERSION)
 	bytes = append(bytes, self.Result)
 	return bytes
 }
@@ -71,7 +71,7 @@ type NewAccount struct {
 }
 
 func (self *NewAccount) ToBytes() []byte {
-	bytes := util.IndexToBytes(NEW_ACCOUNT)
+	bytes := cm.IndexToBytes(NEW_ACCOUNT)
 	return append(bytes, self.Result)
 }
 
@@ -80,7 +80,7 @@ type ChangePassword struct {
 }
 
 func (self *ChangePassword) ToBytes() []byte {
-	bytes := util.IndexToBytes(NEW_ACCOUNT)
+	bytes := cm.IndexToBytes(NEW_ACCOUNT)
 	return append(bytes, self.Result)
 }
 
@@ -101,7 +101,7 @@ type Login struct {
 }
 
 func (self *Login) ToBytes() []byte {
-	bytes := util.IndexToBytes(LOGIN)
+	bytes := cm.IndexToBytes(LOGIN)
 	return append(bytes, self.Result)
 }
 
@@ -121,7 +121,7 @@ type LoginSuccess struct {
 }
 
 func (self *LoginSuccess) ToBytes() []byte {
-	bytes := util.IndexToBytes(LOGIN_SUCCESS)
+	bytes := cm.IndexToBytes(LOGIN_SUCCESS)
 	characters := self.Characters
 	if len(characters) == 0 {
 		bytes = append(bytes, []byte{0, 0, 0, 0}...)
@@ -147,7 +147,7 @@ type NewCharacter struct {
 }
 
 func (self *NewCharacter) ToBytes() []byte {
-	bytes := util.IndexToBytes(NEW_CHARACTER)
+	bytes := cm.IndexToBytes(NEW_CHARACTER)
 	return append(bytes, self.Result)
 }
 
@@ -156,11 +156,85 @@ type NewCharacterSuccess struct {
 }
 
 func (self *NewCharacterSuccess) ToBytes() []byte {
-	pkgBytes := util.IndexToBytes(NEW_CHARACTER_SUCCESS)
+	pkgBytes := cm.IndexToBytes(NEW_CHARACTER_SUCCESS)
 	characterInfoBytes := self.CharInfo.ToBytes()
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, characterInfoBytes} {
 		result = append(result, r...)
 	}
 	return result
+}
+
+type DeleteCharacter struct {
+	Result byte
+}
+
+type DeleteCharacterSuccess struct {
+	CharacterIndex int
+}
+
+type StartGame struct {
+	Result     byte
+	Resolution int
+}
+
+type StartGameBanned struct {
+	Reason string
+	//ExpiryDate time date
+}
+
+type StartGameDelay struct {
+	//Milliseconds c# long
+}
+
+type LightSetting byte
+
+const (
+	NORMAL  LightSetting = iota
+	DAWN
+	DAY
+	EVENING
+	NIGHT
+)
+
+type MapInformation struct {
+	Index        int
+	Filename     string
+	Title        string
+	MiniMap      int
+	BigMap       int
+	Music        int
+	Lightning    bool
+	Fire         bool
+	MapDarkLight byte
+}
+
+type UserInformation struct {
+	ObjectID  int
+	RealId    int
+	Name      string
+	GuildName string
+	GuildRank string
+	//public Color NameColour; int ?
+	Class  cm.MirClass
+	Gender cm.MirGender
+	Level  int
+	//public Point Location; [][]int ?
+	Direction cm.MirDirection
+	Hair      byte
+	HP        int
+	MP        int
+	// long Experience, MaxExperience;
+	// LevelEffects
+	// public UserItem[] Inventory, Equipment, QuestInventory;
+	// public uint Gold, Credit;
+
+	// public bool HasExpandedStorage;
+	// public DateTime ExpandedStorageExpiryTime;
+
+	// public List<ClientMagic> Magics = new List<ClientMagic>();
+
+	// public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();//IntelligentCreature
+	// public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;//IntelligentCreature
+	// public bool CreatureSummoned;//IntelligentCreature
 }

@@ -6,6 +6,7 @@ import (
 	p "mir/proto"
 	cp "mir/proto/client"
 	"time"
+	cm "mir/common"
 )
 
 var host = "192.168.0.105"
@@ -51,7 +52,7 @@ func main() {
 	//
 	//// walk
 	fmt.Println("walk")
-	dir := []cp.Direction{cp.UP, cp.RIGHT, cp.DOWN, cp.LEFT}
+	dir := []cm.MirDirection{cm.UP, cm.RIGHT, cm.DOWN, cm.LEFT}
 	for _, d := range dir {
 		//pkg = &p.Packet{cp.WALK, &cp.Walk{cp.Up}}
 		pkg = &p.Packet{Index: cp.WALK, Data: &cp.Walk{d}}
