@@ -43,22 +43,22 @@ func (c *client) Keepalive(pkg *p.Packet) error {
 	return nil
 }
 func (c *client) NewAccount(pkg *p.Packet) error {
-	if c.status == LOGIN {
-		username := pkg.Data.(*cp.NewAccount).UserName
-		password := pkg.Data.(*cp.NewAccount).Password
-
-		var account orm.Account
-		c.env.Db.First(&account, "user_name = ?", username)
-		if account.UserName == username {
-			SendTo(c.conn, &sp.NewAccount{Result: byte(7)})
-			return nil
-		}
-		c.env.Db.Create(&orm.Account{
-			UserName: username,
-			Password: password,
-		})
-		SendTo(c.conn, &sp.NewAccount{Result: byte(8)})
+	if c.status != LOGIN {
+		return nil
 	}
+	username := pkg.Data.(*cp.NewAccount).UserName
+	password := pkg.Data.(*cp.NewAccount).Password
+	var account orm.Account
+	c.env.Db.First(&account, "user_name = ?", username)
+	if account.UserName == username {
+		SendTo(c.conn, &sp.NewAccount{Result: byte(7)})
+		return nil
+	}
+	c.env.Db.Create(&orm.Account{
+		UserName: username,
+		Password: password,
+	})
+	SendTo(c.conn, &sp.NewAccount{Result: byte(8)})
 	return nil
 }
 
@@ -92,6 +92,9 @@ func (c *client) Login(pkg *p.Packet) error {
 }
 
 func (c *client) NewCharacter(pkg *p.Packet) error {
+	if c.status != SELECT {
+		return nil
+	}
 	name := pkg.Data.(*cp.NewCharacter).Name
 	gender := pkg.Data.(*cp.NewCharacter).Gender
 	class := pkg.Data.(*cp.NewCharacter).Class

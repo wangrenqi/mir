@@ -3,7 +3,6 @@ package server
 import (
 	"mir/util"
 	"mir/orm"
-	"encoding/binary"
 )
 
 const (
@@ -157,33 +156,10 @@ type NewCharacterSuccess struct {
 }
 
 func (self *NewCharacterSuccess) ToBytes() []byte {
-	// index(int32 4byte)
 	pkgBytes := util.IndexToBytes(NEW_CHARACTER_SUCCESS)
-	index := uint32(self.CharInfo.ID)
-	indexBytes := make([]byte, 4)
-	binary.LittleEndian.PutUint32(indexBytes, index)
-	// name (string)
-	name := self.CharInfo.Name
-	nameBytes := []byte(name)
-	nameBytesLenBytes := []byte{byte(len(nameBytes))}
-	nameBytes = append(nameBytesLenBytes, nameBytes...)
-	// level (int16 2byte)
-	level := uint16(self.CharInfo.Level)
-	levelBytes := make([]byte, 2)
-	binary.LittleEndian.PutUint16(levelBytes, level)
-	// class (byte)
-	class := self.CharInfo.Class
-	classBytes := []byte{class}
-	// gender (byte)
-	gender := self.CharInfo.Gender
-	genderBytes := []byte{gender}
-	// lastAccess (int64 8byte)
-	lastAccess := uint64(0)
-	lastAccessBytes := make([]byte, 8)
-	binary.LittleEndian.PutUint64(lastAccessBytes, lastAccess)
-
+	characterInfoBytes := self.CharInfo.ToBytes()
 	result := make([]byte, 0)
-	for _, r := range [][]byte{pkgBytes, indexBytes, nameBytes, levelBytes, classBytes, genderBytes, lastAccessBytes} {
+	for _, r := range [][]byte{pkgBytes, characterInfoBytes} {
 		result = append(result, r...)
 	}
 	return result
