@@ -219,7 +219,7 @@ func GetChat(bytes []byte) *Chat {
 
 func (self *Chat) ToBytes() []byte {
 	msgBytes := []byte(self.Message)
-	index := cm.IndexToBytes(CHAT)
+	index := cm.Uint16ToBytes(CHAT)
 	index = append(index, byte(len(msgBytes)))
 	bytes := append(index, msgBytes...)
 	return bytes

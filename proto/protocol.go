@@ -1,9 +1,11 @@
 package proto
 
+import "encoding/binary"
+
 import (
-	cp "mir/proto/client"
-	"encoding/binary"
 	"log"
+	cm "mir/common"
+	cp "mir/proto/client"
 )
 
 type Packet struct {
@@ -102,9 +104,8 @@ func (pkg *Packet) ToBytes() []byte {
 // 封包
 func Pack(data []byte) []byte {
 	length := len(data) + 2
-	header := make([]byte, 2)
-	binary.LittleEndian.PutUint16(header, uint16(length))
-	return append(header, data...)
+	lenBytes := cm.Uint16ToBytes(uint16(length))
+	return append(lenBytes, data...)
 }
 
 // 解包

@@ -3,7 +3,6 @@ package orm
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"encoding/binary"
 	cm "mir/common"
 )
 
@@ -38,18 +37,11 @@ type SelectInfo struct {
 // TODO 这个方法不应该放在orm 而是proto
 func (self *SelectInfo) ToBytes() []byte {
 	// index(int32 4byte)
-	index := uint32(self.ID)
-	indexBytes := make([]byte, 4)
-	binary.LittleEndian.PutUint32(indexBytes, index)
+	indexBytes := cm.Uint32ToBytes(uint32(self.ID))
 	// name (string)
-	name := self.Name
-	nameBytes := []byte(name)
-	nameBytesLenBytes := []byte{byte(len(nameBytes))}
-	nameBytes = append(nameBytesLenBytes, nameBytes...)
+	nameBytes := cm.StringToBytes(self.Name)
 	// level (int16 2byte)
-	level := uint16(self.Level)
-	levelBytes := make([]byte, 2)
-	binary.LittleEndian.PutUint16(levelBytes, level)
+	levelBytes := cm.Uint16ToBytes(uint16(self.Level))
 	// class (byte)
 	class := self.Class
 	classBytes := []byte{byte(class)}
@@ -57,9 +49,7 @@ func (self *SelectInfo) ToBytes() []byte {
 	gender := self.Gender
 	genderBytes := []byte{byte(gender)}
 	// lastAccess (int64 8byte)
-	lastAccess := uint64(0)
-	lastAccessBytes := make([]byte, 8)
-	binary.LittleEndian.PutUint64(lastAccessBytes, lastAccess)
+	lastAccessBytes := cm.Uint64ToBytes(uint64(0))
 	result := make([]byte, 0)
 	for _, r := range [][]byte{indexBytes, nameBytes, levelBytes, classBytes, genderBytes, lastAccessBytes} {
 		result = append(result, r...)

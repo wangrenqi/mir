@@ -3,7 +3,6 @@ package server
 import (
 	"mir/orm"
 	cm "mir/common"
-	"encoding/binary"
 )
 
 const (
@@ -38,7 +37,7 @@ const (
 type Connected struct{}
 
 func (self *Connected) ToBytes() []byte {
-	bytes := cm.IndexToBytes(CONNECTED)
+	bytes := cm.Uint16ToBytes(CONNECTED)
 	return bytes
 }
 
@@ -49,7 +48,7 @@ type ClientVersion struct {
 }
 
 func (self *ClientVersion) ToBytes() []byte {
-	bytes := cm.IndexToBytes(CLIENT_VERSION)
+	bytes := cm.Uint16ToBytes(CLIENT_VERSION)
 	bytes = append(bytes, self.Result)
 	return bytes
 }
@@ -72,7 +71,7 @@ type NewAccount struct {
 }
 
 func (self *NewAccount) ToBytes() []byte {
-	bytes := cm.IndexToBytes(NEW_ACCOUNT)
+	bytes := cm.Uint16ToBytes(NEW_ACCOUNT)
 	return append(bytes, self.Result)
 }
 
@@ -81,7 +80,7 @@ type ChangePassword struct {
 }
 
 func (self *ChangePassword) ToBytes() []byte {
-	bytes := cm.IndexToBytes(NEW_ACCOUNT)
+	bytes := cm.Uint16ToBytes(NEW_ACCOUNT)
 	return append(bytes, self.Result)
 }
 
@@ -102,7 +101,7 @@ type Login struct {
 }
 
 func (self *Login) ToBytes() []byte {
-	bytes := cm.IndexToBytes(LOGIN)
+	bytes := cm.Uint16ToBytes(LOGIN)
 	return append(bytes, self.Result)
 }
 
@@ -122,14 +121,13 @@ type LoginSuccess struct {
 }
 
 func (self *LoginSuccess) ToBytes() []byte {
-	bytes := cm.IndexToBytes(LOGIN_SUCCESS)
+	bytes := cm.Uint16ToBytes(LOGIN_SUCCESS)
 	characters := self.Characters
 	count := len(characters)
 	if count == 0 {
 		bytes = append(bytes, []byte{0, 0, 0, 0}...)
 	} else {
-		countBytes := make([]byte, 4)
-		binary.LittleEndian.PutUint32(countBytes, uint32(count))
+		countBytes := cm.Uint32ToBytes(uint32(count))
 		for _, character := range characters {
 			countBytes = append(countBytes, character.ToBytes()...)
 		}
@@ -151,7 +149,7 @@ type NewCharacter struct {
 }
 
 func (self *NewCharacter) ToBytes() []byte {
-	bytes := cm.IndexToBytes(NEW_CHARACTER)
+	bytes := cm.Uint16ToBytes(NEW_CHARACTER)
 	return append(bytes, self.Result)
 }
 
@@ -160,7 +158,7 @@ type NewCharacterSuccess struct {
 }
 
 func (self *NewCharacterSuccess) ToBytes() []byte {
-	pkgBytes := cm.IndexToBytes(NEW_CHARACTER_SUCCESS)
+	pkgBytes := cm.Uint16ToBytes(NEW_CHARACTER_SUCCESS)
 	characterInfoBytes := self.CharInfo.ToBytes()
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, characterInfoBytes} {
