@@ -3,6 +3,7 @@ package server
 import (
 	"mir/orm"
 	cm "mir/common"
+	"encoding/binary"
 )
 
 const (
@@ -123,13 +124,16 @@ type LoginSuccess struct {
 func (self *LoginSuccess) ToBytes() []byte {
 	bytes := cm.IndexToBytes(LOGIN_SUCCESS)
 	characters := self.Characters
-	if len(characters) == 0 {
+	count := len(characters)
+	if count == 0 {
 		bytes = append(bytes, []byte{0, 0, 0, 0}...)
 	} else {
-		// TODO 有角色时LoginSuccess处理
+		countBytes := make([]byte, 4)
+		binary.LittleEndian.PutUint32(countBytes, uint32(count))
 		for _, character := range characters {
-			bytes = append(bytes, character.ToBytes()...)
+			countBytes = append(countBytes, character.ToBytes()...)
 		}
+		bytes = append(bytes, countBytes...)
 	}
 	return bytes
 }
