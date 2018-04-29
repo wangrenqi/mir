@@ -20,45 +20,45 @@ const (
 	RUN
 	CHAT
 
-	MoveItem
-	StoreItem
-	TakeBackItem
-	MergeItem
-	EquipItem
-	RemoveItem
-	RemoveSlotItem
-	SplitItem
-	UseItem
-	DropItem
-	DepositRefineItem
-	RetrieveRefineItem
-	RefineCancel
-	RefineItem
-	CheckRefine
-	ReplaceWedRing
-	DepositTradeItem
-	RetrieveTradeItem
-	DropGold
-	PickUp
-	Inspect
-	ChangeAMode
-	ChangePMode
-	ChangeTrade
-	Attack
-	RangeAttack
-	Harvest
-	CallNPC
-	TalkMonsterNPC
-	BuyItem
-	SellItem
-	CraftItem
-	RepairItem
-	BuyItemBack
-	SRepairItem
-	MagicKey
-	Magic
+	MOVE_ITEM
+	STORE_ITEM
+	TAKE_BACK_ITEM
+	MERGE_ITEM
+	EQUIP_ITEM
+	REMOVE_ITEM
+	REMOVE_SLOT_ITEM
+	SPLIT_ITEM
+	USE_ITEM
+	DROP_ITEM
+	DEPOSIT_REFINE_ITEM
+	RETRIEVE_REFINE_ITEM
+	REFINE_CANCEL
+	REFINE_ITEM
+	CHECK_REFINE
+	REPLACE_WED_RING
+	DEPOSIT_TRADE_ITEM
+	RETRIEVE_TRADE_ITEM
+	DROP_GOLD
+	PICK_UP
+	INSPECT
+	CHANGE_A_MODE
+	CHANGE_P_MODE
+	CHANGE_TRADE
+	ATTACK
+	RANGE_ATTACK
+	HARVEST
+	CALL_NPC
+	TALK_MONSTER_NPC
+	BUY_ITEM
+	SELL_ITEM
+	CRAFT_ITEM
+	REPAIR_ITEM
+	BUY_ITEM_BACK
+	S_REPAIR_ITEM
+	MAGIC_KEY
+	MAGIC
 	SwitchGroup
-	AddMember
+	// AddMember
 	DellMember
 	GroupInvite
 	TownRevive

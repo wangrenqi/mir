@@ -96,7 +96,7 @@ const (
 	NPC_GOODS
 	NPC_SELL
 	NPC_REPAIR
-	NPC_SREPAIR
+	NPC_S_REPAIR
 	NPC_REFINE
 	NPC_CHECK_REFINE
 	NPC_COLLECT_REFINE
@@ -112,77 +112,77 @@ const (
 	MAGIC
 	MAGIC_DELAY
 	MAGIC_CAST
-	// ObjectMagic
-	ObjectEffect
-	RangeAttack
-	Pushed
-	ObjectPushed
-	ObjectName
-	UserStorage
-	SwitchGroup
-	DeleteGroup
-	DeleteMember
-	GroupInvite
-	AddMember
-	Revived
-	ObjectRevived
-	SpellToggle
-	ObjectHealth
-	MapEffect
-	ObjectRangeAttack
-	AddBuff
-	RemoveBuff
-	ObjectHidden
-	RefreshItem
-	ObjectSpell
-	UserDash
-	ObjectDash
-	UserDashFail
-	ObjectDashFail
-	NPCConsign
-	NPCMarket
-	NPCMarketPage
-	ConsignItem
-	MarketFail
-	MarketSuccess
-	ObjectSitDown
-	InTrapRock
-	BaseStatsInfo
-	UserName
-	ChatItemStats
-	GuildNoticeChange
-	GuildMemberChange
-	GuildStatus
-	GuildInvite
-	GuildExpGain
-	GuildNameRequest
-	GuildStorageGoldChange
-	GuildStorageItemChange
-	GuildStorageList
-	GuildRequestWar
-	DefaultNPC
-	NPCUpdate
-	NPCImageUpdate
-	MarriageRequest
-	DivorceRequest
-	MentorRequest
-	TradeRequest
-	TradeAccept
-	TradeGold
-	TradeItem
-	TradeConfirm
-	TradeCancel
-	MountUpdate
-	EquipSlotItem
-	FishingUpdate
-	ChangeQuest
-	CompleteQuest
-	ShareQuest
-	NewQuestInfo
-	GainedQuestItem
-	DeleteQuestItem
-	CancelReincarnation
-	RequestReincarnation
+	OBJECT_MAGIC
+	OBJECT_EFFECT
+	RANGE_ATTACK
+	PUSHED
+	OBJECT_PUSHED
+	OBJECT_NAME
+	USER_STORAGE
+	SWITCH_GROUP
+	DELETE_GROUP
+	DELETE_MEMBER
+	GROUP_INVITE
+	ADD_MEMBER
+	REVIVED
+	OBJECT_REVIVED
+	SPELL_TOGGLE
+	OBJECT_HEALTH
+	MAP_EFFECT
+	OBJECT_RANGE_ATTACK
+	ADD_BUFF
+	REMOVE_BUFF
+	OBJECT_HIDDEN
+	REFRESH_ITEM
+	OBJECT_SPELL
+	USER_DASH
+	OBJECT_DASH
+	USER_DASH_FAIL
+	OBJECT_DASH_FAIL
+	NPC_CONSIGN
+	NPC_MARKET
+	NPC_MARKET_PAGE
+	CONSIGN_ITEM
+	MARKET_FAIL
+	MARKET_SUCCESS
+	OBJECT_SIT_DOWN
+	IN_TRAP_ROCK
+	BASE_STATS_INFO
+	USER_NAME
+	CHAT_ITEM_STATS
+	GUILD_NOTICE_CHANGE
+	GUILD_MEMBER_CHANGE
+	GUILD_STATUS
+	GUILD_INVITE
+	GUILD_EXP_GAIN
+	GUILD_NAME_REQUEST
+	GUILD_STORAGE_GOLD_CHANGE
+	GUILD_STORAGE_ITEM_CHANGE
+	GUILD_STORAGE_LIST
+	GUILD_REQUEST_WAR
+	DEFAULT_NPC
+	NPC_UPDATE
+	NPC_IMAGE_UPDATE
+	MARRIAGE_REQUEST
+	DIVORCE_REQUEST
+	MENTOR_REQUEST
+	TRADE_REQUEST
+	TRADE_ACCEPT
+	TRADE_GOLD
+	TRADE_ITEM
+	TRADE_CONFIRM
+	TRADE_CANCEL
+	MOUNT_UPDATE
+	EQUIP_SLOT_ITEM
+	FISHING_UPDATE
+	CHANGE_QUEST
+	COMPLETE_QUEST
+	SHARE_QUEST
+	NEW_QUEST_INFO
+	GAINED_QUEST_ITEM
+	DELETE_QUEST_ITEM
+	CANCEL_REINCARNATION
+	// RequestReincarnation
 	UserBackStep
 	ObjectBackStep
 	UserDashAttack
