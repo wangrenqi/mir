@@ -421,12 +421,12 @@ const (
 )
 
 type MapInformation struct {
-	Index        int
+	Index        uint32
 	Filename     string
 	Title        string
-	MiniMap      int
-	BigMap       int
-	Music        int
+	MiniMap      uint32
+	BigMap       uint32
+	Music        uint32
 	Lightning    bool
 	Fire         bool
 	MapDarkLight byte
@@ -439,44 +439,191 @@ func (self *MapInformation) ToBytes() []byte {
 	return result
 }
 
+type Point struct {
+	X uint32
+	Y uint32
+}
+
+type LevelEffects byte
+
+type ItemInfo struct {
+}
+
+type RefinedValue byte
+
+type UserItem struct {
+	UniqueID       uint64
+	ItemIndex      uint32
+	Info           ItemInfo
+	CurrentDura    uint16
+	MaxDura        uint16
+	Count          uint32
+	GemCount       uint32
+	AC             byte
+	MAC            byte
+	DC             byte
+	MC             byte
+	SC             byte
+	Accuracy       byte
+	Agility        byte
+	HP             byte
+	MP             byte
+	Strong         byte
+	MagicResist    byte
+	PoisonResist   byte
+	HealthRecovery byte
+	ManaRecovery   byte
+	PoisonRecovery byte
+	CriticalRate   byte
+	CriticalDamage byte
+	Freezing       byte
+	PoisonAttack   byte
+	AttackSpeed    byte
+	Luck           byte
+	RefinedValue   RefinedValue
+	RefineAdded    byte
+	DuraChanged    bool
+	SoulBoundId    uint32
+	Identified     bool
+	Cursed         bool
+	WeddingRing    uint32
+	//public UserItem[] Slots = new UserItem[5];
+	//public DateTime BuybackExpiryDate;
+	//public ExpireInfo ExpireInfo;
+	//public RentalInformation RentalInformation;
+	//public Awake Awake = new Awake();
+}
+
+type Spell byte
+
+type ClientMagic struct {
+	Spell       Spell
+	BaseCost    byte
+	LevelCost   byte
+	Icon        byte
+	Level1      byte
+	Level2      byte
+	Level3      byte
+	Need1       uint16
+	Need2       uint16
+	Need3       uint16
+	Level       byte
+	Key         byte
+	Range       byte
+	Experience  uint16
+	IsTempSpell bool
+	CastTime    uint64
+	Delay       uint64
+}
+
+type IntelligentCreatureType byte
+
+type IntelligentCreaturePickupMode byte
+
+type IntelligentCreatureRules struct {
+	//public int MinimalFullness = 1;
+	//
+	//public bool MousePickupEnabled = false;
+	//public int MousePickupRange = 0;
+	//public bool AutoPickupEnabled = false;
+	//public int AutoPickupRange = 0;
+	//public bool SemiAutoPickupEnabled = false;
+	//public int SemiAutoPickupRange = 0;
+	//
+	//public bool CanProduceBlackStone = false;
+	//
+	//public string Info = "";
+	//public string Info1 = "";
+	//public string Info2 = "";
+}
+
+type IntelligentCreatureItemFilter struct {
+	//public bool PetPickupAll = true;
+	//public bool PetPickupGold = false;
+	//public bool PetPickupWeapons = false;
+	//public bool PetPickupArmours = false;
+	//public bool PetPickupHelmets = false;
+	//public bool PetPickupBoots = false;
+	//public bool PetPickupBelts = false;
+	//public bool PetPickupAccessories = false;
+	//public bool PetPickupOthers = false;
+	//
+	//public ItemGrade PickupGrade = ItemGrade.None;
+}
+
+type ClientIntelligentCreature struct {
+	PetType          IntelligentCreatureType
+	Icon             uint32
+	CustomName       string
+	Fullness         uint32
+	SlotIndex        uint32
+	ExpireTime       uint64 // long
+	BlackstoneTime   uint64
+	MaintainFoodTime uint64
+	petMode          IntelligentCreaturePickupMode // default SemiAutomatic
+	CreatureRules    IntelligentCreatureRules
+	Filter           IntelligentCreatureItemFilter
+}
+
 type UserInformation struct {
-	ObjectID  int
-	RealId    int
-	Name      string
-	GuildName string
-	GuildRank string
-	//public Color NameColour; int ?
-	Class  cm.MirClass
-	Gender cm.MirGender
-	Level  int
-	//public Point Location; [][]int ?
-	Direction cm.MirDirection
-	Hair      byte
-	HP        int
-	MP        int
-	// long Experience, MaxExperience;
-	// LevelEffects
-	// public UserItem[] Inventory, Equipment, QuestInventory;
-	// public uint Gold, Credit;
-
-	// public bool HasExpandedStorage;
-	// public DateTime ExpandedStorageExpiryTime;
-
-	// public List<ClientMagic> Magics = new List<ClientMagic>();
-
-	// public List<ClientIntelligentCreature> IntelligentCreatures = new List<ClientIntelligentCreature>();//IntelligentCreature
-	// public IntelligentCreatureType SummonedCreatureType = IntelligentCreatureType.None;//IntelligentCreature
-	// public bool CreatureSummoned;//IntelligentCreature
+	ObjectID                  uint32
+	RealId                    uint32
+	Name                      string
+	GuildName                 string
+	GuildRank                 string
+	NameColour                uint32
+	Class                     cm.MirClass
+	Gender                    cm.MirGender
+	Level                     uint16
+	Location                  Point
+	Direction                 cm.MirDirection
+	Hair                      byte
+	HP                        uint16
+	MP                        uint16
+	Experience                uint64
+	MaxExperience             uint64
+	LevelEffect               LevelEffects
+	Inventory                 []UserItem
+	Equipment                 []UserItem
+	QuestInventory            []UserItem
+	Gold                      uint32
+	Credit                    uint32
+	HasExpandedStorage        bool
+	ExpandedStorageExpiryTime uint64 // DateTime
+	Magics                    []ClientMagic
+	IntelligentCreatures      []ClientIntelligentCreature
+	IntelligentCreatureType   IntelligentCreatureType
+	CreatureSummoned          bool
 }
 
 func (self *UserInformation) ToBytes() []byte {
 	pkgBytes := cm.Uint16ToBytes(USER_INFORMATION)
-	result := append(pkgBytes, []byte{165, 7, 0, 0, 1, 0, 0, 0, 3, 54, 54, 51, 0, 0, 255, 255, 255, 255, 0, 0, 1, 0, 31, 1, 0, 0, 100, 2, 0, 0, 4, 4, 18, 0, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 0, 0, 0, 0, 0, 0, 0, 0, 1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 99, 0}...)
+	result := append(pkgBytes, []byte{
+		165, 7, 0, 0,              // object id
+		1, 0, 0, 0,                // real id
+		3, 54, 54, 51,             // name
+		0,                         // guild name
+		0,                         // guild rank
+		255, 255, 255, 255,        // name color
+		0,                         // class
+		0,                         // gender
+		1, 0,                      // level
+		31, 1, 0, 0, 100, 2, 0, 0, // location ??
+		4,                         // direction
+		4,                         // hair
+		18, 0,                     // hp
+		14, 0,                     // mp
+		0, 0, 0, 0, 0, 0, 0, 0,    // experience
+		100, 0, 0, 0, 0, 0, 0, 0,  // max experience
+		0,                         // level effect
+		1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		99, // intelligent creature type
+		0,  // creature summoned
+	}...)
 	return result
 }
 
 type UserLocation struct {
-
 }
 
 func (self *UserLocation) ToBytes() []byte {
@@ -484,7 +631,6 @@ func (self *UserLocation) ToBytes() []byte {
 }
 
 type ObjectPlayer struct {
-
 }
 
 func (self *ObjectPlayer) ToBytes() []byte {
@@ -492,129 +638,97 @@ func (self *ObjectPlayer) ToBytes() []byte {
 }
 
 type ObjectRemove struct {
-
 }
 
 type ObjectTurn struct {
-
 }
 
 type ObjectWalk struct {
-
 }
 
 type ObjectRun struct {
-
 }
 
 type Chat struct {
-
 }
 
 type ObjectChat struct {
-
 }
 
 type NewItemInfo struct {
-
 }
 
 type MoveItem struct {
-
 }
 
 type EquipItem struct {
-
 }
 
 type MergeItem struct {
-
 }
 
 type RemoveItem struct {
-
 }
 
 type RemoveSlotItem struct {
-
 }
 
 type TakeBackItem struct {
-
 }
 
 type StoreItem struct {
-
 }
 
 type SplitItem struct {
-
 }
 
 type SplitItem1 struct {
-
 }
 
 type DepositRefineItem struct {
-
 }
 
 type RetrieveRefineItem struct {
-
 }
 
 type RefineCancel struct {
-
 }
 
 type RefineItem struct {
-
 }
 
 type DepositTradeItem struct {
-
 }
 
 type RetrieveTradeItem struct {
-
 }
 
 type UseItem struct {
-
 }
 
 type DropItem struct {
-
 }
 
 type PlayerUpdate struct {
-
 }
 
 type PlayerInspect struct {
-
 }
 
 type LogOutSuccess struct {
-
 }
 
 type LogOutFailed struct {
-
 }
 
 type TimeOfDay struct {
-
 }
 
 type ChangeAMode struct {
-
 }
 
 type ChangePMode struct {
-
 }
-
 
 //type NewQuestInfo struct {
 //
