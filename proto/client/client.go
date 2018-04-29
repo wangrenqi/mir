@@ -57,95 +57,95 @@ const (
 	S_REPAIR_ITEM
 	MAGIC_KEY
 	MAGIC
-	SwitchGroup
-	// AddMember
-	DellMember
-	GroupInvite
-	TownRevive
-	SpellToggle
-	ConsignItem
-	MarketSearch
-	MarketRefresh
-	MarketPage
-	MarketBuy
-	MarketGetBack
-	RequestUserName
-	RequestChatItem
-	EditGuildMember
-	EditGuildNotice
-	GuildInvite
-	GuildNameReturn
-	RequestGuildInfo
-	GuildStorageGoldChange
-	GuildStorageItemChange
-	GuildWarReturn
-	MarriageRequest
-	MarriageReply
-	ChangeMarriage
-	DivorceRequest
-	DivorceReply
-	AddMentor
-	MentorReply
-	AllowMentor
-	CancelMentor
-	TradeRequest
-	TradeReply
-	TradeGold
-	TradeConfirm
-	TradeCancel
-	EquipSlotItem
-	FishingCast
-	FishingChangeAutocast
-	AcceptQuest
-	FinishQuest
-	AbandonQuest
-	ShareQuest
+	SWITCH_GROUP
+	ADD_MEMBER
+	DELL_MEMBER
+	GROUP_INVITE
+	TOWN_REVIVE
+	SPELL_TOGGLE
+	CONSIGN_ITEM
+	MARKET_SEARCH
+	MARKET_REFRESH
+	MARKET_PAGE
+	MARKET_BUY
+	MARKET_GET_BACK
+	REQUEST_USER_NAME
+	REQUEST_CHAT_ITEM
+	EDIT_GUILD_MEMBER
+	EDIT_GUILD_NOTICE
+	GUILD_INVITE
+	GUILD_NAME_RETURN
+	REQUEST_GUILD_INFO
+	GUILD_STORAGE_GOLD_CHANGE
+	GUILD_STORAGE_ITEM_CHANGE
+	GUILD_WAR_RETURN
+	MARRIAGE_REQUEST
+	MARRIAGE_REPLY
+	CHANGE_MARRIAGE
+	DIVORCE_REQUEST
+	DIVORCE_REPLY
+	ADD_MENTOR
+	MENTOR_REPLY
+	ALLOW_MENTOR
+	CANCEL_MENTOR
+	TRADE_REQUEST
+	TRADE_REPLY
+	TRADE_GOLD
+	TRADE_CONFIRM
+	TRADE_CANCEL
+	EQUIP_SLOT_ITEM
+	FISHING_CAST
+	FISHING_CHANGE_AUTOCAST
+	ACCEPT_QUEST
+	FINISH_QUEST
+	ABANDON_QUEST
+	SHARE_QUEST
 
-	AcceptReincarnation
-	CancelReincarnation
-	CombineItem
+	ACCEPT_REINCARNATION
+	CANCEL_REINCARNATION
+	COMBINE_ITEM
 
-	SetConcentration
-	AwakeningNeedMaterials
-	AwakeningLockedItem
-	Awakening
-	DisassembleItem
-	DowngradeAwakening
-	ResetAddedItem
+	SET_CONCENTRATION
+	AWAKENING_NEED_MATERIALS
+	AWAKENING_LOCKED_ITEM
+	AWAKENING
+	DISASSEMBLE_ITEM
+	DOWNGRADE_AWAKENING
+	RESET_ADDED_ITEM
 
-	SendMail
-	ReadMail
-	CollectParcel
-	DeleteMail
-	LockMail
-	MailLockedItem
-	MailCost
+	SEND_MAIL
+	READ_MAIL
+	COLLECT_PARCEL
+	DELETE_MAIL
+	LOCK_MAIL
+	MAIL_LOCKED_ITEM
+	MAIL_COST
 
-	UpdateIntelligentCreature
-	IntelligentCreaturePickup
+	UPDATE_INTELLIGENT_CREATURE
+	INTELLIGENT_CREATURE_PICKUP
 
-	AddFriend
-	RemoveFriend
-	RefreshFriends
-	AddMemo
-	GuildBuffUpdate
-	NPCConfirmInput
-	GameshopBuy
+	ADD_FRIEND
+	REMOVE_FRIEND
+	REFRESH_FRIENDS
+	ADD_MEMO
+	GUILD_BUFF_UPDATE
+	NPC_CONFIRM_INPUT
+	GAMESHOP_BUY
 
-	ReportIssue
-	GetRanking
-	Opendoor
+	REPORT_ISSUE
+	GET_RANKING
+	OPENDOOR
 
-	GetRentedItems
-	ItemRentalRequest
-	ItemRentalFee
-	ItemRentalPeriod
-	DepositRentalItem
-	RetrieveRentalItem
-	CancelItemRental
-	ItemRentalLockFee
-	ItemRentalLockItem
-	ConfirmItemRental
+	GET_RENTED_ITEMS
+	ITEM_RENTAL_REQUEST
+	ITEM_RENTAL_FEE
+	ITEM_RENTAL_PERIOD
+	DEPOSIT_RENTAL_ITEM
+	RETRIEVE_RENTAL_ITEM
+	CANCEL_ITEM_RENTAL
+	ITEM_RENTAL_LOCK_FEE
+	ITEM_RENTAL_LOCK_ITEM
+	CONFIRM_ITEM_RENTAL
 )
 
 type ClientVersion struct {
@@ -353,93 +353,70 @@ func (self *Chat) ToBytes() []byte {
 }
 
 type MoveItem struct {
-
 }
 
 type StoreItem struct {
-
 }
 
 type TakeBackItem struct {
-
 }
 
 type MergeItem struct {
-
 }
 
 type EquipItem struct {
-
 }
 
 type RemoveItem struct {
-
 }
 
 type RemoveSlotItem struct {
-
 }
 
 type SplitItem struct {
-
 }
 
 type UseItem struct {
-
 }
 
 type DropItem struct {
-
 }
 
 type DepositRefineItem struct {
-
 }
 
 type RetrieveRefineItem struct {
-
 }
 
 type RefineCancel struct {
-
 }
 
 type RefineItem struct {
-
 }
 
 type CheckRefine struct {
-
 }
 
 type ReplaceWedRing struct {
-
 }
 
 type DepositTradeItem struct {
-
 }
 
 type RetrieveTradeItem struct {
-
 }
 
 type DropGold struct {
-
 }
 
 type PickUp struct {
-
 }
 
 type Inspect struct {
-
 }
 
 type ChangeAMode struct {
-
 }
 
 type ChangePMode struct {
-
 }
