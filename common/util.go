@@ -42,3 +42,10 @@ func Uint64ToBytes(num uint64) []byte {
 	binary.LittleEndian.PutUint64(res, uint64(num))
 	return res
 }
+
+func BoolToBytes(b bool) []byte {
+	if b == true {
+		return []byte{1}
+	}
+	return []byte{0}
+}

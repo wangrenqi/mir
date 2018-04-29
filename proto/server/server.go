@@ -434,17 +434,29 @@ type MapInformation struct {
 
 func (self *MapInformation) ToBytes() []byte {
 	pkgBytes := cm.Uint16ToBytes(MAP_INFORMATION)
-	tmp := []byte{
-		1, 48,                                                                // index
-		14, 66, 105, 99, 104, 111, 110, 80, 114, 111, 118, 105, 110, 99, 101, // filename and title
-		101, 0,                                                               // mini map
-		135, 0,                                                               // big map
-		0, 0,                                                                 // music
-		0,                                                                    // lighting
-		0,                                                                    // fire
-		0,                                                                    // map dark light
+	//tmp := []byte{
+	//	1, 48,                                                                // index
+	//	14, 66, 105, 99, 104, 111, 110, 80, 114, 111, 118, 105, 110, 99, 101, // filename and title
+	//	101, 0,                                                               // mini map
+	//	135, 0,                                                               // big map
+	//	0, 0,                                                                 // music
+	//	0,                                                                    // lighting
+	//	0,                                                                    // fire
+	//	0,                                                                    // map dark light
+	//}
+	//result := append(pkgBytes, tmp...)
+	indexBytes := cm.Uint16ToBytes(self.Index)
+	titleBytes := cm.StringToBytes(self.Title)
+	miniMapBytes := cm.Uint16ToBytes(self.MiniMap)
+	bigMapBytes := cm.Uint16ToBytes(self.BigMap)
+	musicBytes := cm.Uint16ToBytes(self.Music)
+	lightningBytes := cm.BoolToBytes(self.Lightning)
+	fireBytes := cm.BoolToBytes(self.Fire)
+	mapDarkLightBytes := []byte{self.MapDarkLight}
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, indexBytes, titleBytes, miniMapBytes, bigMapBytes, musicBytes, lightningBytes, fireBytes, mapDarkLightBytes} {
+		result = append(result, r...)
 	}
-	result := append(pkgBytes, tmp...)
 	return result
 }
 
@@ -530,34 +542,32 @@ type IntelligentCreatureType byte
 type IntelligentCreaturePickupMode byte
 
 type IntelligentCreatureRules struct {
-	//public int MinimalFullness = 1;
-	//
-	//public bool MousePickupEnabled = false;
-	//public int MousePickupRange = 0;
-	//public bool AutoPickupEnabled = false;
-	//public int AutoPickupRange = 0;
-	//public bool SemiAutoPickupEnabled = false;
-	//public int SemiAutoPickupRange = 0;
-	//
-	//public bool CanProduceBlackStone = false;
-	//
-	//public string Info = "";
-	//public string Info1 = "";
-	//public string Info2 = "";
+	MinimalFullness       uint32 // default 1
+	MousePickupEnabled    bool   // default false
+	MousePickupRange      uint32 // default 0
+	AutoPickupEnabled     bool   // default false
+	AutoPickupRange       uint32 // default 0
+	SemiAutoPickupEnabled bool   // default false
+	SemiAutoPickupRange   uint32 // default 0
+	CanProduceBlackStone  bool   // default false
+	Info                  string // default ""
+	Info1                 string // default ""
+	Info2                 string // default ""
 }
 
+type ItemGrade byte
+
 type IntelligentCreatureItemFilter struct {
-	//public bool PetPickupAll = true;
-	//public bool PetPickupGold = false;
-	//public bool PetPickupWeapons = false;
-	//public bool PetPickupArmours = false;
-	//public bool PetPickupHelmets = false;
-	//public bool PetPickupBoots = false;
-	//public bool PetPickupBelts = false;
-	//public bool PetPickupAccessories = false;
-	//public bool PetPickupOthers = false;
-	//
-	//public ItemGrade PickupGrade = ItemGrade.None;
+	PetPickupAll         bool      // default true
+	PetPickupGold        bool      // default false
+	PetPickupWeapons     bool      // default false
+	PetPickupArmours     bool      // default false
+	PetPickupHelmets     bool      // default false
+	PetPickupBoots       bool      // default false
+	PetPickupBelts       bool      // default false
+	PetPickupAccessories bool      // default false
+	PetPickupOthers      bool      // default false
+	PickupGrade          ItemGrade // default ItemGrade.None;
 }
 
 type ClientIntelligentCreature struct {
