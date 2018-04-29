@@ -475,7 +475,146 @@ func (self *UserInformation) ToBytes() []byte {
 	return result
 }
 
-// ......
+type UserLocation struct {
+
+}
+
+func (self *UserLocation) ToBytes() []byte {
+	return nil
+}
+
+type ObjectPlayer struct {
+
+}
+
+func (self *ObjectPlayer) ToBytes() []byte {
+	return nil
+}
+
+type ObjectRemove struct {
+
+}
+
+type ObjectTurn struct {
+
+}
+
+type ObjectWalk struct {
+
+}
+
+type ObjectRun struct {
+
+}
+
+type Chat struct {
+
+}
+
+type ObjectChat struct {
+
+}
+
+type NewItemInfo struct {
+
+}
+
+type MoveItem struct {
+
+}
+
+type EquipItem struct {
+
+}
+
+type MergeItem struct {
+
+}
+
+type RemoveItem struct {
+
+}
+
+type RemoveSlotItem struct {
+
+}
+
+type TakeBackItem struct {
+
+}
+
+type StoreItem struct {
+
+}
+
+type SplitItem struct {
+
+}
+
+type SplitItem1 struct {
+
+}
+
+type DepositRefineItem struct {
+
+}
+
+type RetrieveRefineItem struct {
+
+}
+
+type RefineCancel struct {
+
+}
+
+type RefineItem struct {
+
+}
+
+type DepositTradeItem struct {
+
+}
+
+type RetrieveTradeItem struct {
+
+}
+
+type UseItem struct {
+
+}
+
+type DropItem struct {
+
+}
+
+type PlayerUpdate struct {
+
+}
+
+type PlayerInspect struct {
+
+}
+
+type LogOutSuccess struct {
+
+}
+
+type LogOutFailed struct {
+
+}
+
+type TimeOfDay struct {
+
+}
+
+type ChangeAMode struct {
+
+}
+
+type ChangePMode struct {
+
+}
+
 
 //type NewQuestInfo struct {
 //

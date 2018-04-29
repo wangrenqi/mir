@@ -351,3 +351,95 @@ func (self *Chat) ToBytes() []byte {
 	bytes := append(index, msgBytes...)
 	return bytes
 }
+
+type MoveItem struct {
+
+}
+
+type StoreItem struct {
+
+}
+
+type TakeBackItem struct {
+
+}
+
+type MergeItem struct {
+
+}
+
+type EquipItem struct {
+
+}
+
+type RemoveItem struct {
+
+}
+
+type RemoveSlotItem struct {
+
+}
+
+type SplitItem struct {
+
+}
+
+type UseItem struct {
+
+}
+
+type DropItem struct {
+
+}
+
+type DepositRefineItem struct {
+
+}
+
+type RetrieveRefineItem struct {
+
+}
+
+type RefineCancel struct {
+
+}
+
+type RefineItem struct {
+
+}
+
+type CheckRefine struct {
+
+}
+
+type ReplaceWedRing struct {
+
+}
+
+type DepositTradeItem struct {
+
+}
+
+type RetrieveTradeItem struct {
+
+}
+
+type DropGold struct {
+
+}
+
+type PickUp struct {
+
+}
+
+type Inspect struct {
+
+}
+
+type ChangeAMode struct {
+
+}
+
+type ChangePMode struct {
+
+}
