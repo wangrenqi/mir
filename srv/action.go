@@ -123,7 +123,9 @@ func (c *client) DeleteCharacter(packet *p.Packet) error {
 	return nil
 }
 func (c *client) StartGame(packet *p.Packet) error {
-
+	SendTo(c.conn, &sp.StartGame{})
+	SendTo(c.conn, &sp.MapInformation{})
+	SendTo(c.conn, &sp.UserInformation{})
 	return nil
 }
 func (c *client) Logout(packet *p.Packet) error {

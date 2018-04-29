@@ -19,6 +19,133 @@ const (
 	WALK
 	RUN
 	CHAT
+
+	MoveItem
+	StoreItem
+	TakeBackItem
+	MergeItem
+	EquipItem
+	RemoveItem
+	RemoveSlotItem
+	SplitItem
+	UseItem
+	DropItem
+	DepositRefineItem
+	RetrieveRefineItem
+	RefineCancel
+	RefineItem
+	CheckRefine
+	ReplaceWedRing
+	DepositTradeItem
+	RetrieveTradeItem
+	DropGold
+	PickUp
+	Inspect
+	ChangeAMode
+	ChangePMode
+	ChangeTrade
+	Attack
+	RangeAttack
+	Harvest
+	CallNPC
+	TalkMonsterNPC
+	BuyItem
+	SellItem
+	CraftItem
+	RepairItem
+	BuyItemBack
+	SRepairItem
+	MagicKey
+	Magic
+	SwitchGroup
+	AddMember
+	DellMember
+	GroupInvite
+	TownRevive
+	SpellToggle
+	ConsignItem
+	MarketSearch
+	MarketRefresh
+	MarketPage
+	MarketBuy
+	MarketGetBack
+	RequestUserName
+	RequestChatItem
+	EditGuildMember
+	EditGuildNotice
+	GuildInvite
+	GuildNameReturn
+	RequestGuildInfo
+	GuildStorageGoldChange
+	GuildStorageItemChange
+	GuildWarReturn
+	MarriageRequest
+	MarriageReply
+	ChangeMarriage
+	DivorceRequest
+	DivorceReply
+	AddMentor
+	MentorReply
+	AllowMentor
+	CancelMentor
+	TradeRequest
+	TradeReply
+	TradeGold
+	TradeConfirm
+	TradeCancel
+	EquipSlotItem
+	FishingCast
+	FishingChangeAutocast
+	AcceptQuest
+	FinishQuest
+	AbandonQuest
+	ShareQuest
+
+	AcceptReincarnation
+	CancelReincarnation
+	CombineItem
+
+	SetConcentration
+	AwakeningNeedMaterials
+	AwakeningLockedItem
+	Awakening
+	DisassembleItem
+	DowngradeAwakening
+	ResetAddedItem
+
+	SendMail
+	ReadMail
+	CollectParcel
+	DeleteMail
+	LockMail
+	MailLockedItem
+	MailCost
+
+	UpdateIntelligentCreature
+	IntelligentCreaturePickup
+
+	AddFriend
+	RemoveFriend
+	RefreshFriends
+	AddMemo
+	GuildBuffUpdate
+	NPCConfirmInput
+	GameshopBuy
+
+	ReportIssue
+	GetRanking
+	Opendoor
+
+	GetRentedItems
+	ItemRentalRequest
+	ItemRentalFee
+	ItemRentalPeriod
+	DepositRentalItem
+	RetrieveRentalItem
+	CancelItemRental
+	ItemRentalLockFee
+	ItemRentalLockItem
+	ConfirmItemRental
 )
 
 type ClientVersion struct {

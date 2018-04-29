@@ -96,5 +96,5 @@ func (c *client) process(pkg *p.Packet) (err error) {
 	case cp.CHAT:
 		return c.Chat(pkg)
 	}
-	return fmt.Errorf("unknow pkg index")
+	return fmt.Errorf("unknow pkg index: %d", pkg.Index)
 }
