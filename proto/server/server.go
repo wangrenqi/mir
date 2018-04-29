@@ -421,12 +421,12 @@ const (
 )
 
 type MapInformation struct {
-	Index        uint32
+	Index        uint16
 	Filename     string
 	Title        string
-	MiniMap      uint32
-	BigMap       uint32
-	Music        uint32
+	MiniMap      uint16
+	BigMap       uint16
+	Music        uint16
 	Lightning    bool
 	Fire         bool
 	MapDarkLight byte
@@ -434,7 +434,16 @@ type MapInformation struct {
 
 func (self *MapInformation) ToBytes() []byte {
 	pkgBytes := cm.Uint16ToBytes(MAP_INFORMATION)
-	tmp := []byte{1, 48, 14, 66, 105, 99, 104, 111, 110, 80, 114, 111, 118, 105, 110, 99, 101, 101, 0, 135, 0, 0, 0, 0, 0, 0}
+	tmp := []byte{
+		1, 48,                                                                // index
+		14, 66, 105, 99, 104, 111, 110, 80, 114, 111, 118, 105, 110, 99, 101, // filename and title
+		101, 0,                                                               // mini map
+		135, 0,                                                               // big map
+		0, 0,                                                                 // music
+		0,                                                                    // lighting
+		0,                                                                    // fire
+		0,                                                                    // map dark light
+	}
 	result := append(pkgBytes, tmp...)
 	return result
 }
