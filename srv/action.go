@@ -124,8 +124,46 @@ func (c *client) DeleteCharacter(packet *p.Packet) error {
 }
 func (c *client) StartGame(packet *p.Packet) error {
 	SendTo(c.conn, &sp.StartGame{})
-	SendTo(c.conn, &sp.MapInformation{})
-	SendTo(c.conn, &sp.UserInformation{})
+	SendTo(c.conn, &sp.MapInformation{
+		Index:        12289,   //uint16 // TODO
+		Title:        "比奇省",   //string
+		MiniMap:      101,     //uint16 // TODO why?
+		BigMap:       135,     //uint16
+		Music:        0,       //uint16
+		Lightning:    false,   //bool
+		Fire:         false,   //bool
+		MapDarkLight: byte(0), //byte
+	})
+	SendTo(c.conn, &sp.UserInformation{
+		ObjectID:                  1,                    //uint32
+		RealId:                    1,                    //uint32
+		Name:                      "测试名字",               //string
+		GuildName:                 "测试工会名字",             //string
+		GuildRank:                 "测试工会Rank",           //string
+		NameColour:                1,                    //uint32
+		Class:                     1,                    //cm.MirClass
+		Gender:                    1,                    //cm.MirGender
+		Level:                     1,                    //uint16
+		Location:                  sp.Point{X: 1, Y: 1}, //Point
+		Direction:                 1,                    //cm.MirDirection
+		Hair:                      1,                    //byte
+		HP:                        1,                    //uint16
+		MP:                        1,                    //uint16
+		Experience:                1,                    //uint64
+		MaxExperience:             1,                    //uint64
+		LevelEffect:               1,              //LevelEffects
+		Inventory:                 1,                    //interface{} // []UserItem
+		Equipment:                 1,                    //interface{} // []UserItem
+		QuestInventory:            1,                    //interface{} // []UserItem
+		Gold:                      1,                    //uint32
+		Credit:                    1,                    //uint32
+		HasExpandedStorage:        false,                //bool
+		ExpandedStorageExpiryTime: 1,                    //uint64      // DateTime
+		Magics:                    1,                    //interface{} // []ClientMagic
+		IntelligentCreatures:      1,                    //interface{} // []ClientIntelligentCreature
+		IntelligentCreatureType:   1,                    //IntelligentCreatureType
+		CreatureSummoned:          false,                //bool
+	})
 	return nil
 }
 func (c *client) Logout(packet *p.Packet) error {

@@ -617,29 +617,55 @@ type UserInformation struct {
 
 func (self *UserInformation) ToBytes() []byte {
 	pkgBytes := cm.Uint16ToBytes(USER_INFORMATION)
-	result := append(pkgBytes, []byte{
-		165, 7, 0, 0,              // object id
-		1, 0, 0, 0,                // real id
-		3, 54, 54, 51,             // name
-		0,                         // guild name
-		0,                         // guild rank
-		255, 255, 255, 255,        // name color
-		0,                         // class
-		0,                         // gender
-		1, 0,                      // level
-		31, 1, 0, 0, 100, 2, 0, 0, // location ??
-		4,                         // direction
-		4,                         // hair
-		18, 0,                     // hp
-		14, 0,                     // mp
-		0, 0, 0, 0, 0, 0, 0, 0,    // experience
-		100, 0, 0, 0, 0, 0, 0, 0,  // max experience
-		0,                         // level effect
-		1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-		99, // intelligent creature type
-		0,  // creature summoned
-	}...)
+	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	realIdBytes := cm.Uint32ToBytes(self.RealId)
+	nameBytes := cm.StringToBytes(self.Name)
+	guildNameBytes := cm.StringToBytes(self.GuildName)
+	guildRankBytes := cm.StringToBytes(self.GuildRank)
+	nameColorBytes := []byte{255, 255, 255, 255}
+	classBytes := []byte{byte(self.Class)}
+	genderBytes := []byte{byte(self.Gender)}
+	levelBytes := cm.Uint16ToBytes(self.Level)
+	locationBytes := []byte{31, 1, 0, 0, 100, 2, 0, 0,} // TODO Point(int32, int32) -> bytes
+	directionBytes := []byte{byte(self.Direction)}
+	hairBytes := []byte{byte(self.Hair)}
+	hpBytes := cm.Uint16ToBytes(self.HP)
+	mpBytes := cm.Uint16ToBytes(self.MP)
+	experienceBytes := cm.Uint64ToBytes(self.Experience)
+	maxExperienceBytes := cm.Uint64ToBytes(self.MaxExperience)
+	levelEffectBytes := []byte{byte(self.LevelEffect)}
+	unknowBytes := []byte{1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	intelligentCreatureTypeBytes := []byte{byte(self.IntelligentCreatureType)}
+	creatureSummonedBytes := cm.BoolToBytes(self.CreatureSummoned)
+
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, objectIdBytes, realIdBytes, nameBytes, guildNameBytes, guildRankBytes, nameColorBytes, classBytes, genderBytes, levelBytes, locationBytes, directionBytes, hairBytes, hpBytes, mpBytes, experienceBytes, maxExperienceBytes, levelEffectBytes, unknowBytes, intelligentCreatureTypeBytes, creatureSummonedBytes} {
+		result = append(result, r...)
+	}
 	return result
+	//result := append(pkgBytes, []byte{
+	//	165, 7, 0, 0,              // object id
+	//	1, 0, 0, 0,                // real id
+	//	3, 54, 54, 51,             // name
+	//	0,                         // guild name
+	//	0,                         // guild rank
+	//	255, 255, 255, 255,        // name color
+	//	0,                         // class
+	//	0,                         // gender
+	//	1, 0,                      // level
+	//	31, 1, 0, 0, 100, 2, 0, 0, // location ??
+	//	4,                         // direction
+	//	4,                         // hair
+	//	18, 0,                     // hp
+	//	14, 0,                     // mp
+	//	0, 0, 0, 0, 0, 0, 0, 0,    // experience
+	//	100, 0, 0, 0, 0, 0, 0, 0,  // max experience
+	//	0,                         // level effect
+	//	1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	//	99, // intelligent creature type
+	//	0,  // creature summoned
+	//}...)
+	//return result
 }
 
 type UserLocation struct {

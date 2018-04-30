@@ -20,6 +20,9 @@ func ReadString(bytes []byte, index int) (int, string) {
 
 func StringToBytes(s string) []byte {
 	// 根据传入的string 返回字节数组，索引为0（即数组开头）的值为数组的长度
+	if s == "" {
+		return []byte{0}
+	}
 	stringBytes := []byte(s)
 	stringBytesLenBytes := []byte{byte(len(stringBytes))}
 	return append(stringBytesLenBytes, stringBytes...)
