@@ -602,15 +602,15 @@ type UserInformation struct {
 	Experience                uint64
 	MaxExperience             uint64
 	LevelEffect               LevelEffects
-	Inventory                 []UserItem
-	Equipment                 []UserItem
-	QuestInventory            []UserItem
+	Inventory                 interface{} // []UserItem
+	Equipment                 interface{} // []UserItem
+	QuestInventory            interface{} // []UserItem
 	Gold                      uint32
 	Credit                    uint32
 	HasExpandedStorage        bool
-	ExpandedStorageExpiryTime uint64 // DateTime
-	Magics                    []ClientMagic
-	IntelligentCreatures      []ClientIntelligentCreature
+	ExpandedStorageExpiryTime uint64      // DateTime
+	Magics                    interface{} // []ClientMagic
+	IntelligentCreatures      interface{} // []ClientIntelligentCreature
 	IntelligentCreatureType   IntelligentCreatureType
 	CreatureSummoned          bool
 }

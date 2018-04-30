@@ -49,3 +49,11 @@ func BoolToBytes(b bool) []byte {
 	}
 	return []byte{0}
 }
+
+func BytesToUint16(bytes []byte) uint16 {
+	return binary.LittleEndian.Uint16(bytes)
+}
+
+func BytesToUint32(bytes []byte) uint32 {
+	return binary.LittleEndian.Uint32(bytes)
+}
