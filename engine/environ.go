@@ -1,4 +1,4 @@
-package env
+package engine
 
 import (
 	"mir/orm"
@@ -8,6 +8,11 @@ import (
 type Environ struct {
 	Db   *gorm.DB
 	Maps interface{}
+}
+
+type Map struct {
+	Witdh  int
+	Height int
 }
 
 func InitEnviron() *Environ {
