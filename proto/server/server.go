@@ -467,7 +467,144 @@ type Point struct {
 
 type LevelEffects byte
 
+type RandomItemStat struct {
+	MAX_DURA_CHANCE             byte
+	MAX_DURA_STAT_CHANCE        byte
+	MAX_DURA_MAX_STAT           byte
+	MAX_AC_CHANCE               byte
+	MAX_AC_STAT_CHANCE          byte
+	MAX_AC_MAX_STAT             byte
+	MAX_MAC_CHANCE              byte
+	MAX_MAC_STAT_CHANCE         byte
+	MAX_MAC_MAX_STAT            byte
+	MAX_DC_CHANCE               byte
+	MAX_DC_STAT_CHANCE          byte
+	MAX_DC_MAX_STAT             byte
+	MAX_MC_CHANCE               byte
+	MAX_MC_STAT_CHANCE          byte
+	MAX_MC_MAX_STAT             byte
+	MAX_SC_CHANCE               byte
+	MAX_SC_STAT_CHANCE          byte
+	MAX_SC_MAX_STAT             byte
+	ACCURACY_CHANCE             byte
+	ACCURACY_STAT_CHANCE        byte
+	ACCURACY_MAX_STAT           byte
+	AGILITY_CHANCE              byte
+	AGILITY_STAT_CHANCE         byte
+	AGILITY_MAX_STAT            byte
+	HP_CHANCE                   byte
+	HP_STAT_CHANCE              byte
+	HP_MAX_STAT                 byte
+	MP_CHANCE                   byte
+	MP_STAT_CHANCE              byte
+	MP_MAX_STAT                 byte
+	STRONG_CHANCE               byte
+	STRONG_STAT_CHANCE          byte
+	STRONG_MAX_STAT             byte
+	MAGIC_RESIST_CHANCE         byte
+	MAGIC_RESIST_STAT_CHANCE    byte
+	MAGIC_RESIST_MAX_STAT       byte
+	POISON_RESIST_CHANCE        byte
+	POISON_RESIST_STAT_CHANCE   byte
+	POISON_RESIST_MAX_STAT      byte
+	HP_RECOV_CHANCE             byte
+	HP_RECOV_STAT_CHANCE        byte
+	HP_RECOV_MAX_STAT           byte
+	MP_RECOV_CHANCE             byte
+	MP_RECOV_STAT_CHANCE        byte
+	MP_RECOV_MAX_STAT           byte
+	POISON_RECOV_CHANCE         byte
+	POISON_RECOV_STAT_CHANCE    byte
+	POISON_RECOV_MAX_STAT       byte
+	CRITICAL_RATE_CHANCE        byte
+	CRITICAL_RATE_STAT_CHANCE   byte
+	CRITICAL_RATE_MAX_STAT      byte
+	CRITICAL_DAMAGE_CHANCE      byte
+	CRITICAL_DAMAGE_STAT_CHANCE byte
+	CRITICAL_DAMAGE_MAX_STAT    byte
+	FREEZE_CHANCE               byte
+	FREEZE_STAT_CHANCE          byte
+	FREEZE_MAX_STAT             byte
+	POISON_ATTACK_CHANCE        byte
+	POISON_ATTACK_STAT_CHANCE   byte
+	POISON_ATTACK_MAX_STAT      byte
+	ATTACK_SPEED_CHANCE         byte
+	ATTACK_SPEED_STAT_CHANCE    byte
+	ATTACK_SPEED_MAX_STAT       byte
+	LUCK_CHANCE                 byte
+	LUCK_STAT_CHANCE            byte
+	LUCK_MAX_STAT               byte
+	CURSE_CHANCE                byte
+}
+
 type ItemInfo struct {
+	Index            uint32
+	Name             string
+	Type             cm.ItemType
+	Grade            ItemGrade
+	RequiredType     cm.RequiredType   // default Level
+	RequiredClass    cm.RequiredClass  // default None
+	RequiredGender   cm.RequiredGender // default None
+	Set              cm.ItemSet
+	Shape            uint16
+	Weight           byte
+	Light            byte
+	RequiredAmount   byte
+	Image            uint16
+	Durability       uint16
+	Price            uint16
+	StackSize        uint16 //default 1;
+	MinAC            byte
+	MaxAC            byte
+	MinMAC           byte
+	MaxMAC           byte
+	MinDC            byte
+	MaxDC            byte
+	MinMC            byte
+	MaxMC            byte
+	MinSC            byte
+	MaxSC            byte
+	Accuracy         byte
+	Agility          byte
+	HP               uint16
+	MP               uint16
+	AttackSpeed      int8 // 需要是负数
+	Luck             int8
+	BagWeight        byte
+	HandWeight       byte
+	WearWeight       byte
+	StartItem        bool
+	Effect           byte
+	Strong           byte
+	MagicResist      byte
+	PoisonResist     byte
+	HealthRecovery   byte
+	SpellRecovery    byte
+	PoisonRecovery   byte
+	HPrate           byte
+	MPrate           byte
+	CriticalRate     byte
+	CriticalDamage   byte
+	NeedIdentify     bool
+	ShowGroupPickup  bool
+	GlobalDropNotify bool
+	ClassBased       bool
+	LevelBased       bool
+	CanMine          bool
+	CanFastRun       bool
+	CanAwakening     bool
+	MaxAcRate        byte
+	MaxMacRate       byte
+	Holy             byte
+	Freezing         byte
+	PoisonAttack     byte
+	HpDrainRate      byte
+	Bind             uint16 // BindMode 这个枚举太大了，直接用uint16 // default none
+	Reflect          byte
+	Unique           uint16 // SpecialItemMode ?? // default None;
+	RandomStatsId    byte
+	RandomStats      RandomItemStat
+	ToolTip          string //default ""
 }
 
 type RefinedValue byte
