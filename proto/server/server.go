@@ -799,6 +799,15 @@ func (self *UserInformation) ToBytes() []byte {
 }
 
 type UserLocation struct {
+	Location  Point
+	Direction cm.MirDirection
+}
+
+func (self *UserLocation) ToBytes() []byte {
+	locationBytes := self.Location.ToBytes()
+	directionBytes := []byte{byte(self.Direction)}
+	result := append(locationBytes, directionBytes...)
+	return result
 }
 
 func (self *UserLocation) ToBytes() []byte {
@@ -816,6 +825,20 @@ type ObjectRemove struct {
 }
 
 type ObjectTurn struct {
+	ObjectID  uint32
+	Location  Point
+	Direction cm.MirDirection
+}
+
+func (self *ObjectTurn) ToBytes() []byte {
+	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	locationBytes := self.Location.ToBytes()
+	directionBytes := []byte{byte(self.Direction)}
+	result := make([]byte, 0)
+	for _, r := range [][]byte{objectIdBytes, locationBytes, directionBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type ObjectWalk struct {
