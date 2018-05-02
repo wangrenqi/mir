@@ -519,11 +519,83 @@ type RandomItemStat struct {
 	CURSE_CHANCE                byte
 }
 
+func (self *RandomItemStat) ToBytes() []byte {
+	return []byte{
+		self.MAX_DURA_CHANCE,
+		self.MAX_DURA_STAT_CHANCE,
+		self.MAX_DURA_MAX_STAT,
+		self.MAX_AC_CHANCE,
+		self.MAX_AC_STAT_CHANCE,
+		self.MAX_AC_MAX_STAT,
+		self.MAX_MAC_CHANCE,
+		self.MAX_MAC_STAT_CHANCE,
+		self.MAX_MAC_MAX_STAT,
+		self.MAX_DC_CHANCE,
+		self.MAX_DC_STAT_CHANCE,
+		self.MAX_DC_MAX_STAT,
+		self.MAX_MC_CHANCE,
+		self.MAX_MC_STAT_CHANCE,
+		self.MAX_MC_MAX_STAT,
+		self.MAX_SC_CHANCE,
+		self.MAX_SC_STAT_CHANCE,
+		self.MAX_SC_MAX_STAT,
+		self.ACCURACY_CHANCE,
+		self.ACCURACY_STAT_CHANCE,
+		self.ACCURACY_MAX_STAT,
+		self.AGILITY_CHANCE,
+		self.AGILITY_STAT_CHANCE,
+		self.AGILITY_MAX_STAT,
+		self.HP_CHANCE,
+		self.HP_STAT_CHANCE,
+		self.HP_MAX_STAT,
+		self.MP_CHANCE,
+		self.MP_STAT_CHANCE,
+		self.MP_MAX_STAT,
+		self.STRONG_CHANCE,
+		self.STRONG_STAT_CHANCE,
+		self.STRONG_MAX_STAT,
+		self.MAGIC_RESIST_CHANCE,
+		self.MAGIC_RESIST_STAT_CHANCE,
+		self.MAGIC_RESIST_MAX_STAT,
+		self.POISON_RESIST_CHANCE,
+		self.POISON_RESIST_STAT_CHANCE,
+		self.POISON_RESIST_MAX_STAT,
+		self.HP_RECOV_CHANCE,
+		self.HP_RECOV_STAT_CHANCE,
+		self.HP_RECOV_MAX_STAT,
+		self.MP_RECOV_CHANCE,
+		self.MP_RECOV_STAT_CHANCE,
+		self.MP_RECOV_MAX_STAT,
+		self.POISON_RECOV_CHANCE,
+		self.POISON_RECOV_STAT_CHANCE,
+		self.POISON_RECOV_MAX_STAT,
+		self.CRITICAL_RATE_CHANCE,
+		self.CRITICAL_RATE_STAT_CHANCE,
+		self.CRITICAL_RATE_MAX_STAT,
+		self.CRITICAL_DAMAGE_CHANCE,
+		self.CRITICAL_DAMAGE_STAT_CHANCE,
+		self.CRITICAL_DAMAGE_MAX_STAT,
+		self.FREEZE_CHANCE,
+		self.FREEZE_STAT_CHANCE,
+		self.FREEZE_MAX_STAT,
+		self.POISON_ATTACK_CHANCE,
+		self.POISON_ATTACK_STAT_CHANCE,
+		self.POISON_ATTACK_MAX_STAT,
+		self.ATTACK_SPEED_CHANCE,
+		self.ATTACK_SPEED_STAT_CHANCE,
+		self.ATTACK_SPEED_MAX_STAT,
+		self.LUCK_CHANCE,
+		self.LUCK_STAT_CHANCE,
+		self.LUCK_MAX_STAT,
+		self.CURSE_CHANCE,
+	}
+}
+
 type ItemInfo struct {
 	Index            uint32
 	Name             string
 	Type             cm.ItemType
-	Grade            ItemGrade
+	Grade            cm.ItemGrade
 	RequiredType     cm.RequiredType   // default Level
 	RequiredClass    cm.RequiredClass  // default None
 	RequiredGender   cm.RequiredGender // default None
@@ -589,7 +661,10 @@ type ItemInfo struct {
 	ToolTip          string //default ""
 }
 
-type RefinedValue byte
+// TODO
+func (self *ItemInfo) ToBytes() []byte {
+	return nil
+}
 
 type UserItem struct {
 	UniqueID       uint64
@@ -620,7 +695,7 @@ type UserItem struct {
 	PoisonAttack   byte
 	AttackSpeed    byte
 	Luck           byte
-	RefinedValue   RefinedValue
+	RefinedValue   cm.RefinedValue
 	RefineAdded    byte
 	DuraChanged    bool
 	SoulBoundId    uint32
@@ -634,10 +709,13 @@ type UserItem struct {
 	//public Awake Awake = new Awake();
 }
 
-type Spell byte
+// TODO
+func (self *UserItem) ToBytes() []byte {
+	return nil
+}
 
 type ClientMagic struct {
-	Spell       Spell
+	Spell       cm.Spell
 	BaseCost    byte
 	LevelCost   byte
 	Icon        byte
@@ -654,6 +732,11 @@ type ClientMagic struct {
 	IsTempSpell bool
 	CastTime    uint64
 	Delay       uint64
+}
+
+// TODO
+func (self *ClientMagic) ToBytes() []byte {
+	return nil
 }
 
 type IntelligentCreatureRules struct {
@@ -675,19 +758,17 @@ func (self *IntelligentCreatureRules) ToBytes() []byte {
 	return nil
 }
 
-type ItemGrade byte
-
 type IntelligentCreatureItemFilter struct {
-	PetPickupAll         bool      // default true
-	PetPickupGold        bool      // default false
-	PetPickupWeapons     bool      // default false
-	PetPickupArmours     bool      // default false
-	PetPickupHelmets     bool      // default false
-	PetPickupBoots       bool      // default false
-	PetPickupBelts       bool      // default false
-	PetPickupAccessories bool      // default false
-	PetPickupOthers      bool      // default false
-	PickupGrade          ItemGrade // default ItemGrade.None;
+	PetPickupAll         bool         // default true
+	PetPickupGold        bool         // default false
+	PetPickupWeapons     bool         // default false
+	PetPickupArmours     bool         // default false
+	PetPickupHelmets     bool         // default false
+	PetPickupBoots       bool         // default false
+	PetPickupBelts       bool         // default false
+	PetPickupAccessories bool         // default false
+	PetPickupOthers      bool         // default false
+	PickupGrade          cm.ItemGrade // default ItemGrade.None;
 }
 
 // TODO
@@ -845,15 +926,71 @@ func (self *ObjectTurn) ToBytes() []byte {
 }
 
 type ObjectWalk struct {
+	ObjectID  uint32
+	Location  Point
+	Direction cm.MirDirection
+}
+
+func (self *ObjectWalk) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(OBJECT_WALK)
+	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	locationBytes := self.Location.ToBytes()
+	directionBytes := []byte{byte(self.Direction)}
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, objectIdBytes, locationBytes, directionBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type ObjectRun struct {
+	ObjectID  uint32
+	Location  Point
+	Direction cm.MirDirection
+}
+
+func (self *ObjectRun) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(OBJECT_RUN)
+	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	locationBytes := self.Location.ToBytes()
+	directionBytes := []byte{byte(self.Direction)}
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, objectIdBytes, locationBytes, directionBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type Chat struct {
+	Message string
+	Type    cm.ChatType
+}
+
+func (self *Chat) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(CHAT)
+	messageBytes := cm.StringToBytes(self.Message)
+	typeBytes := []byte{byte(self.Type)}
+	tmp := append(pkgBytes, messageBytes...)
+	result := append(tmp, typeBytes...)
+	return result
 }
 
 type ObjectChat struct {
+	ObjectID uint32
+	Text     string
+	Type     cm.ChatType
+}
+
+func (self *ObjectChat) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(OBJECT_CHAT)
+	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	messageBytes := cm.StringToBytes(self.Text)
+	typeBytes := []byte{byte(self.Type)}
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, objectIdBytes, messageBytes, typeBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type NewItemInfo struct {

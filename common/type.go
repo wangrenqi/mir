@@ -228,3 +228,46 @@ const (
 	ICP_Automatic     IntelligentCreaturePickupMode = iota
 	ICP_SemiAutomatic
 )
+
+type ChatType byte
+
+const (
+	CT_NORMAL       ChatType = iota
+	CT_SHOUT
+	CT_SYSTEM
+	CT_HINT
+	CT_ANNOUNCEMENT
+	CT_GROUP
+	CT_WHISPERiN
+	CT_WHISPERoUT
+	CT_GUILD
+	CT_TRAINER
+	CT_LEVELuP
+	CT_SYSTEM2
+	CT_RELATIONSHIP
+	CT_MENTOR
+	CT_SHOUT2
+	CT_SHOUT3
+)
+
+type ItemGrade byte
+
+const (
+	IG_NONE      ItemGrade = iota
+	IG_COMMON
+	IG_RARE
+	IG_LEGENDARY
+	IG_MYTHICAL
+)
+
+type RefinedValue byte
+
+const (
+	RV_NONE RefinedValue = iota
+	RV_DC
+	RV_MC
+	RV_SC
+)
+
+// TODO 这个太多
+type Spell byte
