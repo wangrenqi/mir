@@ -192,3 +192,39 @@ const (
 	SIM_BLINK        = 0x800
 )
 
+//type LevelEffects byte
+
+const (
+	LE_NONE        = 0
+	LE_MIST        = 0x0001
+	LE_RED_DRAGON  = 0x0002
+	LE_BLUE_DRAGON = 0x0004
+)
+
+type IntelligentCreatureType byte
+
+const
+(
+	ICT_BABY_PIG      IntelligentCreatureType = iota
+	ICT_CHICK
+	ICT_KITTEN
+	ICT_BABY_SKELETON
+	ICT_BAEKDON
+	ICT_WIMAEN
+	ICT_BLACK_KITTEN
+	ICT_BABY_DRAGON
+	ICT_OLYMPIC_FLAME
+	ICT_BABY_SNOW_MAN
+	ICT_FROG
+	ICT_BABY_MONKEY
+	ICT_ANGRY_BIRD
+	ICT_FOXEY
+	ICT_NONE          = 99
+)
+
+type IntelligentCreaturePickupMode byte
+
+const (
+	ICP_Automatic     IntelligentCreaturePickupMode = iota
+	ICP_SemiAutomatic
+)

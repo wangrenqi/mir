@@ -123,6 +123,9 @@ func (c *client) DeleteCharacter(packet *p.Packet) error {
 	return nil
 }
 func (c *client) StartGame(packet *p.Packet) error {
+	if c.status != SELECT {
+		return nil
+	}
 	SendTo(c.conn, &sp.StartGame{})
 	SendTo(c.conn, &sp.MapInformation{
 		Index:        12289,   //uint16 // TODO
@@ -151,7 +154,7 @@ func (c *client) StartGame(packet *p.Packet) error {
 		MP:                        1,                    //uint16
 		Experience:                1,                    //uint64
 		MaxExperience:             1,                    //uint64
-		LevelEffect:               1,              //LevelEffects
+		LevelEffect:               1,                    //LevelEffects
 		Inventory:                 1,                    //interface{} // []UserItem
 		Equipment:                 1,                    //interface{} // []UserItem
 		QuestInventory:            1,                    //interface{} // []UserItem
@@ -161,9 +164,10 @@ func (c *client) StartGame(packet *p.Packet) error {
 		ExpandedStorageExpiryTime: 1,                    //uint64      // DateTime
 		Magics:                    1,                    //interface{} // []ClientMagic
 		IntelligentCreatures:      1,                    //interface{} // []ClientIntelligentCreature
-		IntelligentCreatureType:   1,                    //IntelligentCreatureType
+		IntelligentCreatureType:   1,                    //cm.IntelligentCreatureType
 		CreatureSummoned:          false,                //bool
 	})
+	c.status = GAME
 	return nil
 }
 func (c *client) Logout(packet *p.Packet) error {

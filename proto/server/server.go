@@ -271,17 +271,7 @@ func (self *ClientVersion) ToBytes() []byte {
 type Disconnect struct{}
 
 type NewAccount struct {
-	/*
- 	* 0: Disabled
- 	* 1: Bad AccountID
- 	* 2: Bad Password
- 	* 3: Bad Email
- 	* 4: Bad Name
- 	* 5: Bad Question
- 	* 6: Bad Answer
- 	* 7: Account Exists.
- 	* 8: Success
- 	*/
+	/** 0: Disabled 1: Bad AccountID 2: Bad Password 3: Bad Email 4: Bad Name 5: Bad Question 6: Bad Answer 7: Account Exists. 8: Success*/
 	Result byte
 }
 
@@ -305,13 +295,7 @@ type ChangePasswordBanned struct {
 }
 
 type Login struct {
-	/*
-	  * 0: Disabled
-	  * 1: Bad AccountID
-	  * 2: Bad Password
-	  * 3: Account Not Exist
-	  * 4: Wrong Password
-	  */
+	/** 0: Disabled 1: Bad AccountID 2: Bad Password 3: Account Not Exist 4: Wrong Password*/
 	Result byte
 }
 
@@ -352,14 +336,7 @@ func (self *LoginSuccess) ToBytes() []byte {
 }
 
 type NewCharacter struct {
-	/*
-	  * 0: Disabled.
-	  * 1: Bad Character Name
-	  * 2: Bad Gender
-	  * 3: Bad Class
-	  * 4: Max Characters
-	  * 5: Character Exists.
-	  * */
+	/** 0: Disabled. 1: Bad Character Name 2: Bad Gender 3: Bad Class 4: Max Characters 5: Character Exists.**/
 	Result byte
 }
 
@@ -465,7 +442,12 @@ type Point struct {
 	Y uint32
 }
 
-type LevelEffects byte
+func (self *Point) ToBytes() []byte {
+	// TODO 未验证
+	XBytes := cm.Uint32ToBytes(self.X)
+	YBytes := cm.Uint32ToBytes(self.Y)
+	return append(XBytes, YBytes...)
+}
 
 type RandomItemStat struct {
 	MAX_DURA_CHANCE             byte
@@ -674,10 +656,6 @@ type ClientMagic struct {
 	Delay       uint64
 }
 
-type IntelligentCreatureType byte
-
-type IntelligentCreaturePickupMode byte
-
 type IntelligentCreatureRules struct {
 	MinimalFullness       uint32 // default 1
 	MousePickupEnabled    bool   // default false
@@ -690,6 +668,11 @@ type IntelligentCreatureRules struct {
 	Info                  string // default ""
 	Info1                 string // default ""
 	Info2                 string // default ""
+}
+
+// TODO
+func (self *IntelligentCreatureRules) ToBytes() []byte {
+	return nil
 }
 
 type ItemGrade byte
@@ -707,8 +690,13 @@ type IntelligentCreatureItemFilter struct {
 	PickupGrade          ItemGrade // default ItemGrade.None;
 }
 
+// TODO
+func (self *IntelligentCreatureItemFilter) ToBytes() []byte {
+	return nil
+}
+
 type ClientIntelligentCreature struct {
-	PetType          IntelligentCreatureType
+	PetType          cm.IntelligentCreatureType
 	Icon             uint32
 	CustomName       string
 	Fullness         uint32
@@ -716,9 +704,14 @@ type ClientIntelligentCreature struct {
 	ExpireTime       uint64 // long
 	BlackstoneTime   uint64
 	MaintainFoodTime uint64
-	petMode          IntelligentCreaturePickupMode // default SemiAutomatic
+	petMode          cm.IntelligentCreaturePickupMode // default SemiAutomatic
 	CreatureRules    IntelligentCreatureRules
 	Filter           IntelligentCreatureItemFilter
+}
+
+// TODO
+func (self *ClientIntelligentCreature) ToBytes() []byte {
+	return nil
 }
 
 type UserInformation struct {
@@ -738,8 +731,8 @@ type UserInformation struct {
 	MP                        uint16
 	Experience                uint64
 	MaxExperience             uint64
-	LevelEffect               LevelEffects
-	Inventory                 interface{} // []UserItem
+	LevelEffect               byte        // LevelEffects
+	Inventory                 interface{} // []UserItem				// TODO UNKNOW
 	Equipment                 interface{} // []UserItem
 	QuestInventory            interface{} // []UserItem
 	Gold                      uint32
@@ -747,8 +740,8 @@ type UserInformation struct {
 	HasExpandedStorage        bool
 	ExpandedStorageExpiryTime uint64      // DateTime
 	Magics                    interface{} // []ClientMagic
-	IntelligentCreatures      interface{} // []ClientIntelligentCreature
-	IntelligentCreatureType   IntelligentCreatureType
+	IntelligentCreatures      interface{} // []ClientIntelligentCreature // TODO
+	IntelligentCreatureType   cm.IntelligentCreatureType
 	CreatureSummoned          bool
 }
 
@@ -763,7 +756,7 @@ func (self *UserInformation) ToBytes() []byte {
 	classBytes := []byte{byte(self.Class)}
 	genderBytes := []byte{byte(self.Gender)}
 	levelBytes := cm.Uint16ToBytes(self.Level)
-	locationBytes := []byte{31, 1, 0, 0, 100, 2, 0, 0,} // TODO Point(int32, int32) -> bytes
+	locationBytes := self.Location.ToBytes()
 	directionBytes := []byte{byte(self.Direction)}
 	hairBytes := []byte{byte(self.Hair)}
 	hpBytes := cm.Uint16ToBytes(self.HP)
