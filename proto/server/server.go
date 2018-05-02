@@ -804,9 +804,11 @@ type UserLocation struct {
 }
 
 func (self *UserLocation) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(USER_LOCATION)
 	locationBytes := self.Location.ToBytes()
 	directionBytes := []byte{byte(self.Direction)}
-	result := append(locationBytes, directionBytes...)
+	tmp := append(pkgBytes, locationBytes...)
+	result := append(tmp, directionBytes...)
 	return result
 }
 
@@ -831,11 +833,12 @@ type ObjectTurn struct {
 }
 
 func (self *ObjectTurn) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(OBJECT_TURN)
 	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
 	locationBytes := self.Location.ToBytes()
 	directionBytes := []byte{byte(self.Direction)}
 	result := make([]byte, 0)
-	for _, r := range [][]byte{objectIdBytes, locationBytes, directionBytes} {
+	for _, r := range [][]byte{pkgBytes, objectIdBytes, locationBytes, directionBytes} {
 		result = append(result, r...)
 	}
 	return result
