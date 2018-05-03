@@ -27,6 +27,20 @@ func SendTo(conn net.Conn, pkg Packet) {
 	conn.Write(bytes)
 }
 
+func Broadcast(self *client, pkg Packet) {
+	// TODO
+	//根据消息类型 如果是全局就走所有人广播
+	//否则Area Of Interesting
+	clients := GetClients()
+
+	for id, client := range clients {
+		if self.id == id {
+			continue
+		}
+		SendTo(client.conn, pkg)
+	}
+}
+
 func (c *client) ClientVersion(pkg *p.Packet) error {
 	// TODO check client version
 	SendTo(c.conn, &sp.ClientVersion{Result: byte(1)})
@@ -170,24 +184,25 @@ func (c *client) StartGame(packet *p.Packet) error {
 	c.status = GAME
 	return nil
 }
-func (c *client) Logout(packet *p.Packet) error {
+func (c *client) Logout(pkg *p.Packet) error {
 
 	return nil
 }
-func (c *client) Turn(packet *p.Packet) error {
+func (c *client) Turn(pkg *p.Packet) error {
+	Broadcast(c, &sp.ObjectTurn{})
+	SendTo(c.conn, &sp.UserLocation{})
+	return nil
+}
+func (c *client) Walk(pkg *p.Packet) error {
 
 	return nil
 }
-func (c *client) Walk(packet *p.Packet) error {
-
-	return nil
-}
-func (c *client) Run(packet *p.Packet) error {
+func (c *client) Run(pkg *p.Packet) error {
 	return nil
 
 }
-func (c *client) Chat(packet *p.Packet) error {
-	msg := packet.Data.(*cp.Chat).Message
+func (c *client) Chat(pkg *p.Packet) error {
+	msg := pkg.Data.(*cp.Chat).Message
 	log.Println("received client message:", msg)
 	return nil
 }

@@ -21,6 +21,8 @@ type client struct {
 }
 
 var id int32 = 0
+var clients = make(map[int32]*client)
+// TODO map 换成atomic map
 
 func HandleClient(conn net.Conn, env *engine.Environ) {
 	reqChan := make(chan []byte, 1024)
@@ -33,6 +35,7 @@ func HandleClient(conn net.Conn, env *engine.Environ) {
 		info:    make(map[string]interface{}),
 	}
 	atomic.AddInt32(&id, 1)
+	clients[id] = client
 	go client.run()
 
 	conn.Write(p.Pack((&sp.Connected{}).ToBytes()))
@@ -46,6 +49,10 @@ func HandleClient(conn net.Conn, env *engine.Environ) {
 		}
 		tmpBuffer = p.UnPack(append(tmpBuffer, buffer[:n]...), reqChan)
 	}
+}
+
+func GetClients() map[int32]*client {
+	return clients
 }
 
 func (c *client) run() {

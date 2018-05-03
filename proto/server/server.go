@@ -893,10 +893,6 @@ func (self *UserLocation) ToBytes() []byte {
 	return result
 }
 
-func (self *UserLocation) ToBytes() []byte {
-	return nil
-}
-
 type ObjectPlayer struct {
 }
 
