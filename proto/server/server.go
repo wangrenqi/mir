@@ -437,15 +437,6 @@ func (self *MapInformation) ToBytes() []byte {
 	return result
 }
 
-type Point cm.Point
-
-func (self *Point) ToBytes() []byte {
-	// TODO 未验证
-	XBytes := cm.Uint32ToBytes(uint32(self.X))
-	YBytes := cm.Uint32ToBytes(uint32(self.Y))
-	return append(XBytes, YBytes...)
-}
-
 type RandomItemStat struct {
 	MAX_DURA_CHANCE             byte
 	MAX_DURA_STAT_CHANCE        byte
@@ -802,7 +793,7 @@ type UserInformation struct {
 	Class                     cm.MirClass
 	Gender                    cm.MirGender
 	Level                     uint16
-	Location                  Point
+	Location                  cm.Point
 	Direction                 cm.MirDirection
 	Hair                      byte
 	HP                        uint16
@@ -877,7 +868,7 @@ func (self *UserInformation) ToBytes() []byte {
 }
 
 type UserLocation struct {
-	Location  Point
+	Location  cm.Point
 	Direction cm.MirDirection
 }
 
@@ -902,7 +893,7 @@ type ObjectRemove struct {
 
 type ObjectTurn struct {
 	ObjectID  uint32
-	Location  Point
+	Location  cm.Point
 	Direction cm.MirDirection
 }
 
@@ -920,7 +911,7 @@ func (self *ObjectTurn) ToBytes() []byte {
 
 type ObjectWalk struct {
 	ObjectID  uint32
-	Location  Point
+	Location  cm.Point
 	Direction cm.MirDirection
 }
 
@@ -938,7 +929,7 @@ func (self *ObjectWalk) ToBytes() []byte {
 
 type ObjectRun struct {
 	ObjectID  uint32
-	Location  Point
+	Location  cm.Point
 	Direction cm.MirDirection
 }
 

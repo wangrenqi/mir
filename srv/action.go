@@ -5,6 +5,7 @@ import (
 	p "mir/proto"
 	cp "mir/proto/client"
 	sp "mir/proto/server"
+	cm "mir/common"
 	"log"
 	"net"
 )
@@ -166,7 +167,7 @@ func (c *client) StartGame(pkg *p.Packet) error {
 		Class:                     1,                    //cm.MirClass
 		Gender:                    1,                    //cm.MirGender
 		Level:                     1,                    //uint16
-		Location:                  sp.Point{X: 1, Y: 1}, //Point
+		Location:                  cm.Point{X: 1, Y: 1}, //Point
 		Direction:                 1,                    //cm.MirDirection
 		Hair:                      1,                    //byte
 		HP:                        1,                    //uint16
