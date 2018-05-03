@@ -437,15 +437,12 @@ func (self *MapInformation) ToBytes() []byte {
 	return result
 }
 
-type Point struct {
-	X uint32
-	Y uint32
-}
+type Point cm.Point
 
 func (self *Point) ToBytes() []byte {
 	// TODO 未验证
-	XBytes := cm.Uint32ToBytes(self.X)
-	YBytes := cm.Uint32ToBytes(self.Y)
+	XBytes := cm.Uint32ToBytes(uint32(self.X))
+	YBytes := cm.Uint32ToBytes(uint32(self.Y))
 	return append(XBytes, YBytes...)
 }
 

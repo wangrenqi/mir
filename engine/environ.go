@@ -14,13 +14,6 @@ type Environ struct {
 	Maps interface{}
 }
 
-type Point struct {
-	//Index int // Map Points数组里的索引
-	X     int
-	Y     int
-	Valid bool
-}
-
 type Map struct {
 	Witdh  uint16
 	Height uint16
@@ -64,7 +57,7 @@ func getMaps(path string) []Map {
 }
 
 func saveToFile(tmp Map) {
-	points := tmp.Points.([]Point)
+	points := tmp.Points.([]cm.Point)
 	str := ""
 	index := 0
 	for _, p := range points {
@@ -103,7 +96,7 @@ func getMapV1(bytes []byte) Map {
 
 	offset = 54
 	index := 0
-	points := make([]Point, int(width)*int(height))
+	points := make([]cm.Point, int(width)*int(height))
 	for i := 0; i < int(width); i ++ {
 		for j := 0; j < int(height); j ++ {
 			valid := true
@@ -114,7 +107,7 @@ func getMapV1(bytes []byte) Map {
 			if ((cm.BytesToUint16(bytes[offset+6:offset+8]) ^ xor) & 0x8000) != 0 {
 				valid = false
 			}
-			p := Point{X: i, Y: j, Valid: valid}
+			p := cm.Point{X: int32(i), Y: int32(j), Valid: valid}
 			points[index] = p
 			index ++
 			offset += 15

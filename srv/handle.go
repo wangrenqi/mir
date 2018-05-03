@@ -18,6 +18,7 @@ type client struct {
 	env     *engine.Environ
 	status  int
 	info    map[string]interface{}
+	player  *engine.PlayerObject
 }
 
 var id int32 = 0
@@ -33,6 +34,7 @@ func HandleClient(conn net.Conn, env *engine.Environ) {
 		env:     env,
 		status:  0,
 		info:    make(map[string]interface{}),
+		player:  nil,
 	}
 	atomic.AddInt32(&id, 1)
 	clients[id] = client

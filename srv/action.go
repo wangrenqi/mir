@@ -132,14 +132,19 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 	SendTo(c.conn, &sp.NewCharacterSuccess{CharInfo: *characterInfo})
 	return nil
 }
-func (c *client) DeleteCharacter(packet *p.Packet) error {
+func (c *client) DeleteCharacter(pkg *p.Packet) error {
 
 	return nil
 }
-func (c *client) StartGame(packet *p.Packet) error {
+func (c *client) StartGame(pkg *p.Packet) error {
 	if c.status != SELECT {
 		return nil
 	}
+
+	// TODO get player by username and characterIndex
+	// characterIndex := pkg.Data.(*cp.StartGame).CharacterIndex
+	//c.player = &engine.Player{}
+
 	SendTo(c.conn, &sp.StartGame{})
 	SendTo(c.conn, &sp.MapInformation{
 		Index:        12289,   //uint16 // TODO
@@ -194,12 +199,17 @@ func (c *client) Turn(pkg *p.Packet) error {
 	return nil
 }
 func (c *client) Walk(pkg *p.Packet) error {
+	//if !c.player.CanWalk() || !c.player.CanMove() {
+	//	SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
+	//}
+	// TODO ...剩下的各种判断
 
+	// 广播给附近玩家，在其他client player视角里，本client player 就是object player
+	Broadcast(c, &sp.ObjectWalk{})
 	return nil
 }
 func (c *client) Run(pkg *p.Packet) error {
 	return nil
-
 }
 func (c *client) Chat(pkg *p.Packet) error {
 	msg := pkg.Data.(*cp.Chat).Message
