@@ -12,7 +12,7 @@ type MapObject struct {
 	//ExplosionInflictedTime int64 ??
 	//ExplosionInflictedStage int64 ??
 	//SpawnThread int32 ??
-	//CurrentMapIndex int32
+	CurrentMapIndex uint16 // c# int? (32byte)
 	CurrentLocation cm.Point
 	Direction       cm.MirDirection
 	Level           uint16

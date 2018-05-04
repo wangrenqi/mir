@@ -12,3 +12,8 @@ func (self *Point) ToBytes() []byte {
 	YBytes := Uint32ToBytes(uint32(self.Y))
 	return append(XBytes, YBytes...)
 }
+
+// TODO
+func (self *Point) Move(direction MirDirection, distance int32) *Point {
+	return &Point{}
+}

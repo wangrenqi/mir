@@ -214,6 +214,11 @@ func (c *client) Walk(pkg *p.Packet) error {
 	if !c.player.CanWalk() || !c.player.CanMove() {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
 	}
+	playerMap := (*c.env.Maps)[c.player.CurrentMapIndex]
+	targetPoint := c.player.CurrentLocation.Move(c.player.Direction, 1)
+	if !playerMap.ValidPoint(targetPoint) {
+		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
+	}
 	// TODO ...剩下的各种判断
 
 	// 广播给附近玩家，在其他client player视角里，本client player 就是object player
