@@ -5,6 +5,7 @@ import (
 	"fmt"
 	p "mir/proto"
 	cp "mir/proto/client"
+	cm "mir/common"
 	"time"
 )
 
@@ -51,14 +52,14 @@ func main() {
 	time.Sleep(time.Second)
 
 	// TODO new character
-	//fmt.Println("new character")
-	//pkg = &p.Packet{Index: cp.NEW_CHARACTER, Data: &cp.NewCharacter{
-	//	Name:   "hello",
-	//	Gender: cm.MirGender(1),
-	//	Class:  cm.MirClass(2),
-	//}}
-	//send(conn, pkg)
-	//time.Sleep(time.Second)
+	fmt.Println("new character")
+	pkg = &p.Packet{Index: cp.NEW_CHARACTER, Data: &cp.NewCharacter{
+		Name:   "hello",
+		Gender: cm.MirGender(1),
+		Class:  cm.MirClass(2),
+	}}
+	send(conn, pkg)
+	time.Sleep(time.Second)
 	//
 	//fmt.Println("start game")
 	//pkg = &p.Packet{Index: cp.START_GAME, Data: &cp.StartGame{}}

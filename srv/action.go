@@ -129,7 +129,7 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 		Class:  byte(class),
 		Gender: byte(gender),
 		//LastAccess int64
-		AccountInfoID: c.info["AccountInfoIndex"].(uint),
+		AccountInfoID: c.info["AccountInfoIndex"].(uint32),
 	}
 	c.env.Db.Create(characterInfo)
 	SendTo(c.conn, &sp.NewCharacterSuccess{CharInfo: sp.SelectInfo{

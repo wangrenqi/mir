@@ -265,7 +265,7 @@ func GetNewCharacter(bytes []byte) *NewCharacter {
 }
 
 func (self *NewCharacter) ToBytes() []byte {
-	pkgBytes := cm.Uint32ToBytes(NEW_CHARACTER)
+	pkgBytes := cm.Uint16ToBytes(NEW_CHARACTER)
 	nameBytes := cm.StringToBytes(self.Name)
 	genderBytes := []byte{byte(self.Gender)}
 	classBytes := []byte{byte(self.Class)}

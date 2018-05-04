@@ -28,7 +28,7 @@ type AccountInfo struct {
 
 type CharacterInfo struct {
 	Index         uint32 `gorm:"primary_key"`
-	AccountInfoID uint
+	AccountInfoID uint32
 	Name          string
 	Level         uint16
 	Class         byte
