@@ -1,4 +1,4 @@
-package engine
+package env
 
 import (
 	"mir/orm"
@@ -21,7 +21,7 @@ type Map struct {
 	Object interface{}
 }
 
-var mapFilesPath = "/Users/Mccree/gopath/src/mir/engine/maps"
+var mapFilesPath = "/Users/Mccree/gopath/src/mir/env/maps"
 
 func InitEnviron() *Environ {
 	db := orm.GetDB()

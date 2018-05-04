@@ -4,28 +4,29 @@ import (
 	"net"
 	"sync/atomic"
 	"log"
-	"mir/engine"
+	"mir/env"
 	p "mir/proto"
 	cp "mir/proto/client"
 	sp "mir/proto/server"
 	"fmt"
+	"mir/object"
 )
 
 type client struct {
 	id      int32
 	conn    net.Conn
 	reqChan <-chan []byte
-	env     *engine.Environ
+	env     *env.Environ
 	status  int
 	info    map[string]interface{}
-	player  *engine.PlayerObject
+	player  *object.PlayerObject
 }
 
 var id int32 = 0
 var clients = make(map[int32]*client)
 // TODO map 换成atomic map
 
-func HandleClient(conn net.Conn, env *engine.Environ) {
+func HandleClient(conn net.Conn, env *env.Environ) {
 	reqChan := make(chan []byte, 1024)
 	client := &client{
 		id:      id,

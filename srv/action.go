@@ -146,7 +146,7 @@ func (c *client) StartGame(pkg *p.Packet) error {
 
 	// TODO get player by username and characterIndex
 	// characterIndex := pkg.Data.(*cp.StartGame).CharacterIndex
-	//c.player = &engine.Player{}
+	//c.player = &env.Player{}
 
 	SendTo(c.conn, &sp.StartGame{})
 	SendTo(c.conn, &sp.MapInformation{

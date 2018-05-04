@@ -4,7 +4,7 @@ import (
 	"net"
 	"log"
 	"os"
-	"mir/engine"
+	"mir/env"
 	"mir/srv"
 )
 
@@ -13,7 +13,7 @@ var addr = "127.0.0.1:7000"
 
 func main() {
 
-	env := engine.InitEnviron()
+	env := env.InitEnviron()
 	defer env.Db.Close()
 
 	listener, err := net.Listen("tcp", addr)

@@ -1,4 +1,4 @@
-package engine
+package object
 
 import (
 	cm "mir/common"
@@ -23,16 +23,4 @@ type MapObject struct {
 	//public ushort MinAC, MaxAC, MinMAC, MaxMAC;
 	//public ushort MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
 	// ...
-}
-
-type PlayerObject struct {
-	MapObject
-}
-
-func (self *PlayerObject) CanWalk() bool {
-	return true
-}
-
-func (self *PlayerObject) CanMove() bool {
-	return true
 }
