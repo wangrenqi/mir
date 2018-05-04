@@ -28,14 +28,14 @@ func SendTo(conn net.Conn, pkg Packet) {
 	conn.Write(bytes)
 }
 
-func Broadcast(self *client, pkg Packet) {
+func Broadcast(this *client, pkg Packet) {
 	// TODO
 	//根据消息类型 如果是全局就走所有人广播
 	//否则Area Of Interesting
 	clients := GetClients()
 
 	for id, client := range clients {
-		if self.id == id {
+		if this.id == id {
 			continue
 		}
 		SendTo(client.conn, pkg)
@@ -133,10 +133,12 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 	SendTo(c.conn, &sp.NewCharacterSuccess{CharInfo: *characterInfo})
 	return nil
 }
+
 func (c *client) DeleteCharacter(pkg *p.Packet) error {
 
 	return nil
 }
+
 func (c *client) StartGame(pkg *p.Packet) error {
 	if c.status != SELECT {
 		return nil
@@ -190,29 +192,51 @@ func (c *client) StartGame(pkg *p.Packet) error {
 	c.status = GAME
 	return nil
 }
+
 func (c *client) Logout(pkg *p.Packet) error {
 
 	return nil
 }
+
 func (c *client) Turn(pkg *p.Packet) error {
+	if c.status != GAME {
+		return nil
+	}
 	Broadcast(c, &sp.ObjectTurn{})
 	SendTo(c.conn, &sp.UserLocation{})
 	return nil
 }
+
 func (c *client) Walk(pkg *p.Packet) error {
-	//if !c.player.CanWalk() || !c.player.CanMove() {
-	//	SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
-	//}
+	if c.status != GAME {
+		return nil
+	}
+	if !c.player.CanWalk() || !c.player.CanMove() {
+		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
+	}
 	// TODO ...剩下的各种判断
 
 	// 广播给附近玩家，在其他client player视角里，本client player 就是object player
 	Broadcast(c, &sp.ObjectWalk{})
 	return nil
 }
+
 func (c *client) Run(pkg *p.Packet) error {
+	if c.status != GAME {
+		return nil
+	}
+	if !c.player.CanMove() || !c.player.CanMove() {
+		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
+	}
+	SendTo(c.conn, &sp.UserLocation{})
+	Broadcast(c, &sp.ObjectRun{})
 	return nil
 }
+
 func (c *client) Chat(pkg *p.Packet) error {
+	if c.status != GAME {
+		return nil
+	}
 	msg := pkg.Data.(*cp.Chat).Message
 	log.Println("received client message:", msg)
 	return nil

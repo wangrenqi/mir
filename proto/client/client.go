@@ -295,7 +295,7 @@ func (self *Logout) ToBytes() []byte {
 }
 
 type Turn struct {
-	Dir cm.MirDirection
+	Direction cm.MirDirection
 }
 
 func GetTurn(bytes []byte) *Turn {
@@ -308,7 +308,7 @@ func (self *Turn) ToBytes() []byte {
 }
 
 type Walk struct {
-	Dir cm.MirDirection
+	Direction cm.MirDirection
 }
 
 func GetWalk(bytes []byte) *Walk {
@@ -319,11 +319,11 @@ func GetWalk(bytes []byte) *Walk {
 func (self *Walk) ToBytes() []byte {
 	// up upright right downright down downleft left upleft
 	// 5, 0 (3 + 2)
-	return []byte{11, 0, byte(self.Dir)}
+	return []byte{11, 0, byte(self.Direction)}
 }
 
 type Run struct {
-	Dir cm.MirDirection
+	Direction cm.MirDirection
 }
 
 func GetRun(bytes []byte) *Run {
