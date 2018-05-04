@@ -63,13 +63,13 @@ func (c *client) NewAccount(pkg *p.Packet) error {
 	}
 	username := pkg.Data.(*cp.NewAccount).UserName
 	password := pkg.Data.(*cp.NewAccount).Password
-	var account orm.Account
+	var account orm.AccountInfo
 	c.env.Db.First(&account, "user_name = ?", username)
 	if account.UserName == username {
 		SendTo(c.conn, &sp.NewAccount{Result: byte(7)})
 		return nil
 	}
-	c.env.Db.Create(&orm.Account{
+	c.env.Db.Create(&orm.AccountInfo{
 		UserName: username,
 		Password: password,
 	})
@@ -89,8 +89,8 @@ func (c *client) Login(pkg *p.Packet) error {
 	// check username and password
 	username := pkg.Data.(*cp.Login).AccountId
 	password := pkg.Data.(*cp.Login).Password
-	var account orm.Account
-	c.env.Db.Where(&orm.Account{UserName: username, Password: password}).First(&account)
+	var account orm.AccountInfo
+	c.env.Db.Where(&orm.AccountInfo{UserName: username, Password: password}).First(&account)
 	if account.UserName == "" {
 		// login failed
 		SendTo(c.conn, &sp.Login{Result: byte(4)})
@@ -100,9 +100,11 @@ func (c *client) Login(pkg *p.Packet) error {
 	c.info["username"] = username
 	c.info["accountId"] = account.AccountID
 	// query characters
-	var characters []orm.SelectInfo
+	var characters []orm.CharacterInfo
 	c.env.Db.Model(&account).Related(&characters)
-	SendTo(c.conn, &sp.LoginSuccess{Characters: characters})
+	// !!!!!
+	// TODO character info to select info
+	// SendTo(c.conn, &sp.LoginSuccess{Characters: []sp.SelectInfo{}})
 	return nil
 }
 
@@ -113,7 +115,7 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 	name := pkg.Data.(*cp.NewCharacter).Name
 	gender := pkg.Data.(*cp.NewCharacter).Gender
 	class := pkg.Data.(*cp.NewCharacter).Class
-	var character orm.SelectInfo
+	var character orm.CharacterInfo
 	c.env.Db.First(&character, "name = ?", name)
 	if character.Name != "" {
 		// 已经存在角色名name
@@ -121,16 +123,22 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 		return nil
 	}
 	// TODO check gender class max...
-	characterInfo := &orm.SelectInfo{
+	characterInfo := &orm.CharacterInfo{
+		Name:   name,
+		Level:  1,
+		Class:  byte(class),
+		Gender: byte(gender),
+		//LastAccess int64
+		AccountInfoID: c.info["accountId"].(uint),
+	}
+	c.env.Db.Create(characterInfo)
+	SendTo(c.conn, &sp.NewCharacterSuccess{CharInfo: sp.SelectInfo{
 		Name:   name,
 		Level:  1,
 		Class:  class,
 		Gender: gender,
-		//LastAccess int64
-		AccountID: c.info["accountId"].(uint),
-	}
-	c.env.Db.Create(characterInfo)
-	SendTo(c.conn, &sp.NewCharacterSuccess{CharInfo: *characterInfo})
+		//AccountID: c.info["accountId"].(uint),
+	}})
 	return nil
 }
 

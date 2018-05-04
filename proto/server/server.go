@@ -1,8 +1,8 @@
 package server
 
 import (
-	"mir/orm"
 	cm "mir/common"
+	"mir/orm"
 )
 
 const (
@@ -313,10 +313,40 @@ func (self *LoginBanned) ToBytes() []byte {
 	return nil
 }
 
+type Account struct {
+	orm.AccountInfo
+	Characters []SelectInfo
+}
+
+type SelectInfo struct {
+	Index      uint32
+	Name       string
+	Level      uint16
+	Class      cm.MirClass
+	Gender     cm.MirGender
+	LastAccess uint64
+}
+
+func (self *SelectInfo) ToBytes() []byte {
+	indexBytes := cm.Uint32ToBytes(self.Index)
+	nameBytes := cm.StringToBytes(self.Name)
+	levelBytes := cm.Uint16ToBytes(self.Level)
+	class := self.Class
+	classBytes := []byte{byte(class)}
+	gender := self.Gender
+	genderBytes := []byte{byte(gender)}
+	lastAccessBytes := cm.Uint64ToBytes(uint64(0))
+	result := make([]byte, 0)
+	for _, r := range [][]byte{indexBytes, nameBytes, levelBytes, classBytes, genderBytes, lastAccessBytes} {
+		result = append(result, r...)
+	}
+	return result
+}
+
 type LoginSuccess struct {
 	// c#
 	// count(int32 4byte) [ index(int32 4byte) name(string) level(int16 2byte) class(1byte) gender(1byte) lastAccess(int64 8byte) ]
-	Characters []orm.SelectInfo
+	Characters []SelectInfo
 }
 
 func (self *LoginSuccess) ToBytes() []byte {
@@ -346,7 +376,7 @@ func (self *NewCharacter) ToBytes() []byte {
 }
 
 type NewCharacterSuccess struct {
-	CharInfo orm.SelectInfo
+	CharInfo SelectInfo
 }
 
 func (self *NewCharacterSuccess) ToBytes() []byte {

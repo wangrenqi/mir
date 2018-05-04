@@ -13,7 +13,7 @@ type Environ struct {
 func InitEnviron() *Environ {
 	db := orm.GetDB()
 
-	db.AutoMigrate(&orm.Account{}, &orm.SelectInfo{})
+	db.AutoMigrate(&orm.AccountInfo{}, &orm.CharacterInfo{})
 
 	maps := GetMaps(MapFilesPath)
 
