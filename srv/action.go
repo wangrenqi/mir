@@ -176,9 +176,11 @@ func (c *client) StartGame(pkg *p.Packet) error {
 	}
 	c.player = &object.PlayerObject{
 		MapObject: object.MapObject{
-			ObjectID: character.Index,
-			Name:     character.Name,
-			Level:    character.Level,
+			ObjectID:        character.Index,
+			Name:            character.Name,
+			Level:           character.Level,
+			CurrentLocation: cm.Point{X: character.CurrentLocationX, Y: character.CurrentLocationY},
+			Direction:       character.Direction,
 			// TODO
 			// ...
 		},

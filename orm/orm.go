@@ -3,6 +3,7 @@ package orm
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	cm "mir/common"
 )
 
 var dialect = "mysql"
@@ -44,7 +45,9 @@ type CharacterInfo struct {
 	//public string BanReason = string.Empty;
 	//public DateTime ExpiryDate;
 	// ...
-	//public MirDirection Direction;
+	CurrentLocationX int32
+	CurrentLocationY int32
+	Direction        cm.MirDirection
 	//public int BindMapIndex;
 	//public Point BindLocation;
 
