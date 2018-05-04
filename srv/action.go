@@ -82,6 +82,21 @@ func (c *client) ChangePassword(packet *p.Packet) error {
 	return nil
 }
 
+func toSelectInfos(infos []orm.CharacterInfo) []sp.SelectInfo {
+	result := make([]sp.SelectInfo, 0)
+	for _, i := range infos {
+		result = append(result, sp.SelectInfo{
+			Index:  i.Index,
+			Name:   i.Name,
+			Level:  i.Level,
+			Class:  cm.MirClass(i.Class),
+			Gender: cm.MirGender(i.Gender),
+			//LastAccess:i,
+		})
+	}
+	return result
+}
+
 func (c *client) Login(pkg *p.Packet) error {
 	if c.status != LOGIN {
 		return nil
@@ -102,9 +117,8 @@ func (c *client) Login(pkg *p.Packet) error {
 	// query characters
 	var characters []orm.CharacterInfo
 	c.env.Db.Model(&account).Related(&characters)
-	// !!!!!
-	// TODO character info to select info
-	// SendTo(c.conn, &sp.LoginSuccess{Characters: []sp.SelectInfo{}})
+	selectInfos := toSelectInfos(characters)
+	SendTo(c.conn, &sp.LoginSuccess{Characters: selectInfos})
 	return nil
 }
 

@@ -24,6 +24,8 @@ type AccountInfo struct {
 	Index     uint32 `gorm:"primary_key"`
 	AccountID string // 这个才是登陆用户名...........WTF???
 	Password  string
+
+	CharacterInfos []CharacterInfo
 }
 
 type CharacterInfo struct {
@@ -36,6 +38,8 @@ type CharacterInfo struct {
 	Hair          byte
 	GuildIndex    int32
 	CreationIP    string
+
+	// TODO
 	//public bool Banned;
 	//public string BanReason = string.Empty;
 	//public DateTime ExpiryDate;
