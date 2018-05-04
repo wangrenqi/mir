@@ -2,6 +2,8 @@ package object
 
 type PlayerObject struct {
 	MapObject
+	HP uint16
+	MP uint16
 }
 
 func (self *PlayerObject) CanWalk() bool {

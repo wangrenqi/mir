@@ -60,10 +60,10 @@ func main() {
 	//send(conn, pkg)
 	//time.Sleep(time.Second)
 	//
-	//fmt.Println("start game")
-	//pkg = &p.Packet{Index: cp.START_GAME, Data: &cp.StartGame{}}
-	//send(conn, pkg)
-	//time.Sleep(time.Second)
+	fmt.Println("start game")
+	pkg = &p.Packet{Index: cp.START_GAME, Data: &cp.StartGame{CharacterIndex: 1}}
+	send(conn, pkg)
+	time.Sleep(time.Second)
 	//
 	//// refine cancel ??
 	//

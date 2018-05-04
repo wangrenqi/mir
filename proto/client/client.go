@@ -294,13 +294,14 @@ type StartGame struct {
 }
 
 func GetStartGame(bytes []byte) *StartGame {
-
-	return nil
+	characterIndex := int(cm.BytesToUint32(bytes))
+	return &StartGame{CharacterIndex: characterIndex}
 }
 
 func (self *StartGame) ToBytes() []byte {
-	// 8, 0 (6 + 2)
-	return []byte{8, 0, 2, 0, 0, 0}
+	pkgBytes := cm.Uint16ToBytes(START_GAME)
+	characterIndexBytes := cm.Uint32ToBytes(uint32(self.CharacterIndex))
+	return append(pkgBytes, characterIndexBytes...)
 }
 
 type Logout struct{}

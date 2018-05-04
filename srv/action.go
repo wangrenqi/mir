@@ -8,6 +8,7 @@ import (
 	cm "mir/common"
 	"log"
 	"net"
+	"mir/object"
 )
 
 const (
@@ -113,7 +114,7 @@ func (c *client) Login(pkg *p.Packet) error {
 	}
 	c.status = SELECT
 	c.info["AccountID"] = accountId
-	c.info["AccountInfoIndex"] = account.Index
+	c.info["AccountInfoID"] = account.Index
 	// query characters
 	var characters []orm.CharacterInfo
 	c.env.Db.Model(&account).Related(&characters)
@@ -143,7 +144,7 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 		Class:  byte(class),
 		Gender: byte(gender),
 		//LastAccess int64
-		AccountInfoID: c.info["AccountInfoIndex"].(uint32),
+		AccountInfoID: c.info["AccountInfoID"].(uint32),
 	}
 	c.env.Db.Create(characterInfo)
 	SendTo(c.conn, &sp.NewCharacterSuccess{CharInfo: sp.SelectInfo{
@@ -166,9 +167,24 @@ func (c *client) StartGame(pkg *p.Packet) error {
 		return nil
 	}
 
-	// TODO get player by accountId and characterIndex
-	// characterIndex := pkg.Data.(*cp.StartGame).CharacterIndex
-	//c.player = &env.Player{}
+	index := pkg.Data.(*cp.StartGame).CharacterIndex
+	accountInfoId := c.info["AccountInfoID"].(uint32)
+	var character orm.CharacterInfo
+	c.env.Db.Where(&orm.CharacterInfo{Index: uint32(index), AccountInfoID: accountInfoId}).First(&character)
+	if character.AccountInfoID == 0 || character.Index == 0 {
+		return nil
+	}
+	c.player = &object.PlayerObject{
+		MapObject: object.MapObject{
+			ObjectID: character.Index,
+			Name:     character.Name,
+			Level:    character.Level,
+			// TODO
+			// ...
+		},
+		HP: character.HP,
+		MP: character.MP,
+	}
 
 	SendTo(c.conn, &sp.StartGame{})
 	SendTo(c.conn, &sp.MapInformation{
@@ -181,35 +197,36 @@ func (c *client) StartGame(pkg *p.Packet) error {
 		Fire:         false,   //bool
 		MapDarkLight: byte(0), //byte
 	})
+	// TODO
 	SendTo(c.conn, &sp.UserInformation{
-		ObjectID:                  1,                    //uint32
-		RealId:                    1,                    //uint32
-		Name:                      "测试名字",               //string
-		GuildName:                 "测试工会名字",             //string
-		GuildRank:                 "测试工会Rank",           //string
-		NameColour:                1,                    //uint32
-		Class:                     1,                    //cm.MirClass
-		Gender:                    1,                    //cm.MirGender
-		Level:                     1,                    //uint16
-		Location:                  cm.Point{X: 1, Y: 1}, //Point
-		Direction:                 1,                    //cm.MirDirection
-		Hair:                      1,                    //byte
-		HP:                        1,                    //uint16
-		MP:                        1,                    //uint16
-		Experience:                1,                    //uint64
-		MaxExperience:             1,                    //uint64
-		LevelEffect:               1,                    //LevelEffects
-		Inventory:                 1,                    //interface{} // []UserItem
-		Equipment:                 1,                    //interface{} // []UserItem
-		QuestInventory:            1,                    //interface{} // []UserItem
-		Gold:                      1,                    //uint32
-		Credit:                    1,                    //uint32
-		HasExpandedStorage:        false,                //bool
-		ExpandedStorageExpiryTime: 1,                    //uint64      // DateTime
-		Magics:                    1,                    //interface{} // []ClientMagic
-		IntelligentCreatures:      1,                    //interface{} // []ClientIntelligentCreature
-		IntelligentCreatureType:   1,                    //cm.IntelligentCreatureType
-		CreatureSummoned:          false,                //bool
+		ObjectID:                  1,                              //uint32
+		RealId:                    character.Index,                //uint32
+		Name:                      character.Name,                 //string
+		GuildName:                 "测试工会名字",                       //string
+		GuildRank:                 "测试工会Rank",                     //string
+		NameColour:                1,                              //uint32
+		Class:                     cm.MirClass(character.Class),   //cm.MirClass
+		Gender:                    cm.MirGender(character.Gender), //cm.MirGender
+		Level:                     character.Level,                //uint16
+		Location:                  cm.Point{X: 1, Y: 1},           //Point
+		Direction:                 1,                              //cm.MirDirection
+		Hair:                      1,                              //byte
+		HP:                        character.HP,                   //uint16
+		MP:                        character.MP,                   //uint16
+		Experience:                1,                              //uint64
+		MaxExperience:             1,                              //uint64
+		LevelEffect:               1,                              //LevelEffects
+		Inventory:                 1,                              //interface{} // []UserItem
+		Equipment:                 1,                              //interface{} // []UserItem
+		QuestInventory:            1,                              //interface{} // []UserItem
+		Gold:                      1,                              //uint32
+		Credit:                    1,                              //uint32
+		HasExpandedStorage:        false,                          //bool
+		ExpandedStorageExpiryTime: 1,                              //uint64      // DateTime
+		Magics:                    1,                              //interface{} // []ClientMagic
+		IntelligentCreatures:      1,                              //interface{} // []ClientIntelligentCreature
+		IntelligentCreatureType:   1,                              //cm.IntelligentCreatureType
+		CreatureSummoned:          false,                          //bool
 	})
 	c.status = GAME
 	return nil
