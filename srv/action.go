@@ -98,7 +98,7 @@ func (c *client) Login(pkg *p.Packet) error {
 	}
 	c.status = SELECT
 	c.info["username"] = username
-	c.info["accountId"] = account.ID
+	c.info["accountId"] = account.AccountID
 	// query characters
 	var characters []orm.SelectInfo
 	c.env.Db.Model(&account).Related(&characters)
@@ -230,7 +230,7 @@ func (c *client) Run(pkg *p.Packet) error {
 	if c.status != GAME {
 		return nil
 	}
-	if !c.player.CanMove() || !c.player.CanMove() {
+	if !c.player.CanMove() || !c.player.CanMove() || !c.player.CanRun() {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
 	}
 	SendTo(c.conn, &sp.UserLocation{})

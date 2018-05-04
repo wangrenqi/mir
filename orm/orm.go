@@ -14,22 +14,21 @@ var dbPassword = "root"
 var dbAddr = "localhost:3306"
 
 type Account struct {
-	gorm.Model
-	//AccountID string
-	Password string
-	UserName string
+	Index     uint32 `gorm:"primary_key"`
+	AccountID string
+	Password  string
+	UserName  string
 
 	Characters []SelectInfo
 }
 
 type SelectInfo struct {
-	gorm.Model
-	//Index      int32 `gorm:"primary_key"`  replace as gorm.Model Id
+	Index      uint32 `gorm:"primary_key"`
 	Name       string
-	Level      int16
+	Level      uint16
 	Class      cm.MirClass
 	Gender     cm.MirGender
-	LastAccess int64
+	LastAccess uint64
 
 	AccountID uint
 }
@@ -37,11 +36,11 @@ type SelectInfo struct {
 // TODO 这个方法不应该放在orm 而是proto
 func (self *SelectInfo) ToBytes() []byte {
 	// index(int32 4byte)
-	indexBytes := cm.Uint32ToBytes(uint32(self.ID))
+	indexBytes := cm.Uint32ToBytes(self.Index)
 	// name (string)
 	nameBytes := cm.StringToBytes(self.Name)
 	// level (int16 2byte)
-	levelBytes := cm.Uint16ToBytes(uint16(self.Level))
+	levelBytes := cm.Uint16ToBytes(self.Level)
 	// class (byte)
 	class := self.Class
 	classBytes := []byte{byte(class)}

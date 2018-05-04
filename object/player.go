@@ -11,3 +11,7 @@ func (self *PlayerObject) CanWalk() bool {
 func (self *PlayerObject) CanMove() bool {
 	return true
 }
+
+func (self *PlayerObject) CanRun() bool {
+	return true
+}
