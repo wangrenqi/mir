@@ -61,17 +61,17 @@ func (c *client) NewAccount(pkg *p.Packet) error {
 	if c.status != LOGIN {
 		return nil
 	}
-	username := pkg.Data.(*cp.NewAccount).UserName
+	accountId := pkg.Data.(*cp.NewAccount).AccountID
 	password := pkg.Data.(*cp.NewAccount).Password
 	var account orm.AccountInfo
-	c.env.Db.First(&account, "user_name = ?", username)
-	if account.UserName == username {
+	c.env.Db.First(&account, "account_id = ?", accountId)
+	if account.AccountID == accountId {
 		SendTo(c.conn, &sp.NewAccount{Result: byte(7)})
 		return nil
 	}
 	c.env.Db.Create(&orm.AccountInfo{
-		UserName: username,
-		Password: password,
+		AccountID: accountId,
+		Password:  password,
 	})
 	SendTo(c.conn, &sp.NewAccount{Result: byte(8)})
 	return nil
@@ -86,19 +86,19 @@ func (c *client) Login(pkg *p.Packet) error {
 	if c.status != LOGIN {
 		return nil
 	}
-	// check username and password
-	username := pkg.Data.(*cp.Login).AccountId
+	// check accountId and password
+	accountId := pkg.Data.(*cp.Login).AccountID
 	password := pkg.Data.(*cp.Login).Password
 	var account orm.AccountInfo
-	c.env.Db.Where(&orm.AccountInfo{UserName: username, Password: password}).First(&account)
-	if account.UserName == "" {
+	c.env.Db.Where(&orm.AccountInfo{AccountID: accountId, Password: password}).First(&account)
+	if account.AccountID == "" {
 		// login failed
 		SendTo(c.conn, &sp.Login{Result: byte(4)})
 		return nil
 	}
 	c.status = SELECT
-	c.info["username"] = username
-	c.info["accountId"] = account.AccountID
+	c.info["AccountID"] = accountId
+	c.info["AccountInfoIndex"] = account.Index
 	// query characters
 	var characters []orm.CharacterInfo
 	c.env.Db.Model(&account).Related(&characters)
@@ -129,7 +129,7 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 		Class:  byte(class),
 		Gender: byte(gender),
 		//LastAccess int64
-		AccountInfoID: c.info["accountId"].(uint),
+		AccountInfoID: c.info["AccountInfoIndex"].(uint),
 	}
 	c.env.Db.Create(characterInfo)
 	SendTo(c.conn, &sp.NewCharacterSuccess{CharInfo: sp.SelectInfo{
@@ -152,7 +152,7 @@ func (c *client) StartGame(pkg *p.Packet) error {
 		return nil
 	}
 
-	// TODO get player by username and characterIndex
+	// TODO get player by accountId and characterIndex
 	// characterIndex := pkg.Data.(*cp.StartGame).CharacterIndex
 	//c.player = &env.Player{}
 

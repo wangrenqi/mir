@@ -187,27 +187,35 @@ func (self *KeepAlive) ToBytes() []byte {
 }
 
 type NewAccount struct {
-	UserName string
-	Password string
+	AccountID string
+	Password  string
 	//BirthDate      datetime
+	//UserName
 	SecretQuestion string
 	SecretAnswer   string
 	EMailAddress   string
 }
 
 func GetNewAccount(bytes []byte) *NewAccount {
-	index, username := cm.ReadString(bytes, 0)
+	index, accountId := cm.ReadString(bytes, 0)
 	index, password := cm.ReadString(bytes, index)
 	// TODO birthday datetime from binary int64
-	return &NewAccount{UserName: username, Password: password}
+	return &NewAccount{AccountID: accountId, Password: password}
 }
 
 func (self *NewAccount) ToBytes() []byte {
-	return nil
+	pkgBytes := cm.Uint16ToBytes(NEW_ACCOUNT)
+	accountIdBytes := cm.StringToBytes(self.AccountID)
+	passwordBytes := cm.StringToBytes(self.Password)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, accountIdBytes, passwordBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type ChangePassword struct {
-	AccountId       string
+	AccountID       string
 	CurrentPassword string
 	NewPassword     string
 }
@@ -222,20 +230,25 @@ func (self *ChangePassword) ToBytes() []byte {
 }
 
 type Login struct {
-	AccountId string
+	AccountID string
 	Password  string
 }
 
 func GetLogin(bytes []byte) *Login {
-	index, username := cm.ReadString(bytes, 0)
+	index, accountId := cm.ReadString(bytes, 0)
 	index, password := cm.ReadString(bytes, index)
-	return &Login{AccountId: username, Password: password}
+	return &Login{AccountID: accountId, Password: password}
 }
 
 func (self *Login) ToBytes() []byte {
-	//data := pkg.Data.(*cp.Login)
-	// 15, 0 (13 + 2)
-	return []byte{5, 0, 3, 50, 50, 50, 6, 50, 50, 50, 50, 50, 50}
+	pkgBytes := cm.Uint16ToBytes(LOGIN)
+	accountIdBytes := cm.StringToBytes(self.AccountID)
+	passwordBytes := cm.StringToBytes(self.Password)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, accountIdBytes, passwordBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type NewCharacter struct {
@@ -252,7 +265,15 @@ func GetNewCharacter(bytes []byte) *NewCharacter {
 }
 
 func (self *NewCharacter) ToBytes() []byte {
-	return nil
+	pkgBytes := cm.Uint32ToBytes(NEW_CHARACTER)
+	nameBytes := cm.StringToBytes(self.Name)
+	genderBytes := []byte{byte(self.Gender)}
+	classBytes := []byte{byte(self.Class)}
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, nameBytes, genderBytes, classBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type DeleteCharacter struct {

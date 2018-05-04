@@ -22,9 +22,8 @@ func GetDB() *gorm.DB {
 
 type AccountInfo struct {
 	Index     uint32 `gorm:"primary_key"`
-	AccountID string
+	AccountID string // 这个才是登陆用户名...........WTF???
 	Password  string
-	UserName  string
 }
 
 type CharacterInfo struct {
