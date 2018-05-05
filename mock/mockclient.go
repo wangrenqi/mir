@@ -5,6 +5,7 @@ import (
 	"fmt"
 	p "mir/proto"
 	cp "mir/proto/client"
+	cm "mir/common"
 	"time"
 )
 
@@ -70,14 +71,14 @@ func main() {
 	////// in game
 	//
 	//// walk
-	//fmt.Println("walk")
-	//dir := []cm.MirDirection{cm.UP, cm.RIGHT, cm.DOWN, cm.LEFT}
-	//for _, d := range dir {
-	//	//pkg = &p.Packet{cp.WALK, &cp.Walk{cp.Up}}
-	//	pkg = &p.Packet{Index: cp.WALK, Data: &cp.Walk{d}}
-	//	send(conn, pkg)
-	//	time.Sleep(time.Second)
-	//}
+	fmt.Println("walk")
+	dir := []cm.MirDirection{cm.UP, cm.RIGHT, cm.DOWN, cm.LEFT}
+	for _, d := range dir {
+		//pkg = &p.Packet{cp.WALK, &cp.Walk{cp.Up}}
+		pkg = &p.Packet{Index: cp.WALK, Data: &cp.Walk{d}}
+		send(conn, pkg)
+		time.Sleep(time.Second)
+	}
 
 	// direction
 

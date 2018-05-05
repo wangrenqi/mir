@@ -12,7 +12,7 @@ var MapFilesPath = "/Users/Mccree/gopath/src/mir/env/maps"
 type Map struct {
 	Witdh  uint16
 	Height uint16
-	Points interface{} // Point
+	Points []cm.Point
 	Object interface{}
 }
 
@@ -39,7 +39,7 @@ func GetMaps(path string) *map[uint16]Map {
 }
 
 func SaveToFile(tmp Map) {
-	points := tmp.Points.([]cm.Point)
+	points := tmp.Points
 	str := ""
 	index := 0
 	for _, p := range points {
@@ -140,6 +140,10 @@ func FindType(bytes []byte) int {
 }
 
 func (self *Map) ValidPoint(point cm.Point) bool {
-	// TODO
-	return true
+	for _, p := range self.Points {
+		if p.X == point.X && p.Y == point.Y {
+			return p.Valid
+		}
+	}
+	return false
 }

@@ -334,8 +334,10 @@ type Walk struct {
 }
 
 func GetWalk(bytes []byte) *Walk {
-
-	return nil
+	if len(bytes) != 1 {
+		return nil
+	}
+	return &Walk{cm.MirDirection(bytes[0])}
 }
 
 func (self *Walk) ToBytes() []byte {

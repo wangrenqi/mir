@@ -201,34 +201,34 @@ func (c *client) StartGame(pkg *p.Packet) error {
 	})
 	// TODO
 	SendTo(c.conn, &sp.UserInformation{
-		ObjectID:                  1,                              //uint32
-		RealId:                    character.Index,                //uint32
-		Name:                      character.Name,                 //string
-		GuildName:                 "测试工会名字",                       //string
-		GuildRank:                 "测试工会Rank",                     //string
-		NameColour:                1,                              //uint32
-		Class:                     cm.MirClass(character.Class),   //cm.MirClass
-		Gender:                    cm.MirGender(character.Gender), //cm.MirGender
-		Level:                     character.Level,                //uint16
-		Location:                  cm.Point{X: 1, Y: 1},           //Point
-		Direction:                 1,                              //cm.MirDirection
-		Hair:                      1,                              //byte
-		HP:                        character.HP,                   //uint16
-		MP:                        character.MP,                   //uint16
-		Experience:                1,                              //uint64
-		MaxExperience:             1,                              //uint64
-		LevelEffect:               1,                              //LevelEffects
-		Inventory:                 1,                              //interface{} // []UserItem
-		Equipment:                 1,                              //interface{} // []UserItem
-		QuestInventory:            1,                              //interface{} // []UserItem
-		Gold:                      1,                              //uint32
-		Credit:                    1,                              //uint32
-		HasExpandedStorage:        false,                          //bool
-		ExpandedStorageExpiryTime: 1,                              //uint64      // DateTime
-		Magics:                    1,                              //interface{} // []ClientMagic
-		IntelligentCreatures:      1,                              //interface{} // []ClientIntelligentCreature
-		IntelligentCreatureType:   1,                              //cm.IntelligentCreatureType
-		CreatureSummoned:          false,                          //bool
+		ObjectID:                  1,                                                                      //uint32
+		RealId:                    character.Index,                                                        //uint32
+		Name:                      character.Name,                                                         //string
+		GuildName:                 "测试工会名字",                                                               //string
+		GuildRank:                 "测试工会Rank",                                                             //string
+		NameColour:                1,                                                                      //uint32
+		Class:                     cm.MirClass(character.Class),                                           //cm.MirClass
+		Gender:                    cm.MirGender(character.Gender),                                         //cm.MirGender
+		Level:                     character.Level,                                                        //uint16
+		Location:                  cm.Point{X: character.CurrentLocationY, Y: character.CurrentLocationY}, //Point
+		Direction:                 1,                                                                      //cm.MirDirection
+		Hair:                      1,                                                                      //byte
+		HP:                        character.HP,                                                           //uint16
+		MP:                        character.MP,                                                           //uint16
+		Experience:                1,                                                                      //uint64
+		MaxExperience:             1,                                                                      //uint64
+		LevelEffect:               1,                                                                      //LevelEffects
+		Inventory:                 1,                                                                      //interface{} // []UserItem
+		Equipment:                 1,                                                                      //interface{} // []UserItem
+		QuestInventory:            1,                                                                      //interface{} // []UserItem
+		Gold:                      1,                                                                      //uint32
+		Credit:                    1,                                                                      //uint32
+		HasExpandedStorage:        false,                                                                  //bool
+		ExpandedStorageExpiryTime: 1,                                                                      //uint64      // DateTime
+		Magics:                    1,                                                                      //interface{} // []ClientMagic
+		IntelligentCreatures:      1,                                                                      //interface{} // []ClientIntelligentCreature
+		IntelligentCreatureType:   1,                                                                      //cm.IntelligentCreatureType
+		CreatureSummoned:          false,                                                                  //bool
 	})
 	c.status = GAME
 	return nil
