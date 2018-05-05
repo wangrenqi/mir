@@ -1011,6 +1011,11 @@ type NewItemInfo struct {
 	Info ItemInfo
 }
 
+// TODO
+func (self *NewItemInfo) ToBytes() []byte {
+	return nil
+}
+
 type MoveItem struct {
 	Grid    cm.MirGridType
 	From    uint32
@@ -1018,11 +1023,37 @@ type MoveItem struct {
 	Success bool
 }
 
+func (self *MoveItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(MOVE_ITEM)
+	gridBytes := []byte{byte(self.Grid)}
+	fromBytes := cm.Uint32ToBytes(self.From)
+	toBytes := cm.Uint32ToBytes(self.To)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, gridBytes, fromBytes, toBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
+}
+
 type EquipItem struct {
 	Grid     cm.MirGridType
 	UniqueID uint64
 	To       uint32
 	Success  bool
+}
+
+func (self *EquipItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(EQUIP_ITEM)
+	gridBytes := []byte{byte(self.Grid)}
+	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
+	toBytes := cm.Uint32ToBytes(self.To)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, gridBytes, uniqueIdBytes, toBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type MergeItem struct {
@@ -1033,11 +1064,38 @@ type MergeItem struct {
 	Success  bool
 }
 
+func (self *MergeItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(MERGE_ITEM)
+	gridFromBytes := []byte{byte(self.GridFrom)}
+	gridToBytes := []byte{byte(self.GridTo)}
+	idFromBytes := cm.Uint64ToBytes(self.IDFrom)
+	idToBytes := cm.Uint64ToBytes(self.IDTo)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, gridFromBytes, gridToBytes, idFromBytes, idToBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
+}
+
 type RemoveItem struct {
 	Grid     cm.MirGridType
 	UniqueID uint64
 	To       uint32
 	Success  bool
+}
+
+func (self *RemoveItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(REMOVE_ITEM)
+	gridBytes := []byte{byte(self.Grid)}
+	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
+	toBytes := cm.Uint32ToBytes(self.To)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, gridBytes, uniqueIdBytes, toBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type RemoveSlotItem struct {
@@ -1048,10 +1106,36 @@ type RemoveSlotItem struct {
 	Success  bool
 }
 
+func (self *RemoveSlotItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(REMOVE_SLOT_ITEM)
+	gridBytes := []byte{byte(self.Grid)}
+	gridToBytes := []byte{byte(self.GridTo)}
+	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
+	toBytes := cm.Uint32ToBytes(self.To)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, gridBytes, gridToBytes, uniqueIdBytes, toBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
+}
+
 type TakeBackItem struct {
 	From    uint32
 	To      uint32
 	Success bool
+}
+
+func (self *TakeBackItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(TAKE_BACK_ITEM)
+	fromBytes := cm.Uint32ToBytes(self.From)
+	toBytes := cm.Uint32ToBytes(self.To)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, fromBytes, toBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type StoreItem struct {
@@ -1060,9 +1144,27 @@ type StoreItem struct {
 	Success bool
 }
 
+func (self *StoreItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(STORE_ITEM)
+	fromBytes := cm.Uint32ToBytes(self.From)
+	toBytes := cm.Uint32ToBytes(self.To)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, fromBytes, toBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
+}
+
 type SplitItem struct {
 	Item UserItem
 	Grid cm.MirGridType
+}
+
+// TODO
+func (self SplitItem) ToBytes() []byte {
+	//pkgBytes := cm.Uint16ToBytes(SPLIT_ITEM)
+	return nil
 }
 
 type SplitItem1 struct {
@@ -1072,10 +1174,35 @@ type SplitItem1 struct {
 	Success  bool
 }
 
+func (self *SplitItem1) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(SPLIT_ITEM1)
+	gridBytes := []byte{byte(self.Grid)}
+	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
+	countBytes := cm.Uint32ToBytes(self.Count)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, gridBytes, uniqueIdBytes, countBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
+}
+
 type DepositRefineItem struct {
 	From    uint32
 	To      uint32
 	Success bool
+}
+
+func (self *DepositRefineItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(DEPOSIT_REFINE_ITEM)
+	fromBytes := cm.Uint32ToBytes(self.From)
+	toBytes := cm.Uint32ToBytes(self.To)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, fromBytes, toBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type RetrieveRefineItem struct {
@@ -1084,12 +1211,36 @@ type RetrieveRefineItem struct {
 	Success bool
 }
 
+func (self *RetrieveRefineItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(RETRIEVE_REFINE_ITEM)
+	fromBytes := cm.Uint32ToBytes(self.From)
+	toBytes := cm.Uint32ToBytes(self.To)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, fromBytes, toBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
+}
+
 type RefineCancel struct {
 	Unlock bool
 }
 
+func (self *RefineCancel) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(REFINE_CANCEL)
+	unlockBytes := cm.BoolToBytes(self.Unlock)
+	return append(pkgBytes, unlockBytes...)
+}
+
 type RefineItem struct {
 	UniqueID uint64
+}
+
+func (self *RefineItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(REFINE_ITEM)
+	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
+	return append(pkgBytes, uniqueIdBytes...)
 }
 
 type DepositTradeItem struct {
@@ -1098,10 +1249,34 @@ type DepositTradeItem struct {
 	Success bool
 }
 
+func (self *DepositTradeItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(DEPOSIT_TRADE_ITEM)
+	fromBytes := cm.Uint32ToBytes(self.From)
+	toBytes := cm.Uint32ToBytes(self.To)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, fromBytes, toBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
+}
+
 type RetrieveTradeItem struct {
 	From    uint32
 	To      uint32
 	Success bool
+}
+
+func (self *RetrieveTradeItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(RETRIEVE_TRADE_ITEM)
+	fromBytes := cm.Uint32ToBytes(self.From)
+	toBytes := cm.Uint32ToBytes(self.To)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, fromBytes, toBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type UseItem struct {
@@ -1109,10 +1284,33 @@ type UseItem struct {
 	Success  bool
 }
 
+func (self *UseItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(USE_ITEM)
+	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, uniqueIdBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
+}
+
 type DropItem struct {
 	UniqueID uint64
 	Count    uint32
 	Success  bool
+}
+
+func (self *DropItem) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(DROP_ITEM)
+	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
+	countBytes := cm.Uint32ToBytes(self.Count)
+	successBytes := cm.BoolToBytes(self.Success)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, uniqueIdBytes, countBytes, successBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type PlayerUpdate struct {
@@ -1122,6 +1320,21 @@ type PlayerUpdate struct {
 	WeaponEffect uint16
 	Armour       uint16
 	WingEffect   byte
+}
+
+func (self *PlayerUpdate) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(PLAYER_UPDATE)
+	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	lightBytes := []byte{self.Light}
+	weaponBytes := cm.Uint16ToBytes(self.Weapon)
+	weaponEffectBytes := cm.Uint16ToBytes(self.WeaponEffect)
+	armourBytes := cm.Uint16ToBytes(self.Armour)
+	wingEffectBytes := []byte{self.WingEffect}
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, objectIdBytes, lightBytes, weaponBytes, weaponEffectBytes, armourBytes, wingEffectBytes} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type PlayerInspect struct {
