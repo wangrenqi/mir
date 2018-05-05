@@ -337,7 +337,16 @@ func GetWalk(bytes []byte) *Walk {
 	if len(bytes) != 1 {
 		return nil
 	}
-	return &Walk{cm.MirDirection(bytes[0])}
+	in := false
+	for _, dir := range []cm.MirDirection{cm.UP, cm.UP_RIGHT, cm.RIGHT, cm.DOWN_RIGHT, cm.DOWN, cm.DOWN_LEFT, cm.LEFT, cm.UP_LEFT} {
+		if cm.MirDirection(bytes[0]) == dir {
+			in = true
+		}
+	}
+	if in {
+		return &Walk{cm.MirDirection(bytes[0])}
+	}
+	return nil
 }
 
 func (self *Walk) ToBytes() []byte {

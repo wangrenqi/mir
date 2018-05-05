@@ -140,6 +140,7 @@ func FindType(bytes []byte) int {
 }
 
 func (self *Map) ValidPoint(point cm.Point) bool {
+	// TODO check has player monster NPC ...
 	for _, p := range self.Points {
 		if p.X == point.X && p.Y == point.Y {
 			return p.Valid

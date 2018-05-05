@@ -295,6 +295,31 @@ func (c *client) Chat(pkg *p.Packet) error {
 		return nil
 	}
 	msg := pkg.Data.(*cp.Chat).Message
-	log.Println("received client message:", msg)
+	// TODO switch case msg type
+	Broadcast(c, &sp.Chat{Message: msg, Type: cm.CT_NORMAL})
 	return nil
 }
+
+func (c *client) MoveItem(pkg *p.Packet) error           { return nil }
+func (c *client) StoreItem(pkg *p.Packet) error          { return nil }
+func (c *client) TakeBackItem(pkg *p.Packet) error       { return nil }
+func (c *client) MergeItem(pkg *p.Packet) error          { return nil }
+func (c *client) EquipItem(pkg *p.Packet) error          { return nil }
+func (c *client) RemoveItem(pkg *p.Packet) error         { return nil }
+func (c *client) RemoveSlotItem(pkg *p.Packet) error     { return nil }
+func (c *client) SplitItem(pkg *p.Packet) error          { return nil }
+func (c *client) UseItem(pkg *p.Packet) error            { return nil }
+func (c *client) DropItem(pkg *p.Packet) error           { return nil }
+func (c *client) DepositRefineItem(pkg *p.Packet) error  { return nil }
+func (c *client) RetrieveRefineItem(pkg *p.Packet) error { return nil }
+func (c *client) RefineCancel(pkg *p.Packet) error       { return nil }
+func (c *client) RefineItem(pkg *p.Packet) error         { return nil }
+func (c *client) CheckRefine(pkg *p.Packet) error        { return nil }
+func (c *client) ReplaceWedRing(pkg *p.Packet) error     { return nil }
+func (c *client) DepositTradeItem(pkg *p.Packet) error   { return nil }
+func (c *client) RetrieveTradeItem(pkg *p.Packet) error  { return nil }
+func (c *client) DropGold(pkg *p.Packet) error           { return nil }
+func (c *client) PickUp(pkg *p.Packet) error             { return nil }
+func (c *client) Inspect(pkg *p.Packet) error            { return nil }
+func (c *client) ChangeAMode(pkg *p.Packet) error        { return nil }
+func (c *client) ChangePMode(pkg *p.Packet) error        { return nil }

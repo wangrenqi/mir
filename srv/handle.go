@@ -105,6 +105,52 @@ func (c *client) process(pkg *p.Packet) (err error) {
 		return c.Run(pkg)
 	case cp.CHAT:
 		return c.Chat(pkg)
+	case cp.MOVE_ITEM:
+		return c.MoveItem(pkg)
+	case cp.STORE_ITEM:
+		return c.StoreItem(pkg)
+	case cp.TAKE_BACK_ITEM:
+		return c.TakeBackItem(pkg)
+	case cp.MERGE_ITEM:
+		return c.MergeItem(pkg)
+	case cp.EQUIP_ITEM:
+		return c.EquipItem(pkg)
+	case cp.REMOVE_ITEM:
+		return c.RemoveItem(pkg)
+	case cp.REMOVE_SLOT_ITEM:
+		return c.RemoveSlotItem(pkg)
+	case cp.SPLIT_ITEM:
+		return c.SplitItem(pkg)
+	case cp.USE_ITEM:
+		return c.UseItem(pkg)
+	case cp.DROP_ITEM:
+		return c.DropItem(pkg)
+	case cp.DEPOSIT_REFINE_ITEM:
+		return c.DepositRefineItem(pkg)
+	case cp.RETRIEVE_REFINE_ITEM:
+		return c.RetrieveRefineItem(pkg)
+	case cp.REFINE_CANCEL:
+		return c.RefineCancel(pkg)
+	case cp.REFINE_ITEM:
+		return c.RefineItem(pkg)
+	case cp.CHECK_REFINE:
+		return c.CheckRefine(pkg)
+	case cp.REPLACE_WED_RING:
+		return c.ReplaceWedRing(pkg)
+	case cp.DEPOSIT_TRADE_ITEM:
+		return c.DepositTradeItem(pkg)
+	case cp.RETRIEVE_TRADE_ITEM:
+		return c.RetrieveTradeItem(pkg)
+	case cp.DROP_GOLD:
+		return c.DropGold(pkg)
+	case cp.PICK_UP:
+		return c.PickUp(pkg)
+	case cp.INSPECT:
+		return c.Inspect(pkg)
+	case cp.CHANGE_A_MODE:
+		return c.ChangeAMode(pkg)
+	case cp.CHANGE_P_MODE:
+		return c.ChangePMode(pkg)
 	}
 	return fmt.Errorf("unknow pkg index: %d", pkg.Index)
 }
