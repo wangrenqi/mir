@@ -243,8 +243,8 @@ func (c *client) Turn(pkg *p.Packet) error {
 	if c.status != GAME {
 		return nil
 	}
-	Broadcast(c, &sp.ObjectTurn{})
-	SendTo(c.conn, &sp.UserLocation{})
+	Broadcast(c, &sp.ObjectTurn{ObjectID: c.player.ObjectID, Direction: pkg.Data.(*cp.Turn).Direction, Location: c.player.CurrentLocation})
+	SendTo(c.conn, &sp.UserLocation{Direction: pkg.Data.(*cp.Turn).Direction, Location: c.player.CurrentLocation})
 	return nil
 }
 
@@ -256,14 +256,15 @@ func (c *client) Walk(pkg *p.Packet) error {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
 	}
 	playerMap := (*c.env.Maps)[c.player.CurrentMapIndex]
-	targetPoint := c.player.CurrentLocation.Move(c.player.Direction, 1)
+	targetDirection := pkg.Data.(*cp.Walk).Direction
+	targetPoint := c.player.CurrentLocation.Move(targetDirection, 1)
 	if !playerMap.ValidPoint(targetPoint) {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
 	}
 	// TODO ...剩下的各种判断
 
 	// 广播给附近玩家，在其他client player视角里，本client player 就是object player
-	Broadcast(c, &sp.ObjectWalk{})
+	Broadcast(c, &sp.ObjectWalk{ObjectID: c.player.ObjectID, Direction: targetDirection, Location: targetPoint})
 	return nil
 }
 
@@ -274,8 +275,18 @@ func (c *client) Run(pkg *p.Packet) error {
 	if !c.player.CanMove() || !c.player.CanMove() || !c.player.CanRun() {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
 	}
-	SendTo(c.conn, &sp.UserLocation{})
-	Broadcast(c, &sp.ObjectRun{})
+	playerLocation := c.player.CurrentLocation
+	targetDirection := pkg.Data.(*cp.Run).Direction
+	targetPoint := c.player.CurrentLocation
+	steps := 2
+	for i := 1; i <= steps; i ++ {
+		targetPoint = playerLocation.Move(targetDirection, 1)
+		// TODO check point
+		SendTo(c.conn, &sp.UserLocation{targetPoint, targetDirection})
+	}
+	if targetPoint != c.player.CurrentLocation {
+		Broadcast(c, &sp.ObjectRun{c.player.ObjectID, targetPoint, targetDirection})
+	}
 	return nil
 }
 

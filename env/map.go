@@ -139,7 +139,7 @@ func FindType(bytes []byte) int {
 	return 0
 }
 
-func (self *Map) ValidPoint(point *cm.Point) bool {
+func (self *Map) ValidPoint(point cm.Point) bool {
 	// TODO
 	return true
 }

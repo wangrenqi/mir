@@ -14,6 +14,6 @@ func (self *Point) ToBytes() []byte {
 }
 
 // TODO
-func (self *Point) Move(direction MirDirection, distance int32) *Point {
-	return &Point{}
+func (self *Point) Move(direction MirDirection, distance int32) Point {
+	return Point{}
 }
