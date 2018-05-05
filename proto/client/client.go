@@ -377,68 +377,252 @@ func (self *Chat) ToBytes() []byte {
 type MoveItem struct {
 }
 
+func GetMoveItem(bytes []byte) *MoveItem {
+	return nil
+}
+
+func (self *MoveItem) ToBytes() []byte {
+	return nil
+}
+
 type StoreItem struct {
+}
+
+func GetStoreItem(bytes []byte) *StoreItem {
+	return nil
+}
+
+func (self *StoreItem) ToBytes() []byte {
+	return nil
 }
 
 type TakeBackItem struct {
 }
 
+func GetTakeBackItem(bytes []byte) *TakeBackItem {
+	return nil
+}
+
+func (self *TakeBackItem) ToBytes() []byte {
+	return nil
+}
+
 type MergeItem struct {
+}
+
+func GetMergeItem(bytes []byte) *MergeItem {
+	return nil
+}
+
+func (self *MergeItem) ToBytes() []byte {
+	return nil
 }
 
 type EquipItem struct {
 }
 
+func GetEquipItem(bytes []byte) *EquipItem {
+	return nil
+}
+
+func (self *EquipItem) ToBytes() []byte {
+	return nil
+}
+
 type RemoveItem struct {
+}
+
+func GetRemoveItem(bytes []byte) *RemoveItem {
+	return nil
+}
+
+func (self *RemoveItem) ToBytes() []byte {
+	return nil
 }
 
 type RemoveSlotItem struct {
 }
 
+func GetRemoveSlotItem(bytes []byte) *RemoveSlotItem {
+	return nil
+}
+
+func (self *RemoveSlotItem) ToBytes() []byte {
+	return nil
+}
+
 type SplitItem struct {
+}
+
+func GetSplitItem(bytes []byte) *SplitItem {
+	return nil
+}
+
+func (self *SplitItem) ToBytes() []byte {
+	return nil
 }
 
 type UseItem struct {
 }
 
+func GetUseItem(bytes []byte) *UseItem {
+	return nil
+}
+
+func (self *UseItem) ToBytes() []byte {
+	return nil
+}
+
 type DropItem struct {
+}
+
+func GetDropItem(bytes []byte) *DropItem {
+	return nil
+}
+
+func (self *DropItem) ToBytes() []byte {
+	return nil
 }
 
 type DepositRefineItem struct {
 }
 
+func GetDepositRefineItem(bytes []byte) *DepositRefineItem {
+	return nil
+}
+
+func (self *DepositRefineItem) ToBytes() []byte {
+	return nil
+}
+
 type RetrieveRefineItem struct {
+}
+
+func GetRetrieveRefineItem(bytes []byte) *RetrieveRefineItem {
+	return nil
+}
+
+func (self *RetrieveRefineItem) ToBytes() []byte {
+	return nil
 }
 
 type RefineCancel struct {
 }
 
+func GetRefineCancel(bytes []byte) *RefineCancel {
+	return nil
+}
+
+func (self *RefineCancel) ToBytes() []byte {
+	return nil
+}
+
 type RefineItem struct {
+}
+
+func GetRefineItem(bytes []byte) *RefineItem {
+	return nil
+}
+
+func (self *RefineItem) ToBytes() []byte {
+	return nil
 }
 
 type CheckRefine struct {
 }
 
+func GetCheckRefine(bytes []byte) *CheckRefine {
+	return nil
+}
+
+func (self *CheckRefine) ToBytes() []byte {
+	return nil
+}
+
 type ReplaceWedRing struct {
+}
+
+func GetReplaceWedRing(bytes []byte) *ReplaceWedRing {
+	return nil
+}
+
+func (self *ReplaceWedRing) ToBytes() []byte {
+	return nil
 }
 
 type DepositTradeItem struct {
 }
 
+func GetDepositTradeItem(bytes []byte) *DepositTradeItem {
+	return nil
+}
+
+func (self *DepositTradeItem) ToBytes() []byte {
+	return nil
+}
+
 type RetrieveTradeItem struct {
+}
+
+func GetRetrieveTradeItem(bytes []byte) *RetrieveTradeItem {
+	return nil
+}
+
+func (self *RetrieveTradeItem) ToBytes() []byte {
+	return nil
 }
 
 type DropGold struct {
 }
 
+func GetDropGold(bytes []byte) *DropGold {
+	return nil
+}
+
+func (self *DropGold) ToBytes() []byte {
+	return nil
+}
+
 type PickUp struct {
+}
+
+func GetPickUp(bytes []byte) *PickUp {
+	return nil
+}
+
+func (self *PickUp) ToBytes() []byte {
+	return nil
 }
 
 type Inspect struct {
 }
 
+func GetInspect(bytes []byte) *Inspect {
+	return nil
+}
+
+func (self *Inspect) ToBytes() []byte {
+	return nil
+}
+
 type ChangeAMode struct {
 }
 
+func GetChangeAMode(bytes []byte) *ChangeAMode {
+	return nil
+}
+
+func (self *ChangeAMode) ToBytes() []byte {
+	return nil
+}
+
 type ChangePMode struct {
+}
+
+func GetChangePMode(bytes []byte) *ChangePMode {
+	return nil
+}
+
+func (self *ChangePMode) ToBytes() []byte {
+	return nil
 }

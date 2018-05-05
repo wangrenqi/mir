@@ -1008,63 +1008,124 @@ func (self *ObjectChat) ToBytes() []byte {
 }
 
 type NewItemInfo struct {
+	Info ItemInfo
 }
 
 type MoveItem struct {
+	Grid    cm.MirGridType
+	From    uint32
+	To      uint32
+	Success bool
 }
 
 type EquipItem struct {
+	Grid     cm.MirGridType
+	UniqueID uint64
+	To       uint32
+	Success  bool
 }
 
 type MergeItem struct {
+	GridFrom cm.MirGridType
+	GridTo   cm.MirGridType
+	IDFrom   uint64
+	IDTo     uint64
+	Success  bool
 }
 
 type RemoveItem struct {
+	Grid     cm.MirGridType
+	UniqueID uint64
+	To       uint32
+	Success  bool
 }
 
 type RemoveSlotItem struct {
+	Grid     cm.MirGridType
+	GridTo   cm.MirGridType
+	UniqueID uint64
+	To       uint32
+	Success  bool
 }
 
 type TakeBackItem struct {
+	From    uint32
+	To      uint32
+	Success bool
 }
 
 type StoreItem struct {
+	From    uint32
+	To      uint32
+	Success bool
 }
 
 type SplitItem struct {
+	Item UserItem
+	Grid cm.MirGridType
 }
 
 type SplitItem1 struct {
+	Grid     cm.MirGridType
+	UniqueID uint64
+	Count    uint32
+	Success  bool
 }
 
 type DepositRefineItem struct {
+	From    uint32
+	To      uint32
+	Success bool
 }
 
 type RetrieveRefineItem struct {
+	From    uint32
+	To      uint32
+	Success bool
 }
 
 type RefineCancel struct {
+	Unlock bool
 }
 
 type RefineItem struct {
+	UniqueID uint64
 }
 
 type DepositTradeItem struct {
+	From    uint32
+	To      uint32
+	Success bool
 }
 
 type RetrieveTradeItem struct {
+	From    uint32
+	To      uint32
+	Success bool
 }
 
 type UseItem struct {
+	UniqueID uint64
+	Success  bool
 }
 
 type DropItem struct {
+	UniqueID uint64
+	Count    uint32
+	Success  bool
 }
 
 type PlayerUpdate struct {
+	ObjectID     uint32
+	Light        byte
+	Weapon       uint16
+	WeaponEffect uint16
+	Armour       uint16
+	WingEffect   byte
 }
 
 type PlayerInspect struct {
+	// TODO
 }
 
 type LogOutSuccess struct {

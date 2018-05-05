@@ -53,6 +53,52 @@ func BytesToStruct(bytes []byte) (int, interface{}) {
 		data = cp.GetRun(bytes)
 	case cp.CHAT:
 		data = cp.GetChat(bytes)
+	case cp.MOVE_ITEM:
+		data = cp.GetMoveItem(bytes)
+	case cp.STORE_ITEM:
+		data = cp.GetStoreItem(bytes)
+	case cp.TAKE_BACK_ITEM:
+		data = cp.GetTakeBackItem(bytes)
+	case cp.MERGE_ITEM:
+		data = cp.GetMergeItem(bytes)
+	case cp.EQUIP_ITEM:
+		data = cp.GetEquipItem(bytes)
+	case cp.REMOVE_ITEM:
+		data = cp.GetRemoveItem(bytes)
+	case cp.REMOVE_SLOT_ITEM:
+		data = cp.GetRemoveSlotItem(bytes)
+	case cp.SPLIT_ITEM:
+		data = cp.GetSplitItem(bytes)
+	case cp.USE_ITEM:
+		data = cp.GetUseItem(bytes)
+	case cp.DROP_ITEM:
+		data = cp.GetDropItem(bytes)
+	case cp.DEPOSIT_REFINE_ITEM:
+		data = cp.GetDepositRefineItem(bytes)
+	case cp.RETRIEVE_REFINE_ITEM:
+		data = cp.GetRetrieveRefineItem(bytes)
+	case cp.REFINE_CANCEL:
+		data = cp.GetRefineCancel(bytes)
+	case cp.REFINE_ITEM:
+		data = cp.GetRefineItem(bytes)
+	case cp.CHECK_REFINE:
+		data = cp.GetCheckRefine(bytes)
+	case cp.REPLACE_WED_RING:
+		data = cp.GetReplaceWedRing(bytes)
+	case cp.DEPOSIT_TRADE_ITEM:
+		data = cp.GetDepositTradeItem(bytes)
+	case cp.RETRIEVE_TRADE_ITEM:
+		data = cp.GetRetrieveTradeItem(bytes)
+	case cp.DROP_GOLD:
+		data = cp.GetDropGold(bytes)
+	case cp.PICK_UP:
+		data = cp.GetPickUp(bytes)
+	case cp.INSPECT:
+		data = cp.GetInspect(bytes)
+	case cp.CHANGE_A_MODE:
+		data = cp.GetChangeAMode(bytes)
+	case cp.CHANGE_P_MODE:
+		data = cp.GetChangePMode(bytes)
 	default:
 		data = &Null{}
 		log.Println("未知的client packet index:", index)
@@ -95,6 +141,52 @@ func (pkg *Packet) ToBytes() []byte {
 		parser = pkg.Data.(*cp.Run)
 	case cp.CHAT:
 		parser = pkg.Data.(*cp.Chat)
+	case cp.MOVE_ITEM:
+		parser = pkg.Data.(*cp.MoveItem)
+	case cp.STORE_ITEM:
+		parser = pkg.Data.(*cp.StoreItem)
+	case cp.TAKE_BACK_ITEM:
+		parser = pkg.Data.(*cp.TakeBackItem)
+	case cp.MERGE_ITEM:
+		parser = pkg.Data.(*cp.MergeItem)
+	case cp.EQUIP_ITEM:
+		parser = pkg.Data.(*cp.EquipItem)
+	case cp.REMOVE_ITEM:
+		parser = pkg.Data.(*cp.RemoveItem)
+	case cp.REMOVE_SLOT_ITEM:
+		parser = pkg.Data.(*cp.RemoveSlotItem)
+	case cp.SPLIT_ITEM:
+		parser = pkg.Data.(*cp.SplitItem)
+	case cp.USE_ITEM:
+		parser = pkg.Data.(*cp.UseItem)
+	case cp.DROP_ITEM:
+		parser = pkg.Data.(*cp.DropItem)
+	case cp.DEPOSIT_REFINE_ITEM:
+		parser = pkg.Data.(*cp.DepositRefineItem)
+	case cp.RETRIEVE_REFINE_ITEM:
+		parser = pkg.Data.(*cp.RetrieveRefineItem)
+	case cp.REFINE_CANCEL:
+		parser = pkg.Data.(*cp.RefineCancel)
+	case cp.REFINE_ITEM:
+		parser = pkg.Data.(*cp.RefineItem)
+	case cp.CHECK_REFINE:
+		parser = pkg.Data.(*cp.CheckRefine)
+	case cp.REPLACE_WED_RING:
+		parser = pkg.Data.(*cp.ReplaceWedRing)
+	case cp.DEPOSIT_TRADE_ITEM:
+		parser = pkg.Data.(*cp.DepositTradeItem)
+	case cp.RETRIEVE_TRADE_ITEM:
+		parser = pkg.Data.(*cp.RetrieveTradeItem)
+	case cp.DROP_GOLD:
+		parser = pkg.Data.(*cp.DropGold)
+	case cp.PICK_UP:
+		parser = pkg.Data.(*cp.PickUp)
+	case cp.INSPECT:
+		parser = pkg.Data.(*cp.Inspect)
+	case cp.CHANGE_A_MODE:
+		parser = pkg.Data.(*cp.ChangeAMode)
+	case cp.CHANGE_P_MODE:
+		parser = pkg.Data.(*cp.ChangePMode)
 	default:
 		parser = &Null{}
 	}
