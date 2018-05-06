@@ -17,6 +17,11 @@ func InitEnviron() *Environ {
 
 	maps := GetMaps(MapFilesPath)
 
+	for _, m := range *maps {
+		m.LoadNPC()
+		m.LoadMonster()
+	}
+
 	return &Environ{
 		Db:   db,
 		Maps: maps,

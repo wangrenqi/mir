@@ -7,7 +7,7 @@ import (
 	cm "mir/common"
 )
 
-var MapFilesPath = "/Users/Mccree/gopath/src/mir/env/maps"
+var MapFilesPath = "env/maps"
 
 type Map struct {
 	Witdh  uint16
@@ -152,4 +152,12 @@ func (self *Map) ValidPoint(point cm.Point) bool {
 func GetStartPoint() cm.Point {
 	// TODO Random
 	return cm.Point{X: 287, Y: 612}
+}
+
+func (self *Map) LoadNPC() {
+	// TODO
+}
+
+func (self *Map) LoadMonster() {
+	// TODO
 }
