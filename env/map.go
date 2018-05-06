@@ -148,3 +148,8 @@ func (self *Map) ValidPoint(point cm.Point) bool {
 	}
 	return false
 }
+
+func GetStartPoint() cm.Point {
+	// TODO Random
+	return cm.Point{X: 287, Y: 612}
+}

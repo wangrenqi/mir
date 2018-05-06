@@ -9,6 +9,7 @@ import (
 	"log"
 	"net"
 	"mir/object"
+	"mir/env"
 )
 
 const (
@@ -138,13 +139,22 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 		return nil
 	}
 	// TODO check gender class max...
+	startPoint := env.GetStartPoint()
 	characterInfo := &orm.CharacterInfo{
-		Name:   name,
-		Level:  1,
-		Class:  byte(class),
-		Gender: byte(gender),
-		//LastAccess int64
 		AccountInfoID: c.info["AccountInfoID"].(uint32),
+		Name:          name,
+		Level:         1,
+		Class:         byte(class),
+		Gender:        byte(gender),
+		Hair:          1,
+		//GuildIndex: 1,
+		//CreationIP: 1,
+		CurrentLocationX: startPoint.X,
+		CurrentLocationY: startPoint.Y,
+		Direction:        cm.DOWN,
+		HP:               1,
+		MP:               1,
+		Experience:       0,
 	}
 	c.env.Db.Create(characterInfo)
 	SendTo(c.conn, &sp.NewCharacterSuccess{CharInfo: sp.SelectInfo{

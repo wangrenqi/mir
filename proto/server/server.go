@@ -539,73 +539,20 @@ type RandomItemStat struct {
 
 func (self *RandomItemStat) ToBytes() []byte {
 	return []byte{
-		self.MAX_DURA_CHANCE,
-		self.MAX_DURA_STAT_CHANCE,
-		self.MAX_DURA_MAX_STAT,
-		self.MAX_AC_CHANCE,
-		self.MAX_AC_STAT_CHANCE,
-		self.MAX_AC_MAX_STAT,
-		self.MAX_MAC_CHANCE,
-		self.MAX_MAC_STAT_CHANCE,
-		self.MAX_MAC_MAX_STAT,
-		self.MAX_DC_CHANCE,
-		self.MAX_DC_STAT_CHANCE,
-		self.MAX_DC_MAX_STAT,
-		self.MAX_MC_CHANCE,
-		self.MAX_MC_STAT_CHANCE,
-		self.MAX_MC_MAX_STAT,
-		self.MAX_SC_CHANCE,
-		self.MAX_SC_STAT_CHANCE,
-		self.MAX_SC_MAX_STAT,
-		self.ACCURACY_CHANCE,
-		self.ACCURACY_STAT_CHANCE,
-		self.ACCURACY_MAX_STAT,
-		self.AGILITY_CHANCE,
-		self.AGILITY_STAT_CHANCE,
-		self.AGILITY_MAX_STAT,
-		self.HP_CHANCE,
-		self.HP_STAT_CHANCE,
-		self.HP_MAX_STAT,
-		self.MP_CHANCE,
-		self.MP_STAT_CHANCE,
-		self.MP_MAX_STAT,
-		self.STRONG_CHANCE,
-		self.STRONG_STAT_CHANCE,
-		self.STRONG_MAX_STAT,
-		self.MAGIC_RESIST_CHANCE,
-		self.MAGIC_RESIST_STAT_CHANCE,
-		self.MAGIC_RESIST_MAX_STAT,
-		self.POISON_RESIST_CHANCE,
-		self.POISON_RESIST_STAT_CHANCE,
-		self.POISON_RESIST_MAX_STAT,
-		self.HP_RECOV_CHANCE,
-		self.HP_RECOV_STAT_CHANCE,
-		self.HP_RECOV_MAX_STAT,
-		self.MP_RECOV_CHANCE,
-		self.MP_RECOV_STAT_CHANCE,
-		self.MP_RECOV_MAX_STAT,
-		self.POISON_RECOV_CHANCE,
-		self.POISON_RECOV_STAT_CHANCE,
-		self.POISON_RECOV_MAX_STAT,
-		self.CRITICAL_RATE_CHANCE,
-		self.CRITICAL_RATE_STAT_CHANCE,
-		self.CRITICAL_RATE_MAX_STAT,
-		self.CRITICAL_DAMAGE_CHANCE,
-		self.CRITICAL_DAMAGE_STAT_CHANCE,
-		self.CRITICAL_DAMAGE_MAX_STAT,
-		self.FREEZE_CHANCE,
-		self.FREEZE_STAT_CHANCE,
-		self.FREEZE_MAX_STAT,
-		self.POISON_ATTACK_CHANCE,
-		self.POISON_ATTACK_STAT_CHANCE,
-		self.POISON_ATTACK_MAX_STAT,
-		self.ATTACK_SPEED_CHANCE,
-		self.ATTACK_SPEED_STAT_CHANCE,
-		self.ATTACK_SPEED_MAX_STAT,
-		self.LUCK_CHANCE,
-		self.LUCK_STAT_CHANCE,
-		self.LUCK_MAX_STAT,
-		self.CURSE_CHANCE,
+		self.MAX_DURA_CHANCE, self.MAX_DURA_STAT_CHANCE, self.MAX_DURA_MAX_STAT, self.MAX_AC_CHANCE, self.MAX_AC_STAT_CHANCE,
+		self.MAX_AC_MAX_STAT, self.MAX_MAC_CHANCE, self.MAX_MAC_STAT_CHANCE, self.MAX_MAC_MAX_STAT, self.MAX_DC_CHANCE,
+		self.MAX_DC_STAT_CHANCE, self.MAX_DC_MAX_STAT, self.MAX_MC_CHANCE, self.MAX_MC_STAT_CHANCE, self.MAX_MC_MAX_STAT,
+		self.MAX_SC_CHANCE, self.MAX_SC_STAT_CHANCE, self.MAX_SC_MAX_STAT, self.ACCURACY_CHANCE, self.ACCURACY_STAT_CHANCE,
+		self.ACCURACY_MAX_STAT, self.AGILITY_CHANCE, self.AGILITY_STAT_CHANCE, self.AGILITY_MAX_STAT, self.HP_CHANCE,
+		self.HP_STAT_CHANCE, self.HP_MAX_STAT, self.MP_CHANCE, self.MP_STAT_CHANCE, self.MP_MAX_STAT, self.STRONG_CHANCE,
+		self.STRONG_STAT_CHANCE, self.STRONG_MAX_STAT, self.MAGIC_RESIST_CHANCE, self.MAGIC_RESIST_STAT_CHANCE, self.MAGIC_RESIST_MAX_STAT,
+		self.POISON_RESIST_CHANCE, self.POISON_RESIST_STAT_CHANCE, self.POISON_RESIST_MAX_STAT, self.HP_RECOV_CHANCE,
+		self.HP_RECOV_STAT_CHANCE, self.HP_RECOV_MAX_STAT, self.MP_RECOV_CHANCE, self.MP_RECOV_STAT_CHANCE, self.MP_RECOV_MAX_STAT,
+		self.POISON_RECOV_CHANCE, self.POISON_RECOV_STAT_CHANCE, self.POISON_RECOV_MAX_STAT, self.CRITICAL_RATE_CHANCE,
+		self.CRITICAL_RATE_STAT_CHANCE, self.CRITICAL_RATE_MAX_STAT, self.CRITICAL_DAMAGE_CHANCE, self.CRITICAL_DAMAGE_STAT_CHANCE,
+		self.CRITICAL_DAMAGE_MAX_STAT, self.FREEZE_CHANCE, self.FREEZE_STAT_CHANCE, self.FREEZE_MAX_STAT, self.POISON_ATTACK_CHANCE,
+		self.POISON_ATTACK_STAT_CHANCE, self.POISON_ATTACK_MAX_STAT, self.ATTACK_SPEED_CHANCE, self.ATTACK_SPEED_STAT_CHANCE,
+		self.ATTACK_SPEED_MAX_STAT, self.LUCK_CHANCE, self.LUCK_STAT_CHANCE, self.LUCK_MAX_STAT, self.CURSE_CHANCE,
 	}
 }
 
@@ -624,8 +571,8 @@ type ItemInfo struct {
 	RequiredAmount   byte
 	Image            uint16
 	Durability       uint16
-	Price            uint16
-	StackSize        uint16 //default 1;
+	Price            uint32
+	StackSize        uint32 //default 1;
 	MinAC            byte
 	MaxAC            byte
 	MinMAC           byte
@@ -681,7 +628,88 @@ type ItemInfo struct {
 
 // TODO
 func (self *ItemInfo) ToBytes() []byte {
-	return nil
+	indexBytes := cm.Uint32ToBytes(self.Index)
+	nameBytes := cm.StringToBytes(self.Name)
+	typeBytes := []byte{byte(self.Type)}
+	gradeBytes := []byte{byte(self.Grade)}
+	requiredTypeBytes := []byte{byte(self.RequiredType)}
+	requiredClassBytes := []byte{byte(self.RequiredClass)}
+	requiredGenderBytes := []byte{byte(self.RequiredGender)}
+	setBytes := []byte{byte(self.Set)}
+	shapeBytes := cm.Uint16ToBytes(self.Shape)
+	weightBytes := []byte{self.Weight}
+	lightBytes := []byte{self.Light}
+	requiredAmountBytes := []byte{self.RequiredAmount}
+	imageBytes := cm.Uint16ToBytes(self.Image)
+	durabilityBytes := cm.Uint16ToBytes(self.Durability)
+	priceBytes := cm.Uint32ToBytes(self.Price)
+	stackSizeBytes := cm.Uint32ToBytes(self.StackSize)
+	minACBytes := []byte{self.MinAC}
+	maxACBytes := []byte{self.MaxAC}
+	minMACBytes := []byte{self.MinMAC}
+	maxMACBytes := []byte{self.MaxMAC}
+	minDCBytes := []byte{self.MinDC}
+	maxDCBytes := []byte{self.MaxDC}
+	minMCBytes := []byte{self.MinMC}
+	maxMCBytes := []byte{self.MaxMC}
+	minSCBytes := []byte{self.MinSC}
+	maxSCBytes := []byte{self.MaxSC}
+	accuracyBytes := []byte{self.Accuracy}
+	agilityBytes := []byte{self.Agility}
+	hPBytes := cm.Uint16ToBytes(self.HP)
+	mPBytes := cm.Uint16ToBytes(self.MP)
+	attackSpeedBytes := []byte{byte(self.AttackSpeed)} // TODO int8 可能为负数，先当正数处理
+	luckBytes := []byte{byte(self.Luck)}               // 同上
+	bagWeightBytes := []byte{self.BagWeight}
+	handWeightBytes := []byte{self.HandWeight}
+	wearWeightBytes := []byte{self.WearWeight}
+	startItemBytes := cm.BoolToBytes(self.StartItem)
+	effectBytes := []byte{self.Effect}
+	strongBytes := []byte{self.Strong}
+	magicResistBytes := []byte{self.MagicResist}
+	poisonResistBytes := []byte{self.PoisonResist}
+	healthRecoveryBytes := []byte{self.HealthRecovery}
+	spellRecoveryBytes := []byte{self.SpellRecovery}
+	poisonRecoveryBytes := []byte{self.PoisonRecovery}
+	hPrateBytes := []byte{self.HPrate}
+	mPrateBytes := []byte{self.MPrate}
+	criticalRateBytes := []byte{self.CriticalRate}
+	criticalDamageBytes := []byte{self.CriticalDamage}
+	needIdentifyBytes := cm.BoolToBytes(self.NeedIdentify)
+	showGroupPickupBytes := cm.BoolToBytes(self.ShowGroupPickup)
+	globalDropNotifyBytes := cm.BoolToBytes(self.GlobalDropNotify)
+	classBasedBytes := cm.BoolToBytes(self.ClassBased)
+	levelBasedBytes := cm.BoolToBytes(self.LevelBased)
+	canMineBytes := cm.BoolToBytes(self.CanMine)
+	canFastRunBytes := cm.BoolToBytes(self.CanFastRun)
+	canAwakeningBytes := cm.BoolToBytes(self.CanAwakening)
+	maxAcRateBytes := []byte{self.MaxAcRate}
+	maxMacRateBytes := []byte{self.MaxMacRate}
+	holyBytes := []byte{self.Holy}
+	freezingBytes := []byte{self.Freezing}
+	poisonAttackBytes := []byte{self.PoisonAttack}
+	hpDrainRateBytes := []byte{self.HpDrainRate}
+	bindBytes := cm.Uint16ToBytes(self.Bind)
+	reflectBytes := []byte{self.Reflect}
+	uniqueBytes := cm.Uint16ToBytes(self.Unique)
+	randomStatsIdBytes := []byte{self.RandomStatsId}
+	randomStatsBytes := self.RandomStats.ToBytes()
+	toolTipBytes := cm.StringToBytes(self.ToolTip)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{indexBytes, nameBytes, typeBytes, gradeBytes, requiredTypeBytes, requiredClassBytes,
+		requiredGenderBytes, setBytes, shapeBytes, weightBytes, lightBytes, requiredAmountBytes, imageBytes,
+		durabilityBytes, priceBytes, stackSizeBytes, minACBytes, maxACBytes, minMACBytes, maxMACBytes, minDCBytes,
+		maxDCBytes, minMCBytes, maxMCBytes, minSCBytes, maxSCBytes, accuracyBytes, agilityBytes, hPBytes, mPBytes,
+		attackSpeedBytes, luckBytes, bagWeightBytes, handWeightBytes, wearWeightBytes, startItemBytes, effectBytes,
+		strongBytes, magicResistBytes, poisonResistBytes, healthRecoveryBytes, spellRecoveryBytes, poisonRecoveryBytes,
+		hPrateBytes, mPrateBytes, criticalRateBytes, criticalDamageBytes, needIdentifyBytes, showGroupPickupBytes,
+		globalDropNotifyBytes, classBasedBytes, levelBasedBytes, canMineBytes, canFastRunBytes, canAwakeningBytes,
+		maxAcRateBytes, maxMacRateBytes, holyBytes, freezingBytes, poisonAttackBytes, hpDrainRateBytes, bindBytes,
+		reflectBytes, uniqueBytes, randomStatsIdBytes, randomStatsBytes, toolTipBytes,
+	} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type UserItem struct {
