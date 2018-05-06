@@ -1412,9 +1412,55 @@ type LoseCredit struct{}
 
 func (self *LoseCredit) ToBytes() []byte { return nil }
 
-type ObjectMonster struct{}
+type ObjectMonster struct {
+	ObjectID          uint32
+	Name              string
+	NameColour        uint32 // Color
+	Location          cm.Point
+	Image             cm.Monster
+	Direction         cm.MirDirection
+	Effect            byte
+	AI                byte
+	Light             byte
+	Dead              bool
+	Skeleton          bool
+	Poison            cm.PoisonType
+	Hidden            bool
+	Extra             bool
+	ExtraByte         byte
+	ShockTime         uint64 // long
+	BindingShotCenter bool
+}
 
-func (self *ObjectMonster) ToBytes() []byte { return nil }
+func (self *ObjectMonster) ToBytes() []byte {
+	// TODO test
+	pkgBytes := cm.Uint16ToBytes(OBJECT_MONSTER)
+	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	nameBytes := cm.StringToBytes(self.Name)
+	nameColorBytes := cm.Uint32ToBytes(self.NameColour)
+	locationBytes := self.Location.ToBytes()
+	imageBytes := []byte{byte(self.Image)}
+	directionBytes := []byte{byte(self.Direction)}
+	effectBytes := []byte{self.Effect}
+	aiBytes := []byte{self.AI}
+	lightBytes := []byte{self.Light}
+	deadBytes := cm.BoolToBytes(self.Dead)
+	skeletonBytes := cm.BoolToBytes(self.Skeleton)
+	poisonBytes := []byte{byte(self.Poison)}
+	hiddenBytes := cm.BoolToBytes(self.Hidden)
+	extraBytes := cm.BoolToBytes(self.Extra)
+	extraByteBytes := []byte{self.ExtraByte}
+	shockTimeBytes := cm.Uint64ToBytes(self.ShockTime)
+	bindingShotCenterBytes := cm.BoolToBytes(self.BindingShotCenter)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, objectIdBytes, nameBytes, nameColorBytes, locationBytes,
+		imageBytes, directionBytes, effectBytes, aiBytes, lightBytes, deadBytes, skeletonBytes, poisonBytes,
+		hiddenBytes, extraBytes, extraByteBytes, shockTimeBytes, bindingShotCenterBytes,
+	} {
+		result = append(result, r...)
+	}
+	return result
+}
 
 type ObjectAttack struct{}
 

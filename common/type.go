@@ -153,52 +153,53 @@ const (
 	IS_SULGWAN
 )
 
-// type BindMode uint16
+type BindMode uint16
 
 const (
-	BM_NONE                  = 0
-	BM_DONT_DEATHDROP        = 1
-	BM_DONT_DROP             = 2
-	BM_DONT_SELL             = 4
-	BM_DONT_STORE            = 8
-	BM_DONT_TRADE            = 16
-	BM_DONT_REPAIR           = 32
-	BM_DONT_UPGRADE          = 64
-	BM_DESTROY_ON_DROP       = 128
-	BM_BREAK_ON_DEATH        = 256
-	BM_BIND_ON_EQUIP         = 512
-	BM_NO_S_REPAIR           = 1024
-	BM_NO_WEDDING_RING       = 2048
-	BM_UNABLE_TO_RENT        = 4096
-	BM_UNABLE_TO_DISASSEMBLE = 8192
+	BM_NONE                  BindMode = iota
+	BM_DONT_DEATHDROP                 = 1
+	BM_DONT_DROP                      = 2
+	BM_DONT_SELL                      = 4
+	BM_DONT_STORE                     = 8
+	BM_DONT_TRADE                     = 16
+	BM_DONT_REPAIR                    = 32
+	BM_DONT_UPGRADE                   = 64
+	BM_DESTROY_ON_DROP                = 128
+	BM_BREAK_ON_DEATH                 = 256
+	BM_BIND_ON_EQUIP                  = 512
+	BM_NO_S_REPAIR                    = 1024
+	BM_NO_WEDDING_RING                = 2048
+	BM_UNABLE_TO_RENT                 = 4096
+	BM_UNABLE_TO_DISASSEMBLE          = 8192
 )
 
-// type SpecialItemMode uint16
+type SpecialItemMode uint16
+
 // TODO 转成十进制
 
 const (
-	SIM_NONE         = 0
-	SIM_PARALIZE     = 0x0001
-	SIM_TELEPORT     = 0x0002
-	SIM_CLEARRING    = 0x0004
-	SIM_PROTECTION   = 0x0008
-	SIM_REVIVAL      = 0x0010
-	SIM_MUSCLE       = 0x0020
-	SIM_FLAME        = 0x0040
-	SIM_HEALING      = 0x0080
-	SIM_PROBE        = 0x0100
-	SIM_SKILL        = 0x0200
-	SIM_NO_DURA_LOSS = 0x0400
-	SIM_BLINK        = 0x800
+	SIM_NONE         SpecialItemMode = iota
+	SIM_PARALIZE                     = 0x0001
+	SIM_TELEPORT                     = 0x0002
+	SIM_CLEARRING                    = 0x0004
+	SIM_PROTECTION                   = 0x0008
+	SIM_REVIVAL                      = 0x0010
+	SIM_MUSCLE                       = 0x0020
+	SIM_FLAME                        = 0x0040
+	SIM_HEALING                      = 0x0080
+	SIM_PROBE                        = 0x0100
+	SIM_SKILL                        = 0x0200
+	SIM_NO_DURA_LOSS                 = 0x0400
+	SIM_BLINK                        = 0x800
 )
 
-//type LevelEffects byte
+type LevelEffects byte
 
 const (
-	LE_NONE        = 0
-	LE_MIST        = 0x0001
-	LE_RED_DRAGON  = 0x0002
-	LE_BLUE_DRAGON = 0x0004
+	LE_NONE        LevelEffects = iota
+	LE_MIST                     = 0x0001
+	LE_RED_DRAGON               = 0x0002
+	LE_BLUE_DRAGON              = 0x0004
 )
 
 type IntelligentCreatureType byte
@@ -295,4 +296,36 @@ const (
 	MGT_RENTING
 	MGT_GUEST_RENTING
 	MGT_CRAFT
+)
+
+type Monster uint16
+
+const (
+	GUARD          Monster = iota
+	TAOIST_GUARD
+	GUARD2
+	HEN
+	DEER
+	SCARECROW
+	HOOKING_CAT
+	RAKING_CAT
+	YOB
+	OMA
+	CANNIBAL_PLANT
+	// TODO ......
+)
+
+type PoisonType uint16
+
+const (
+	PT_None             PoisonType = iota
+	PT_Green                       = 1
+	PT_Red                         = 2
+	PT_Slow                        = 4
+	PT_Frozen                      = 8
+	PT_Stun                        = 16
+	PT_Paralysis                   = 32
+	PT_DelayedExplosion            = 64
+	PT_Bleeding                    = 128
+	PT_LRParalysis                 = 256
 )
