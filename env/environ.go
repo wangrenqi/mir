@@ -6,8 +6,9 @@ import (
 )
 
 type Environ struct {
-	Db   *gorm.DB
-	Maps *map[uint16]Map
+	DB   *gorm.DB
+	Maps *map[uint32]Map
+	AOI  *map[uint32][]AOIEntity
 }
 
 func InitEnviron() *Environ {
@@ -17,13 +18,19 @@ func InitEnviron() *Environ {
 
 	maps := GetMaps(MapFilesPath)
 
-	for _, m := range *maps {
+	aoi := make(map[uint32][]AOIEntity)
+
+	for i, m := range *maps {
+		m.Index = i
 		m.LoadNPC()
 		m.LoadMonster()
+
+		aoi[i] = m.GetAOIEntities()
 	}
 
 	return &Environ{
-		Db:   db,
+		DB:   db,
 		Maps: maps,
+		AOI:  &aoi,
 	}
 }

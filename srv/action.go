@@ -66,12 +66,12 @@ func (c *client) NewAccount(pkg *p.Packet) error {
 	accountId := pkg.Data.(*cp.NewAccount).AccountID
 	password := pkg.Data.(*cp.NewAccount).Password
 	var account orm.AccountInfo
-	c.env.Db.First(&account, "account_id = ?", accountId)
+	c.env.DB.First(&account, "account_id = ?", accountId)
 	if account.AccountID == accountId {
 		SendTo(c.conn, &sp.NewAccount{Result: byte(7)})
 		return nil
 	}
-	c.env.Db.Create(&orm.AccountInfo{
+	c.env.DB.Create(&orm.AccountInfo{
 		AccountID: accountId,
 		Password:  password,
 	})
@@ -107,7 +107,7 @@ func (c *client) Login(pkg *p.Packet) error {
 	accountId := pkg.Data.(*cp.Login).AccountID
 	password := pkg.Data.(*cp.Login).Password
 	var account orm.AccountInfo
-	c.env.Db.Where(&orm.AccountInfo{AccountID: accountId, Password: password}).First(&account)
+	c.env.DB.Where(&orm.AccountInfo{AccountID: accountId, Password: password}).First(&account)
 	if account.AccountID == "" {
 		// login failed
 		SendTo(c.conn, &sp.Login{Result: byte(4)})
@@ -118,7 +118,7 @@ func (c *client) Login(pkg *p.Packet) error {
 	c.info["AccountInfoID"] = account.Index
 	// query characters
 	var characters []orm.CharacterInfo
-	c.env.Db.Model(&account).Related(&characters)
+	c.env.DB.Model(&account).Related(&characters)
 	selectInfos := toSelectInfos(characters)
 	SendTo(c.conn, &sp.LoginSuccess{Characters: selectInfos})
 	return nil
@@ -132,7 +132,7 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 	gender := pkg.Data.(*cp.NewCharacter).Gender
 	class := pkg.Data.(*cp.NewCharacter).Class
 	var character orm.CharacterInfo
-	c.env.Db.First(&character, "name = ?", name)
+	c.env.DB.First(&character, "name = ?", name)
 	if character.Name != "" {
 		// 已经存在角色名name
 		SendTo(c.conn, &sp.NewCharacter{Result: 5})
@@ -149,6 +149,7 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 		Hair:          1,
 		//GuildIndex: 1,
 		//CreationIP: 1,
+		CurrentMapIndex:  0,
 		CurrentLocationX: startPoint.X,
 		CurrentLocationY: startPoint.Y,
 		Direction:        cm.DOWN,
@@ -156,7 +157,7 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 		MP:               1,
 		Experience:       0,
 	}
-	c.env.Db.Create(characterInfo)
+	c.env.DB.Create(characterInfo)
 	SendTo(c.conn, &sp.NewCharacterSuccess{CharInfo: sp.SelectInfo{
 		Name:   name,
 		Level:  1,
@@ -180,16 +181,17 @@ func (c *client) StartGame(pkg *p.Packet) error {
 	index := pkg.Data.(*cp.StartGame).CharacterIndex
 	accountInfoId := c.info["AccountInfoID"].(uint32)
 	var character orm.CharacterInfo
-	c.env.Db.Where(&orm.CharacterInfo{Index: uint32(index), AccountInfoID: accountInfoId}).First(&character)
+	c.env.DB.Where(&orm.CharacterInfo{Index: uint32(index), AccountInfoID: accountInfoId}).First(&character)
 	if character.AccountInfoID == 0 || character.Index == 0 {
 		return nil
 	}
 	c.player = &object.PlayerObject{
 		MapObject: object.MapObject{
-			ObjectID:        character.Index,
+			ObjectID:        character.Index, // TODO 应该取map object id，随地图object 数量递增
 			Name:            character.Name,
-			Level:           character.Level,
+			CurrentMapIndex: character.CurrentMapIndex,
 			CurrentLocation: cm.Point{X: character.CurrentLocationX, Y: character.CurrentLocationY},
+			Level:           character.Level,
 			Direction:       character.Direction,
 			// TODO
 			// ...

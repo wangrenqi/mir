@@ -45,6 +45,7 @@ type CharacterInfo struct {
 	//public string BanReason = string.Empty;
 	//public DateTime ExpiryDate;
 	// ...
+	CurrentMapIndex  uint32
 	CurrentLocationX int32
 	CurrentLocationY int32
 	Direction        cm.MirDirection

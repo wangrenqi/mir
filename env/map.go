@@ -10,13 +10,14 @@ import (
 var MapFilesPath = "env/maps"
 
 type Map struct {
+	Index  uint32
 	Witdh  uint16
 	Height uint16
 	Points []cm.Point
 	Object interface{}
 }
 
-func GetMaps(path string) *map[uint16]Map {
+func GetMaps(path string) *map[uint32]Map {
 	// TODO for map in path, loop read map and return []Map
 	fileBytes, err := filepath.Abs(path + "/0.map")
 	if err != nil {
@@ -32,8 +33,8 @@ func GetMaps(path string) *map[uint16]Map {
 
 	//saveToFile(tmp)
 
-	index := uint16(12289) // TODO
-	maps := make(map[uint16]Map)
+	index := uint32(12289) // TODO
+	maps := make(map[uint32]Map)
 	maps[index] = tmp
 	return &maps
 }
