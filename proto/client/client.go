@@ -637,3 +637,73 @@ func GetChangePMode(bytes []byte) *ChangePMode {
 func (self *ChangePMode) ToBytes() []byte {
 	return nil
 }
+
+type ChangeTrade struct {
+}
+
+func (self *ChangeTrade) ToBytes() []byte { return nil }
+
+type Attack struct {
+}
+
+func (self *Attack) ToBytes() []byte { return nil }
+
+type RangeAttack struct {
+}
+
+func (self *RangeAttack) ToBytes() []byte { return nil }
+
+type Harvest struct {
+}
+
+func (self *Harvest) ToBytes() []byte { return nil }
+
+type CallNPC struct {
+}
+
+func (self *CallNPC) ToBytes() []byte { return nil }
+
+type TalkMonsterNPC struct {
+}
+
+func (self *TalkMonsterNPC) ToBytes() []byte { return nil }
+
+type BuyItem struct {
+}
+
+func (self *BuyItem) ToBytes() []byte { return nil }
+
+type SellItem struct {
+}
+
+func (self *SellItem) ToBytes() []byte { return nil }
+
+type CraftItem struct {
+}
+
+func (self *CraftItem) ToBytes() []byte { return nil }
+
+type RepairItem struct {
+}
+
+func (self *RepairItem) ToBytes() []byte { return nil }
+
+type BuyItemBack struct {
+}
+
+func (self *BuyItemBack) ToBytes() []byte { return nil }
+
+type SRepairItem struct {
+}
+
+func (self *SRepairItem) ToBytes() []byte { return nil }
+
+type MagicKey struct {
+}
+
+func (self *MagicKey) ToBytes() []byte { return nil }
+
+type Magic struct {
+}
+
+func (self *Magic) ToBytes() []byte { return nil }

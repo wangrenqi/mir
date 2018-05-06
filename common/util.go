@@ -60,3 +60,7 @@ func BytesToUint16(bytes []byte) uint16 {
 func BytesToUint32(bytes []byte) uint32 {
 	return binary.LittleEndian.Uint32(bytes)
 }
+
+func BytesToUint64(bytes []byte) uint64 {
+	return binary.LittleEndian.Uint64(bytes)
+}

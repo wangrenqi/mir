@@ -1384,10 +1384,210 @@ type ChangeAMode struct {
 type ChangePMode struct {
 }
 
-//type NewQuestInfo struct {
-//
-//}
-//
-//func (self *NewQuestInfo) ToBytes() []byte {
-//	return
-//}
+type ObjectItem struct{}
+
+func (self *ObjectItem) ToBytes() []byte { return nil }
+
+type ObjectGold struct{}
+
+func (self *ObjectGold) ToBytes() []byte { return nil }
+
+type GainedItem struct{}
+
+func (self *GainedItem) ToBytes() []byte { return nil }
+
+type GainedGold struct{}
+
+func (self *GainedGold) ToBytes() []byte { return nil }
+
+type LoseGold struct{}
+
+func (self *LoseGold) ToBytes() []byte { return nil }
+
+type GainedCredit struct{}
+
+func (self *GainedCredit) ToBytes() []byte { return nil }
+
+type LoseCredit struct{}
+
+func (self *LoseCredit) ToBytes() []byte { return nil }
+
+type ObjectMonster struct{}
+
+func (self *ObjectMonster) ToBytes() []byte { return nil }
+
+type ObjectAttack struct{}
+
+func (self *ObjectAttack) ToBytes() []byte { return nil }
+
+type Struck struct{}
+
+func (self *Struck) ToBytes() []byte { return nil }
+
+type ObjectStruck struct{}
+
+func (self *ObjectStruck) ToBytes() []byte { return nil }
+
+type DamageIndicator struct{}
+
+func (self *DamageIndicator) ToBytes() []byte { return nil }
+
+type DuraChanged struct{}
+
+func (self *DuraChanged) ToBytes() []byte { return nil }
+
+type HealthChanged struct{}
+
+func (self *HealthChanged) ToBytes() []byte { return nil }
+
+type DeleteItem struct{}
+
+func (self *DeleteItem) ToBytes() []byte { return nil }
+
+type Death struct{}
+
+func (self *Death) ToBytes() []byte { return nil }
+
+type ObjectDied struct{}
+
+func (self *ObjectDied) ToBytes() []byte { return nil }
+
+type ColourChanged struct{}
+
+func (self *ColourChanged) ToBytes() []byte { return nil }
+
+type ObjectColourChanged struct{}
+
+func (self *ObjectColourChanged) ToBytes() []byte { return nil }
+
+type ObjectGuildNameChanged struct{}
+
+func (self *ObjectGuildNameChanged) ToBytes() []byte { return nil }
+
+type GainExperience struct{}
+
+func (self *GainExperience) ToBytes() []byte { return nil }
+
+type LevelChanged struct{}
+
+func (self *LevelChanged) ToBytes() []byte { return nil }
+
+type ObjectLeveled struct{}
+
+func (self *ObjectLeveled) ToBytes() []byte { return nil }
+
+type ObjectHarvest struct{}
+
+func (self *ObjectHarvest) ToBytes() []byte { return nil }
+
+type ObjectHarvested struct{}
+
+func (self *ObjectHarvested) ToBytes() []byte { return nil }
+
+type ObjectNpc struct{}
+
+func (self *ObjectNpc) ToBytes() []byte { return nil }
+
+type NPCResponse struct{}
+
+func (self *NPCResponse) ToBytes() []byte { return nil }
+
+type ObjectHide struct{}
+
+func (self *ObjectHide) ToBytes() []byte { return nil }
+
+type ObjectShow struct{}
+
+func (self *ObjectShow) ToBytes() []byte { return nil }
+
+type Poisoned struct{}
+
+func (self *Poisoned) ToBytes() []byte { return nil }
+
+type ObjectPoisoned struct{}
+
+func (self *ObjectPoisoned) ToBytes() []byte { return nil }
+
+type MapChanged struct{}
+
+func (self *MapChanged) ToBytes() []byte { return nil }
+
+type ObjectTeleportOut struct{}
+
+func (self *ObjectTeleportOut) ToBytes() []byte { return nil }
+
+type ObjectTeleportIn struct{}
+
+func (self *ObjectTeleportIn) ToBytes() []byte { return nil }
+
+type TeleportIn struct{}
+
+func (self *TeleportIn) ToBytes() []byte { return nil }
+
+type NPCGoods struct{}
+
+func (self *NPCGoods) ToBytes() []byte { return nil }
+
+type NPCSell struct{}
+
+func (self *NPCSell) ToBytes() []byte { return nil }
+
+type NPCRepair struct{}
+
+func (self *NPCRepair) ToBytes() []byte { return nil }
+
+type NPCSRepair struct{}
+
+func (self *NPCSRepair) ToBytes() []byte { return nil }
+
+type NPCRefine struct{}
+
+func (self *NPCRefine) ToBytes() []byte { return nil }
+
+type NPCCheckRefine struct{}
+
+func (self *NPCCheckRefine) ToBytes() []byte { return nil }
+
+type NPCCollectRefine struct{}
+
+func (self *NPCCollectRefine) ToBytes() []byte { return nil }
+
+type NPCReplaceWedRing struct{}
+
+func (self *NPCReplaceWedRing) ToBytes() []byte { return nil }
+
+type NPCStorage struct{}
+
+func (self *NPCStorage) ToBytes() []byte { return nil }
+
+type SellItem struct{}
+
+func (self *SellItem) ToBytes() []byte { return nil }
+
+type CraftItem struct{}
+
+func (self *CraftItem) ToBytes() []byte { return nil }
+
+type RepairItem struct{}
+
+func (self *RepairItem) ToBytes() []byte { return nil }
+
+type ItemRepaired struct{}
+
+func (self *ItemRepaired) ToBytes() []byte { return nil }
+
+type NewMagic struct{}
+
+func (self *NewMagic) ToBytes() []byte { return nil }
+
+type RemoveMagic struct{}
+
+func (self *RemoveMagic) ToBytes() []byte { return nil }
+
+type MagicLeveled struct{}
+
+func (self *MagicLeveled) ToBytes() []byte { return nil }
+
+type Magic struct{}
+
+func (self *Magic) ToBytes() []byte { return nil }
