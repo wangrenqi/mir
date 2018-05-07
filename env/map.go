@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"log"
 	cm "mir/common"
+	"github.com/jinzhu/gorm"
+	"mir/orm"
 )
 
 var MapFilesPath = "env/maps"
@@ -155,10 +157,18 @@ func GetStartPoint() cm.Point {
 	return cm.Point{X: 287, Y: 612}
 }
 
-func (self *Map) LoadNPC() {
+func (self *Map) LoadNPC(db *gorm.DB) {
 	// TODO
 }
 
-func (self *Map) LoadMonster() {
-	// TODO
+func (self *Map) LoadMonster(db *gorm.DB) {
+	var respawnInfos []orm.RespawnInfo
+	db.Where(&orm.RespawnInfo{MapIndex: self.Index}).Find(&respawnInfos)
+
+	//for _, info := range respawnInfos {
+	//	//TODO
+	//	monsterCount = info.Count
+	//	get monster info by monster index
+	//	create monster object and save to map object
+	//}
 }

@@ -14,7 +14,7 @@ type Environ struct {
 func InitEnviron() *Environ {
 	db := orm.GetDB()
 
-	db.AutoMigrate(&orm.AccountInfo{}, &orm.CharacterInfo{})
+	db.AutoMigrate(&orm.AccountInfo{}, &orm.CharacterInfo{}, &orm.RespawnInfo{})
 
 	maps := GetMaps(MapFilesPath)
 
@@ -22,8 +22,8 @@ func InitEnviron() *Environ {
 
 	for i, m := range *maps {
 		m.Index = i
-		m.LoadNPC()
-		m.LoadMonster()
+		m.LoadNPC(db)
+		m.LoadMonster(db)
 
 		aoi[i] = m.GetAOIEntities()
 	}

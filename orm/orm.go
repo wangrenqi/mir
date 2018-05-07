@@ -60,3 +60,20 @@ type CharacterInfo struct {
 	//public PetMode PMode;
 	// ...
 }
+
+// many maps to many monster types
+type RespawnInfo struct {
+	Index        uint32 `gorm:"primary_key"`
+	MapIndex     uint32
+	MonsterIndex uint32
+	Count        uint32
+}
+
+type MonsterInfo struct {
+	Index        uint32 `gorm:"primary_key"`
+	MonsterIndex uint32
+	Name         string
+	Level        uint16
+	HP           uint16
+	// TODO ...
+}
