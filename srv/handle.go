@@ -13,13 +13,14 @@ import (
 )
 
 type client struct {
-	id      int32
-	conn    net.Conn
-	reqChan <-chan []byte
-	env     *env.Environ
-	status  int
-	info    map[string]interface{}
-	player  *object.PlayerObject
+	id        int32
+	conn      net.Conn
+	reqChan   <-chan []byte
+	env       *env.Environ
+	status    int
+	info      map[string]interface{}
+	player    *object.PlayerObject
+	aoiEntity *env.AOIEntity
 }
 
 var id int32 = 0
@@ -29,13 +30,14 @@ var clients = make(map[int32]*client)
 func HandleClient(conn net.Conn, env *env.Environ) {
 	reqChan := make(chan []byte, 1024)
 	client := &client{
-		id:      id,
-		conn:    conn,
-		reqChan: reqChan,
-		env:     env,
-		status:  0,
-		info:    make(map[string]interface{}),
-		player:  nil,
+		id:        id,
+		conn:      conn,
+		reqChan:   reqChan,
+		env:       env,
+		status:    0,
+		info:      make(map[string]interface{}),
+		player:    nil,
+		aoiEntity: nil,
 	}
 	atomic.AddInt32(&id, 1)
 	clients[id] = client

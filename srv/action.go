@@ -30,18 +30,30 @@ func SendTo(conn net.Conn, pkg Packet) {
 	conn.Write(bytes)
 }
 
-func Broadcast(this *client, pkg Packet) {
-	// TODO
-	//根据消息类型 如果是全局就走所有人广播
-	//否则Area Of Interesting
+func sendToAll(this client, pkg Packet) {
 	clients := GetClients()
-
 	for id, client := range clients {
 		if this.id == id {
 			continue
 		}
 		SendTo(client.conn, pkg)
 	}
+}
+
+func sendToNearly(this client, pkg Packet) {
+	connections := this.aoiEntity.GetNearlyPlayerConnections()
+	for _, conn := range connections {
+		if this.conn == conn {
+			continue
+		}
+		SendTo(conn, pkg)
+	}
+}
+
+func Broadcast(this *client, pkg Packet) {
+	// TODO
+	//根据消息类型 如果是全局sendToAll
+	//否则sendToNearly
 }
 
 func (c *client) ClientVersion(pkg *p.Packet) error {
@@ -185,6 +197,9 @@ func (c *client) StartGame(pkg *p.Packet) error {
 	if character.AccountInfoID == 0 || character.Index == 0 {
 		return nil
 	}
+	aoiEntity := env.GetAOIEntity(character.CurrentMapIndex, cm.Point{X: character.CurrentLocationX, Y: character.CurrentLocationY})
+	aoiEntity.Connections[c.id] = c.conn
+	c.aoiEntity = aoiEntity
 	c.player = &object.PlayerObject{
 		MapObject: object.MapObject{
 			ObjectID:        character.Index, // TODO 应该取map object id，随地图object 数量递增
