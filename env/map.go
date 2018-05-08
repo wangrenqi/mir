@@ -7,16 +7,17 @@ import (
 	cm "mir/common"
 	"github.com/jinzhu/gorm"
 	"mir/orm"
+	"mir/object"
 )
 
 var MapFilesPath = "env/maps"
 
 type Map struct {
-	Index  uint32
-	Witdh  uint16
-	Height uint16
-	Points []cm.Point
-	Object interface{}
+	Index   uint32
+	Witdh   uint16
+	Height  uint16
+	Points  *[]cm.Point
+	Objects *map[string]interface{}
 }
 
 func GetMaps(path string) *map[uint32]Map {
@@ -42,7 +43,7 @@ func GetMaps(path string) *map[uint32]Map {
 }
 
 func SaveToFile(tmp Map) {
-	points := tmp.Points
+	points := *tmp.Points
 	str := ""
 	index := 0
 	for _, p := range points {
@@ -98,7 +99,8 @@ func GetMapV1(bytes []byte) Map {
 			offset += 15
 		}
 	}
-	m := Map{Witdh: width, Height: height, Points: points}
+	objects := make(map[string]interface{}, 0)
+	m := Map{Witdh: width, Height: height, Points: &points, Objects: &objects}
 	return m
 }
 
@@ -144,7 +146,7 @@ func FindType(bytes []byte) int {
 
 func (self *Map) ValidPoint(point cm.Point) bool {
 	// TODO check has player monster NPC ...
-	for _, p := range self.Points {
+	for _, p := range *self.Points {
 		if p.X == point.X && p.Y == point.Y {
 			return p.Valid
 		}
@@ -165,10 +167,41 @@ func (self *Map) LoadMonster(db *gorm.DB) {
 	var respawnInfos []orm.RespawnInfo
 	db.Where(&orm.RespawnInfo{MapIndex: self.Index}).Find(&respawnInfos)
 
-	//for _, info := range respawnInfos {
-	//	//TODO
-	//	monsterCount = info.Count
-	//	get monster info by monster index
-	//	create monster object and save to map object
-	//}
+	var monsterObjects []object.MonsterObject
+	for _, respawnInfo := range respawnInfos {
+		respawnCount := respawnInfo.Count
+		// get monster info by monster index
+		var monsterInfo orm.MonsterInfo
+		db.Where(&orm.MonsterInfo{Index: monsterInfo.MonsterIndex}).Find(&monsterInfo)
+		// create monster object and save to map object
+		if monsterInfo.Index == 0 {
+			continue
+		}
+		for i := uint32(0); i < respawnCount; i++ {
+			monsterObject := monsterInfoToMonsterObject(monsterInfo)
+			// random monster object point base on respawnInfo.spread
+			randPoint := self.GetRandomPoint(cm.Point{X: respawnInfo.LocationX, Y: respawnInfo.LocationY}, respawnInfo.Spread)
+			monsterObject.MapObject.CurrentLocation = randPoint
+			monsterObjects = append(monsterObjects, monsterObject)
+		}
+	}
+	(*self.Objects)["monster"] = monsterObjects
+}
+
+func (self *Map) GetRandomPoint(center cm.Point, spread uint32) cm.Point {
+	// TODO !!!优化算法 根据给定点，取该点spread范围内所有点，而不是map上所有点
+	points := *self.Points
+	mapLen := len(points)
+	for {
+		randInt := cm.RandomInt(0, mapLen)
+		p := points[randInt]
+		if p.Valid {
+			return p
+		}
+	}
+}
+
+// TODO
+func monsterInfoToMonsterObject(info orm.MonsterInfo) object.MonsterObject {
+	return object.MonsterObject{}
 }

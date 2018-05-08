@@ -14,7 +14,7 @@ var dbPassword = "root"
 var dbAddr = "localhost:3306"
 
 func GetDB() *gorm.DB {
-	db, err := gorm.Open("mysql", dbUser+":"+dbPassword+"@tcp("+dbAddr+")/"+dbName+"?charset=utf8&parseTime=True&loc=Local")
+	db, err := gorm.Open(dialect, dbUser+":"+dbPassword+"@tcp("+dbAddr+")/"+dbName+"?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -67,13 +67,19 @@ type RespawnInfo struct {
 	MapIndex     uint32
 	MonsterIndex uint32
 	Count        uint32
+	Spread       uint32
+	LocationX    int32
+	LocationY    int32
 }
 
+// monster type
 type MonsterInfo struct {
 	Index        uint32 `gorm:"primary_key"`
 	MonsterIndex uint32
 	Name         string
 	Level        uint16
 	HP           uint16
+	Experience   uint32
 	// TODO ...
+	// uint16 MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
 }

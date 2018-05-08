@@ -14,7 +14,7 @@ type Environ struct {
 func InitEnviron() *Environ {
 	db := orm.GetDB()
 
-	db.AutoMigrate(&orm.AccountInfo{}, &orm.CharacterInfo{}, &orm.RespawnInfo{})
+	db.AutoMigrate(&orm.AccountInfo{}, &orm.CharacterInfo{}, &orm.RespawnInfo{}, &orm.MonsterInfo{})
 
 	maps := GetMaps(MapFilesPath)
 
