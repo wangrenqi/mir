@@ -181,14 +181,15 @@ func (self *Map) LoadMonster(db *gorm.DB) {
 			monsterObject := monsterInfoToMonsterObject(monsterInfo)
 			// random monster object point base on respawnInfo.spread
 			randPoint := self.GetRandomPoint(cm.Point{X: respawnInfo.LocationX, Y: respawnInfo.LocationY}, respawnInfo.Spread)
-			monsterObject.MapObject.CurrentLocation = randPoint
+			monsterObject.MapObject.CurrentLocation = *randPoint
+			randPoint.Valid = false
 			monsterObjects = append(monsterObjects, monsterObject)
 		}
 	}
 	(*self.Objects)["monster"] = monsterObjects
 }
 
-func (self *Map) GetRandomPoint(center cm.Point, spread uint32) cm.Point {
+func (self *Map) GetRandomPoint(center cm.Point, spread uint32) *cm.Point {
 	// TODO !!!优化算法 根据给定点，取该点spread范围内所有点，而不是map上所有点
 	points := *self.Points
 	mapLen := len(points)
@@ -196,7 +197,7 @@ func (self *Map) GetRandomPoint(center cm.Point, spread uint32) cm.Point {
 		randInt := cm.RandomInt(0, mapLen)
 		p := points[randInt]
 		if p.Valid {
-			return p
+			return &p
 		}
 	}
 }
