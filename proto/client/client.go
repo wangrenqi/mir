@@ -641,9 +641,17 @@ func (self *ChangePMode) ToBytes() []byte {
 type ChangeTrade struct {
 }
 
+func GetChangeTrade(bytes []byte) *ChangeTrade {
+	return nil
+}
+
 func (self *ChangeTrade) ToBytes() []byte { return nil }
 
 type Attack struct {
+}
+
+func GetAttack(bytes []byte) *Attack {
+	return nil
 }
 
 func (self *Attack) ToBytes() []byte { return nil }
@@ -651,9 +659,17 @@ func (self *Attack) ToBytes() []byte { return nil }
 type RangeAttack struct {
 }
 
+func GetRangeAttack(bytes []byte) *RangeAttack {
+	return nil
+}
+
 func (self *RangeAttack) ToBytes() []byte { return nil }
 
 type Harvest struct {
+}
+
+func GetHarvest(bytes []byte) *Harvest {
+	return nil
 }
 
 func (self *Harvest) ToBytes() []byte { return nil }
@@ -661,9 +677,17 @@ func (self *Harvest) ToBytes() []byte { return nil }
 type CallNPC struct {
 }
 
+func GetCallNPC(bytes []byte) *CallNPC {
+	return nil
+}
+
 func (self *CallNPC) ToBytes() []byte { return nil }
 
 type TalkMonsterNPC struct {
+}
+
+func GetTalkMonsterNPC(bytes []byte) *TalkMonsterNPC {
+	return nil
 }
 
 func (self *TalkMonsterNPC) ToBytes() []byte { return nil }
@@ -671,9 +695,17 @@ func (self *TalkMonsterNPC) ToBytes() []byte { return nil }
 type BuyItem struct {
 }
 
+func GetBuyItem(bytes []byte) *BuyItem {
+	return nil
+}
+
 func (self *BuyItem) ToBytes() []byte { return nil }
 
 type SellItem struct {
+}
+
+func GetSellItem(bytes []byte) *SellItem {
+	return nil
 }
 
 func (self *SellItem) ToBytes() []byte { return nil }
@@ -681,9 +713,17 @@ func (self *SellItem) ToBytes() []byte { return nil }
 type CraftItem struct {
 }
 
+func GetCraftItem(bytes []byte) *CraftItem {
+	return nil
+}
+
 func (self *CraftItem) ToBytes() []byte { return nil }
 
 type RepairItem struct {
+}
+
+func GetRepairItem(bytes []byte) *RepairItem {
+	return nil
 }
 
 func (self *RepairItem) ToBytes() []byte { return nil }
@@ -691,9 +731,17 @@ func (self *RepairItem) ToBytes() []byte { return nil }
 type BuyItemBack struct {
 }
 
+func GetBuyItemBack(bytes []byte) *BuyItemBack {
+	return nil
+}
+
 func (self *BuyItemBack) ToBytes() []byte { return nil }
 
 type SRepairItem struct {
+}
+
+func GetSRepairItem(bytes []byte) *SRepairItem {
+	return nil
 }
 
 func (self *SRepairItem) ToBytes() []byte { return nil }
@@ -701,9 +749,17 @@ func (self *SRepairItem) ToBytes() []byte { return nil }
 type MagicKey struct {
 }
 
+func GetMagicKey(bytes []byte) *MagicKey {
+	return nil
+}
+
 func (self *MagicKey) ToBytes() []byte { return nil }
 
 type Magic struct {
+}
+
+func GetMagic(bytes []byte) *Magic {
+	return nil
 }
 
 func (self *Magic) ToBytes() []byte { return nil }

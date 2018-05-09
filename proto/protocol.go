@@ -99,6 +99,34 @@ func BytesToStruct(bytes []byte) (int, interface{}) {
 		data = cp.GetChangeAMode(bytes)
 	case cp.CHANGE_P_MODE:
 		data = cp.GetChangePMode(bytes)
+	case cp.CHANGE_TRADE:
+		data = cp.GetChangeTrade(bytes)
+	case cp.ATTACK:
+		data = cp.GetAttack(bytes)
+	case cp.RANGE_ATTACK:
+		data = cp.GetRangeAttack(bytes)
+	case cp.HARVEST:
+		data = cp.GetHarvest(bytes)
+	case cp.CALL_NPC:
+		data = cp.GetCallNPC(bytes)
+	case cp.TALK_MONSTER_NPC:
+		data = cp.GetTalkMonsterNPC(bytes)
+	case cp.BUY_ITEM:
+		data = cp.GetBuyItem(bytes)
+	case cp.SELL_ITEM:
+		data = cp.GetSellItem(bytes)
+	case cp.CRAFT_ITEM:
+		data = cp.GetCraftItem(bytes)
+	case cp.REPAIR_ITEM:
+		data = cp.GetRepairItem(bytes)
+	case cp.BUY_ITEM_BACK:
+		data = cp.GetBuyItemBack(bytes)
+	case cp.S_REPAIR_ITEM:
+		data = cp.GetSRepairItem(bytes)
+	case cp.MAGIC_KEY:
+		data = cp.GetMagicKey(bytes)
+	case cp.MAGIC:
+		data = cp.GetMagic(bytes)
 	default:
 		data = &Null{}
 		log.Println("未知的client packet index:", index)
@@ -187,6 +215,34 @@ func (pkg *Packet) ToBytes() []byte {
 		parser = pkg.Data.(*cp.ChangeAMode)
 	case cp.CHANGE_P_MODE:
 		parser = pkg.Data.(*cp.ChangePMode)
+	case cp.CHANGE_TRADE:
+		parser = pkg.Data.(*cp.ChangeTrade)
+	case cp.ATTACK:
+		parser = pkg.Data.(*cp.Attack)
+	case cp.RANGE_ATTACK:
+		parser = pkg.Data.(*cp.RangeAttack)
+	case cp.HARVEST:
+		parser = pkg.Data.(*cp.Harvest)
+	case cp.CALL_NPC:
+		parser = pkg.Data.(*cp.CallNPC)
+	case cp.TALK_MONSTER_NPC:
+		parser = pkg.Data.(*cp.TalkMonsterNPC)
+	case cp.BUY_ITEM:
+		parser = pkg.Data.(*cp.BuyItem)
+	case cp.SELL_ITEM:
+		parser = pkg.Data.(*cp.SellItem)
+	case cp.CRAFT_ITEM:
+		parser = pkg.Data.(*cp.CraftItem)
+	case cp.REPAIR_ITEM:
+		parser = pkg.Data.(*cp.RepairItem)
+	case cp.BUY_ITEM_BACK:
+		parser = pkg.Data.(*cp.BuyItemBack)
+	case cp.S_REPAIR_ITEM:
+		parser = pkg.Data.(*cp.SRepairItem)
+	case cp.MAGIC_KEY:
+		parser = pkg.Data.(*cp.MagicKey)
+	case cp.MAGIC:
+		parser = pkg.Data.(*cp.Magic)
 	default:
 		parser = &Null{}
 	}

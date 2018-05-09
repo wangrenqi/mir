@@ -153,6 +153,34 @@ func (c *client) process(pkg *p.Packet) (err error) {
 		return c.ChangeAMode(pkg)
 	case cp.CHANGE_P_MODE:
 		return c.ChangePMode(pkg)
+	case cp.CHANGE_TRADE:
+		return c.ChangeTrade(pkg)
+	case cp.ATTACK:
+		return c.Attack(pkg)
+	case cp.RANGE_ATTACK:
+		return c.RangeAttack(pkg)
+	case cp.HARVEST:
+		return c.Harvest(pkg)
+	case cp.CALL_NPC:
+		return c.CallNPC(pkg)
+	case cp.TALK_MONSTER_NPC:
+		return c.TalkMonsterNPC(pkg)
+	case cp.BUY_ITEM:
+		return c.BuyItem(pkg)
+	case cp.SELL_ITEM:
+		return c.SellItem(pkg)
+	case cp.CRAFT_ITEM:
+		return c.CraftItem(pkg)
+	case cp.REPAIR_ITEM:
+		return c.RepairItem(pkg)
+	case cp.BUY_ITEM_BACK:
+		return c.BuyItemBack(pkg)
+	case cp.S_REPAIR_ITEM:
+		return c.SRepairItem(pkg)
+	case cp.MAGIC_KEY:
+		return c.MagicKey(pkg)
+	case cp.MAGIC:
+		return c.Magic(pkg)
 	}
 	return fmt.Errorf("unknow pkg index: %d", pkg.Index)
 }

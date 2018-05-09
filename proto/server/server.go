@@ -1462,9 +1462,29 @@ func (self *ObjectMonster) ToBytes() []byte {
 	return result
 }
 
-type ObjectAttack struct{}
+type ObjectAttack struct {
+	ObjectID  uint32
+	Location  cm.Point
+	Direction cm.MirDirection
+	Spell     cm.Spell
+	Level     byte
+	Type      byte
+}
 
-func (self *ObjectAttack) ToBytes() []byte { return nil }
+func (self *ObjectAttack) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(OBJECT_ATTACK)
+	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	locationBytes := self.Location.ToBytes()
+	directionBytes := []byte{byte(self.Direction)}
+	spellBytes := []byte{byte(self.Spell)}
+	levelBytes := []byte{byte(self.Level)}
+	typeBytes := []byte{byte(self.Type)}
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, objectIdBytes, locationBytes, directionBytes, spellBytes, levelBytes, typeBytes} {
+		result = append(result, r...)
+	}
+	return result
+}
 
 type Struck struct{}
 
@@ -1482,9 +1502,21 @@ type DuraChanged struct{}
 
 func (self *DuraChanged) ToBytes() []byte { return nil }
 
-type HealthChanged struct{}
+type HealthChanged struct {
+	HP uint16
+	MP uint16
+}
 
-func (self *HealthChanged) ToBytes() []byte { return nil }
+func (self *HealthChanged) ToBytes() []byte {
+	pkgBytes := cm.Uint16ToBytes(HEALTH_CHANGED)
+	hpBytes := cm.Uint16ToBytes(self.HP)
+	mpBytes := cm.Uint16ToBytes(self.MP)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{pkgBytes, hpBytes, mpBytes} {
+		result = append(result, r...)
+	}
+	return result
+}
 
 type DeleteItem struct{}
 

@@ -350,3 +350,17 @@ func (c *client) PickUp(pkg *p.Packet) error             { return nil }
 func (c *client) Inspect(pkg *p.Packet) error            { return nil }
 func (c *client) ChangeAMode(pkg *p.Packet) error        { return nil }
 func (c *client) ChangePMode(pkg *p.Packet) error        { return nil }
+func (c *client) ChangeTrade(pkg *p.Packet) error        { return nil }
+func (c *client) Attack(pkg *p.Packet) error             { return nil }
+func (c *client) RangeAttack(pkg *p.Packet) error        { return nil }
+func (c *client) Harvest(pkg *p.Packet) error            { return nil }
+func (c *client) CallNPC(pkg *p.Packet) error            { return nil }
+func (c *client) TalkMonsterNPC(pkg *p.Packet) error     { return nil }
+func (c *client) BuyItem(pkg *p.Packet) error            { return nil }
+func (c *client) SellItem(pkg *p.Packet) error           { return nil }
+func (c *client) CraftItem(pkg *p.Packet) error          { return nil }
+func (c *client) RepairItem(pkg *p.Packet) error         { return nil }
+func (c *client) BuyItemBack(pkg *p.Packet) error        { return nil }
+func (c *client) SRepairItem(pkg *p.Packet) error        { return nil }
+func (c *client) MagicKey(pkg *p.Packet) error           { return nil }
+func (c *client) Magic(pkg *p.Packet) error              { return nil }
