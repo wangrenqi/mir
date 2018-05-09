@@ -8,6 +8,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"mir/orm"
 	"mir/object"
+	"sync/atomic"
 )
 
 var MapFilesPath = "env/maps"
@@ -18,6 +19,14 @@ type Map struct {
 	Height  uint16
 	Points  *[]cm.Point
 	Objects *map[string]interface{}
+}
+
+var objectId uint32 = 0
+
+func GetMapObjectId() uint32 {
+	res := objectId
+	atomic.AddUint32(&objectId, 1)
+	return res
 }
 
 func GetMaps(path string) *map[uint32]Map {
@@ -178,7 +187,7 @@ func (self *Map) LoadMonster(db *gorm.DB) {
 			continue
 		}
 		for i := uint32(0); i < respawnCount; i++ {
-			monsterObject := monsterInfoToMonsterObject(monsterInfo)
+			monsterObject := monsterInfoToMonsterObject(monsterInfo, *self)
 			// random monster object point base on respawnInfo.spread
 			randPoint := self.GetRandomPoint(cm.Point{X: respawnInfo.LocationX, Y: respawnInfo.LocationY}, respawnInfo.Spread)
 			monsterObject.MapObject.CurrentLocation = *randPoint
@@ -202,7 +211,21 @@ func (self *Map) GetRandomPoint(center cm.Point, spread uint32) *cm.Point {
 	}
 }
 
-// TODO
-func monsterInfoToMonsterObject(info orm.MonsterInfo) object.MonsterObject {
-	return object.MonsterObject{}
+func monsterInfoToMonsterObject(info orm.MonsterInfo, mapInfo Map) object.MonsterObject {
+	obj := object.MonsterObject{}
+	obj.ObjectID = GetMapObjectId()
+	obj.Name = info.Name
+	//CurrentMap Map
+	//ExplosionInflictedTime int64 ??
+	//ExplosionInflictedStage int64 ??
+	//SpawnThread int32 ??
+	obj.MonsterIndex = info.MonsterIndex
+	obj.CurrentMapIndex = mapInfo.Index
+	obj.CurrentLocation = cm.Point{}
+	obj.Direction = cm.MirDirection(cm.RandomInt(0, 7))
+	obj.Level = info.Level
+	obj.Health = uint32(info.HP)
+	obj.MaxHealth = uint32(info.HP)
+	obj.PercentHealth = 100
+	return obj
 }
