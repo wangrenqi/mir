@@ -273,6 +273,100 @@ const (
 // TODO 这个太多
 type Spell byte
 
+const (
+	S_NONE Spell = iota
+
+	//Warrior
+	S_FENCING          = 1
+	S_SLAYING          = 2
+	S_THRUSTING        = 3
+	S_HALF_MOON        = 4
+	S_SHOULDER_DASH    = 5
+	S_TWIN_DRAKE_BLADE = 6
+	S_ENTRAPMENT       = 7
+	S_FLAMING_SWORD    = 8
+	S_LION_ROAR        = 9
+	S_CROSS_HALF_MOON  = 10
+	S_BLADE_AVALANCHE  = 11
+	S_PROTECTION_FIELD = 12
+	S_RAGE             = 13
+	S_COUNTER_ATTACK   = 14
+	S_SLASHING_BURST   = 15
+	S_FURY             = 16
+	S_IMMORTAL_SKIN    = 17
+
+	//Wizard
+	S_FIRE_BALL       = 31
+	S_REPULSION       = 32
+	S_ELECTRIC_SHOCK  = 33
+	S_GREAT_FIRE_BALL = 34
+	S_HELL_FIRE       = 35
+	S_THUNDER_BOLT    = 36
+	S_TELEPORT        = 37
+	S_FIRE_BANG       = 38
+	S_FIRE_WALL       = 39
+	S_LIGHTNING       = 40
+	S_FROST_CRUNCH    = 41
+	S_THUNDER_STORM   = 42
+	S_MAGIC_SHIELD    = 43
+	S_TURN_UNDEAD     = 44
+	S_VAMPIRISM       = 45
+	S_ICE_STORM       = 46
+	S_FLAME_DISRUPTOR = 47
+	S_MIRRORING       = 48
+	S_FLAME_FIELD     = 49
+	S_BLIZZARD        = 50
+	S_MAGIC_BOOSTER   = 51
+	S_METEOR_STRIKE   = 52
+	S_ICE_THRUST      = 53
+	S_FAST_MOVE       = 54
+	S_STORM_ESCAPE    = 55
+
+	//Taoist
+	S_HEALING           = 61
+	S_SPIRIT_SWORD      = 62
+	S_POISONING         = 63
+	S_SOUL_FIRE_BALL    = 64
+	S_SUMMON_SKELETON   = 65
+	S_HIDING            = 67
+	S_MASS_HIDING       = 68
+	S_SOUL_SHIELD       = 69
+	S_REVELATION        = 70
+	S_BLESSED_ARMOUR    = 71
+	S_ENERGY_REPULSOR   = 72
+	S_TRAP_HEXAGON      = 73
+	S_PURIFICATION      = 74
+	S_MASS_HEALING      = 75
+	S_HALLUCINATION     = 76
+	S_ULTIMATE_ENHANCER = 77
+	S_SUMMON_SHINSU     = 78
+	S_REINCARNATION     = 79
+	S_SUMMON_HOLY_DEVA  = 80
+	S_CURSE             = 81
+	S_PLAGUE            = 82
+	S_POISON_CLOUD      = 83
+	S_ENERGY_SHIELD     = 84
+	S_PET_ENHANCER      = 85
+	S_HEALING_CIRCLE    = 86
+
+	//Assassin
+
+	//Archer
+
+	//Custom
+	S_BLINK      = 151
+	S_PORTAL     = 152
+	S_BATTLE_Cry = 153
+
+	//Map Events
+	S_DIG_OUT_ZOMBIE = 200
+	S_RUBBLE         = 201
+	S_MAP_LIGHTNING  = 202
+	S_MAP_LAVA       = 203
+	S_MAP_QUAKE1     = 204
+	S_MAP_QUAKE2     = 205
+)
+
 type MirGridType byte
 
 const (

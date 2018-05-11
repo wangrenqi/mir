@@ -83,3 +83,12 @@ type MonsterInfo struct {
 	// TODO ...
 	// uint16 MinAC, MaxAC, MinMAC, MaxMAC, MinDC, MaxDC, MinMC, MaxMC, MinSC, MaxSC;
 }
+
+type NPCInfo struct {
+	Index     uint32 `gorm:"primary_key"`
+	Name      string
+	MapIndex  uint32
+	LocationX int32
+	LocationY int32
+	Image     uint16
+}

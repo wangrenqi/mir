@@ -15,7 +15,7 @@ var MapFilesPath = "env/maps"
 
 type Map struct {
 	Index   uint32
-	Witdh   uint16
+	Width   uint16
 	Height  uint16
 	Points  *[]cm.Point
 	Objects *map[string]interface{}
@@ -109,7 +109,7 @@ func GetMapV1(bytes []byte) Map {
 		}
 	}
 	objects := make(map[string]interface{}, 0)
-	m := Map{Witdh: width, Height: height, Points: &points, Objects: &objects}
+	m := Map{Width: width, Height: height, Points: &points, Objects: &objects}
 	return m
 }
 

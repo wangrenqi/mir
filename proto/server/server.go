@@ -780,9 +780,32 @@ type ClientMagic struct {
 	Delay       uint64
 }
 
-// TODO
 func (self *ClientMagic) ToBytes() []byte {
-	return nil
+	spellBytes := []byte{byte(self.Spell)}
+	baseCostBytes := []byte{byte(self.BaseCost)}
+	levelCostBytes := []byte{byte(self.LevelCost)}
+	iconBytes := []byte{byte(self.Icon)}
+	level1Bytes := []byte{byte(self.Level1)}
+	level2Bytes := []byte{byte(self.Level2)}
+	level3Bytes := []byte{byte(self.Level3)}
+	need1Bytes := cm.Uint16ToBytes(self.Need1)
+	need2Bytes := cm.Uint16ToBytes(self.Need2)
+	need3Bytes := cm.Uint16ToBytes(self.Need3)
+	levelBytes := []byte{byte(self.Level)}
+	keyBytes := []byte{byte(self.Key)}
+	rangeBytes := []byte{byte(self.Range)}
+	experienceBytes := cm.Uint16ToBytes(self.Experience)
+	isTempSpellBytes := cm.BoolToBytes(self.IsTempSpell)
+	castTimeBytes := cm.Uint64ToBytes(self.CastTime)
+	delayBytes := cm.Uint64ToBytes(self.Delay)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{spellBytes, baseCostBytes, levelCostBytes, iconBytes, level1Bytes, level2Bytes, level3Bytes,
+		need1Bytes, need2Bytes, need3Bytes, levelBytes, keyBytes, rangeBytes, experienceBytes, isTempSpellBytes,
+		castTimeBytes, delayBytes,
+	} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type IntelligentCreatureRules struct {
@@ -799,9 +822,26 @@ type IntelligentCreatureRules struct {
 	Info2                 string // default ""
 }
 
-// TODO
 func (self *IntelligentCreatureRules) ToBytes() []byte {
-	return nil
+	minimalFullnessBytes := cm.Uint32ToBytes(self.MinimalFullness)
+	mousePickupEnabledBytes := cm.BoolToBytes(self.MousePickupEnabled)
+	mousePickupRangeBytes := cm.Uint32ToBytes(self.MousePickupRange)
+	autoPickupEnabledBytes := cm.BoolToBytes(self.AutoPickupEnabled)
+	autoPickupRangeBytes := cm.Uint32ToBytes(self.AutoPickupRange)
+	semiAutoPickupEnabledBytes := cm.BoolToBytes(self.SemiAutoPickupEnabled)
+	semiAutoPickupRangeBytes := cm.Uint32ToBytes(self.SemiAutoPickupRange)
+	canProduceBlackStoneBytes := cm.BoolToBytes(self.CanProduceBlackStone)
+	infoBytes := cm.StringToBytes(self.Info)
+	info1Bytes := cm.StringToBytes(self.Info1)
+	info2Bytes := cm.StringToBytes(self.Info2)
+	result := make([]byte, 0)
+	for _, r := range [][]byte{minimalFullnessBytes, mousePickupEnabledBytes, mousePickupRangeBytes, autoPickupEnabledBytes,
+		autoPickupRangeBytes, semiAutoPickupEnabledBytes, semiAutoPickupRangeBytes, canProduceBlackStoneBytes, infoBytes,
+		info1Bytes, info2Bytes,
+	} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type IntelligentCreatureItemFilter struct {
@@ -817,9 +857,24 @@ type IntelligentCreatureItemFilter struct {
 	PickupGrade          cm.ItemGrade // default ItemGrade.None;
 }
 
-// TODO
 func (self *IntelligentCreatureItemFilter) ToBytes() []byte {
-	return nil
+	petPickupAllBytes := cm.BoolToBytes(self.PetPickupAll)
+	petPickupGoldBytes := cm.BoolToBytes(self.PetPickupGold)
+	petPickupWeaponsBytes := cm.BoolToBytes(self.PetPickupWeapons)
+	petPickupArmoursBytes := cm.BoolToBytes(self.PetPickupArmours)
+	petPickupHelmetsBytes := cm.BoolToBytes(self.PetPickupHelmets)
+	petPickupBootsBytes := cm.BoolToBytes(self.PetPickupBoots)
+	petPickupBeltsBytes := cm.BoolToBytes(self.PetPickupBelts)
+	petPickupAccessoriesBytes := cm.BoolToBytes(self.PetPickupAccessories)
+	petPickupOthersBytes := cm.BoolToBytes(self.PetPickupOthers)
+	pickupGradeBytes := []byte{byte(self.PickupGrade)}
+	result := make([]byte, 0)
+	for _, r := range [][]byte{petPickupAllBytes, petPickupGoldBytes, petPickupWeaponsBytes, petPickupArmoursBytes,
+		petPickupHelmetsBytes, petPickupBootsBytes, petPickupBeltsBytes, petPickupAccessoriesBytes, petPickupOthersBytes, pickupGradeBytes,
+	} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type ClientIntelligentCreature struct {
@@ -828,17 +883,33 @@ type ClientIntelligentCreature struct {
 	CustomName       string
 	Fullness         uint32
 	SlotIndex        uint32
-	ExpireTime       uint64 // long
-	BlackstoneTime   uint64
-	MaintainFoodTime uint64
-	petMode          cm.IntelligentCreaturePickupMode // default SemiAutomatic
+	ExpireTime       uint64                           // long
+	BlackstoneTime   uint64                           // long
+	MaintainFoodTime uint64                           // long
+	PetMode          cm.IntelligentCreaturePickupMode // default SemiAutomatic
 	CreatureRules    IntelligentCreatureRules
 	Filter           IntelligentCreatureItemFilter
 }
 
-// TODO
 func (self *ClientIntelligentCreature) ToBytes() []byte {
-	return nil
+	petTypeBytes := []byte{byte(self.PetType)}
+	iconBytes := cm.Uint32ToBytes(self.Icon)
+	customNameBytes := cm.StringToBytes(self.CustomName)
+	fullnessBytes := cm.Uint32ToBytes(self.Fullness)
+	slotIndexBytes := cm.Uint32ToBytes(self.SlotIndex)
+	expireTimeBytes := cm.Uint64ToBytes(self.ExpireTime)
+	blackstoneTimeBytes := cm.Uint64ToBytes(self.BlackstoneTime)
+	maintainFoodTimeBytes := cm.Uint64ToBytes(self.MaintainFoodTime)
+	petModeBytes := []byte{byte(self.PetMode)}
+	creatureRulesBytes := self.CreatureRules.ToBytes()
+	filterBytes := self.Filter.ToBytes()
+	result := make([]byte, 0)
+	for _, r := range [][]byte{petTypeBytes, iconBytes, customNameBytes, fullnessBytes, slotIndexBytes,
+		expireTimeBytes, blackstoneTimeBytes, maintainFoodTimeBytes, petModeBytes, creatureRulesBytes, filterBytes,
+	} {
+		result = append(result, r...)
+	}
+	return result
 }
 
 type UserInformation struct {
