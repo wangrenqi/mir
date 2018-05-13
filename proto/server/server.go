@@ -3,6 +3,7 @@ package server
 import (
 	cm "mir/common"
 	"mir/orm"
+	"log"
 )
 
 const (
@@ -1505,6 +1506,27 @@ type ObjectMonster struct {
 
 func (self *ObjectMonster) ToBytes() []byte {
 	// TODO test
+	/*
+	59, 0,
+	173, 4, 0, 0,   object id
+	4, 68, 101, 101, 114,    name
+	255, 255, 255, 255,  color
+	30, 1, 0, 0,    location
+	82, 2, 0, 0,
+	4, 0,   image
+	4,   direction
+	0,   effect
+	2,   ai
+	0,  light
+	0,   dead
+	0,  skeleton
+	0, 0,  poison
+	0,  hidden
+	0,  extra
+	0,  extra byte
+	0, 0, 0, 0, 0, 0, 0, 0,   shock time
+	0    binding shot
+	*/
 	pkgBytes := cm.Uint16ToBytes(OBJECT_MONSTER)
 	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
 	nameBytes := cm.StringToBytes(self.Name)
@@ -1517,7 +1539,7 @@ func (self *ObjectMonster) ToBytes() []byte {
 	lightBytes := []byte{self.Light}
 	deadBytes := cm.BoolToBytes(self.Dead)
 	skeletonBytes := cm.BoolToBytes(self.Skeleton)
-	poisonBytes := []byte{byte(self.Poison)}
+	poisonBytes := cm.Uint16ToBytes(uint16(self.Poison))
 	hiddenBytes := cm.BoolToBytes(self.Hidden)
 	extraBytes := cm.BoolToBytes(self.Extra)
 	extraByteBytes := []byte{self.ExtraByte}
@@ -1528,6 +1550,7 @@ func (self *ObjectMonster) ToBytes() []byte {
 		imageBytes, directionBytes, effectBytes, aiBytes, lightBytes, deadBytes, skeletonBytes, poisonBytes,
 		hiddenBytes, extraBytes, extraByteBytes, shockTimeBytes, bindingShotCenterBytes,
 	} {
+		log.Println(r)
 		result = append(result, r...)
 	}
 	return result

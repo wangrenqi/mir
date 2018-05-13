@@ -251,7 +251,25 @@ func (c *client) StartGame(pkg *p.Packet) {
 		IntelligentCreatureType:   1,                                                                      //cm.IntelligentCreatureType
 		CreatureSummoned:          false,                                                                  //bool
 	})
-
+	SendTo(c.conn, &sp.ObjectMonster{
+		ObjectID:          51,                                                                             //uint32
+		Name:              "test",                                                                         //string
+		NameColour:        4294967295,                                                                     // 255, 255, 255, 255 uint32 // Color
+		Location:          cm.Point{X: character.CurrentLocationX + 1, Y: character.CurrentLocationY + 1}, //cm.Point
+		Image:             cm.Monster(11),                                                                  //cm.Monster
+		Direction:         cm.MirDirection(5),                                                             //cm.MirDirection
+		Effect:            1,                                                                              //byte
+		AI:                1,                                                                              //byte
+		Light:             byte(1),                                                                        //byte
+		Dead:              false,                                                                          //bool
+		Skeleton:          false,                                                                          //bool
+		Poison:            cm.PoisonType(0),                                                               //cm.PoisonType
+		Hidden:            false,                                                                          //bool
+		Extra:             false,                                                                          //bool
+		ExtraByte:         0,                                                                              //byte
+		ShockTime:         1,                                                                              //uint64 // long
+		BindingShotCenter: false,                                                                          //bool
+	})
 	c.status = GAME
 }
 
