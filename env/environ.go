@@ -25,7 +25,7 @@ func InitEnviron() *Environ {
 		m.LoadNPC(db)
 		m.LoadMonster(db)
 
-		aoi[i] = m.GetAOIEntities()
+		aoi[i] = m.InitAOIEntities()
 	}
 
 	return &Environ{

@@ -14,11 +14,12 @@ import (
 var MapFilesPath = "env/maps"
 
 type Map struct {
-	Index   uint32
-	Width   uint16
-	Height  uint16
-	Points  *[]cm.Point
-	Objects *map[string]interface{}
+	Index      uint32
+	Width      uint16
+	Height     uint16
+	Points     *[]cm.Point
+	PointProxy map[string]*cm.Point
+	Objects    *map[string]interface{}
 }
 
 var objectId uint32 = 0
@@ -68,14 +69,10 @@ func SaveToFile(tmp Map) {
 		}
 	}
 	err := ioutil.WriteFile("output.txt", []byte(str), 0644)
-	check(err)
-	//fmt.Println("saved...")
-}
-
-func check(e error) {
-	if e != nil {
-		panic(e)
+	if err != nil {
+		panic(err)
 	}
+	//fmt.Println("saved...")
 }
 
 func GetMapV1(bytes []byte) Map {
@@ -88,6 +85,7 @@ func GetMapV1(bytes []byte) Map {
 	width := w ^ xor
 	height := h ^ xor
 	//fmt.Println(width, height)
+	pointProxy := make(map[string]*cm.Point, 0)
 
 	offset = 54
 	index := 0
@@ -103,13 +101,14 @@ func GetMapV1(bytes []byte) Map {
 				valid = false
 			}
 			p := cm.Point{X: int32(i), Y: int32(j), Valid: valid}
+			pointProxy[string(i)+","+string(j)] = &p
 			points[index] = p
 			index ++
 			offset += 15
 		}
 	}
 	objects := make(map[string]interface{}, 0)
-	m := Map{Width: width, Height: height, Points: &points, Objects: &objects}
+	m := Map{Width: width, Height: height, Points: &points, Objects: &objects, PointProxy: pointProxy}
 	return m
 }
 
@@ -153,15 +152,19 @@ func FindType(bytes []byte) int {
 	return 0
 }
 
-func (self *Map) ValidPoint(point cm.Point) bool {
-	// TODO check has player monster NPC ...
-	for _, p := range *self.Points {
-		if p.X == point.X && p.Y == point.Y {
-			return p.Valid
-		}
-	}
-	return false
+func (self *Map) GetPoint(x, y int) *cm.Point {
+	return nil
 }
+
+//func (self *Map) ValidPoint(point cm.Point) bool {
+//	// TODO check has player monster NPC ...
+//	for _, p := range *self.Points {
+//		if p.X == point.X && p.Y == point.Y {
+//			return p.Valid
+//		}
+//	}
+//	return false
+//}
 
 func GetStartPoint() cm.Point {
 	// TODO Random

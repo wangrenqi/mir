@@ -188,10 +188,12 @@ func (c *client) StartGame(pkg *p.Packet) {
 	if character.AccountInfoID == 0 || character.Index == 0 {
 		return
 	}
-	// TODO
-	//aoiEntity := env.GetAOIEntity(character.CurrentMapIndex, cm.Point{X: character.CurrentLocationX, Y: character.CurrentLocationY})
-	//aoiEntity.Connections[c.id] = c.conn
-	//c.aoiEntity = aoiEntity
+	aoiEntity := env.GetAOIEntity((*c.env.AOI)[character.CurrentMapIndex], cm.Point{X: character.CurrentLocationX, Y: character.CurrentLocationY})
+	if aoiEntity == nil {
+		return
+	}
+	(*aoiEntity.Connections)[c.id] = c.conn
+	c.aoiEntity = aoiEntity
 	c.player = &object.PlayerObject{
 		MapObject: object.MapObject{
 			ObjectID:        character.Index, // TODO 应该取map object id，随地图object 数量递增
@@ -274,10 +276,10 @@ func (c *client) Walk(pkg *p.Packet) {
 	if !c.player.CanWalk() || !c.player.CanMove() {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
 	}
-	playerMap := (*c.env.Maps)[c.player.CurrentMapIndex]
+	//playerMap := (*c.env.Maps)[c.player.CurrentMapIndex]
 	targetDirection := pkg.Data.(*cp.Walk).Direction
 	targetPoint := c.player.CurrentLocation.Move(targetDirection, 1)
-	if !playerMap.ValidPoint(targetPoint) {
+	if !c.aoiEntity.ValidPoint(targetPoint) {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
 	}
 	// TODO ...剩下的各种判断
@@ -295,7 +297,7 @@ func (c *client) Run(pkg *p.Packet) {
 	if !c.player.CanMove() || !c.player.CanMove() || !c.player.CanRun() {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
 	}
-	playerMap := (*c.env.Maps)[c.player.CurrentMapIndex]
+	//playerMap := (*c.env.Maps)[c.player.CurrentMapIndex]
 	playerLocation := c.player.CurrentLocation
 	targetDirection := pkg.Data.(*cp.Run).Direction
 	targetPoint := c.player.CurrentLocation.Move(targetDirection, 1)
@@ -303,7 +305,7 @@ func (c *client) Run(pkg *p.Packet) {
 	for i := 1; i <= steps; i ++ {
 		// TODO check point
 		targetPoint = c.player.CurrentLocation.Move(targetDirection, 1)
-		if !playerMap.ValidPoint(targetPoint) {
+		if !c.aoiEntity.ValidPoint(targetPoint) {
 			targetPoint = c.player.CurrentLocation
 			break
 		}
