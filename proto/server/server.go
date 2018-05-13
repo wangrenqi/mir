@@ -1,8 +1,7 @@
 package server
 
 import (
-	cm "mir/common"
-	"mir/orm"
+	"mir/com"
 	"log"
 )
 
@@ -253,7 +252,7 @@ const (
 type Connected struct{}
 
 func (self *Connected) ToBytes() []byte {
-	bytes := cm.Uint16ToBytes(CONNECTED)
+	bytes := com.Uint16ToBytes(CONNECTED)
 	return bytes
 }
 
@@ -264,7 +263,7 @@ type ClientVersion struct {
 }
 
 func (self *ClientVersion) ToBytes() []byte {
-	bytes := cm.Uint16ToBytes(CLIENT_VERSION)
+	bytes := com.Uint16ToBytes(CLIENT_VERSION)
 	bytes = append(bytes, self.Result)
 	return bytes
 }
@@ -277,7 +276,7 @@ type NewAccount struct {
 }
 
 func (self *NewAccount) ToBytes() []byte {
-	bytes := cm.Uint16ToBytes(NEW_ACCOUNT)
+	bytes := com.Uint16ToBytes(NEW_ACCOUNT)
 	return append(bytes, self.Result)
 }
 
@@ -286,7 +285,7 @@ type ChangePassword struct {
 }
 
 func (self *ChangePassword) ToBytes() []byte {
-	bytes := cm.Uint16ToBytes(NEW_ACCOUNT)
+	bytes := com.Uint16ToBytes(NEW_ACCOUNT)
 	return append(bytes, self.Result)
 }
 
@@ -301,7 +300,7 @@ type Login struct {
 }
 
 func (self *Login) ToBytes() []byte {
-	bytes := cm.Uint16ToBytes(LOGIN)
+	bytes := com.Uint16ToBytes(LOGIN)
 	return append(bytes, self.Result)
 }
 
@@ -315,7 +314,7 @@ func (self *LoginBanned) ToBytes() []byte {
 }
 
 type Account struct {
-	orm.AccountInfo
+	com.AccountInfo
 	Characters []SelectInfo
 }
 
@@ -323,20 +322,20 @@ type SelectInfo struct {
 	Index      uint32
 	Name       string
 	Level      uint16
-	Class      cm.MirClass
-	Gender     cm.MirGender
+	Class      com.MirClass
+	Gender     com.MirGender
 	LastAccess uint64
 }
 
 func (self *SelectInfo) ToBytes() []byte {
-	indexBytes := cm.Uint32ToBytes(self.Index)
-	nameBytes := cm.StringToBytes(self.Name)
-	levelBytes := cm.Uint16ToBytes(self.Level)
+	indexBytes := com.Uint32ToBytes(self.Index)
+	nameBytes := com.StringToBytes(self.Name)
+	levelBytes := com.Uint16ToBytes(self.Level)
 	class := self.Class
 	classBytes := []byte{byte(class)}
 	gender := self.Gender
 	genderBytes := []byte{byte(gender)}
-	lastAccessBytes := cm.Uint64ToBytes(uint64(0))
+	lastAccessBytes := com.Uint64ToBytes(uint64(0))
 	result := make([]byte, 0)
 	for _, r := range [][]byte{indexBytes, nameBytes, levelBytes, classBytes, genderBytes, lastAccessBytes} {
 		result = append(result, r...)
@@ -351,13 +350,13 @@ type LoginSuccess struct {
 }
 
 func (self *LoginSuccess) ToBytes() []byte {
-	bytes := cm.Uint16ToBytes(LOGIN_SUCCESS)
+	bytes := com.Uint16ToBytes(LOGIN_SUCCESS)
 	characters := self.Characters
 	count := len(characters)
 	if count == 0 {
 		bytes = append(bytes, []byte{0, 0, 0, 0}...)
 	} else {
-		countBytes := cm.Uint32ToBytes(uint32(count))
+		countBytes := com.Uint32ToBytes(uint32(count))
 		for _, character := range characters {
 			countBytes = append(countBytes, character.ToBytes()...)
 		}
@@ -372,7 +371,7 @@ type NewCharacter struct {
 }
 
 func (self *NewCharacter) ToBytes() []byte {
-	bytes := cm.Uint16ToBytes(NEW_CHARACTER)
+	bytes := com.Uint16ToBytes(NEW_CHARACTER)
 	return append(bytes, self.Result)
 }
 
@@ -381,7 +380,7 @@ type NewCharacterSuccess struct {
 }
 
 func (self *NewCharacterSuccess) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(NEW_CHARACTER_SUCCESS)
+	pkgBytes := com.Uint16ToBytes(NEW_CHARACTER_SUCCESS)
 	characterInfoBytes := self.CharInfo.ToBytes()
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, characterInfoBytes} {
@@ -404,7 +403,7 @@ type StartGame struct {
 }
 
 func (self *StartGame) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(START_GAME)
+	pkgBytes := com.Uint16ToBytes(START_GAME)
 	result := append(pkgBytes, []byte{4, 0, 4, 0, 0}...)
 	return result
 }
@@ -441,7 +440,7 @@ type MapInformation struct {
 }
 
 func (self *MapInformation) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(MAP_INFORMATION)
+	pkgBytes := com.Uint16ToBytes(MAP_INFORMATION)
 	//tmp := []byte{
 	//	1, 48,                                                                // index
 	//	14, 66, 105, 99, 104, 111, 110, 80, 114, 111, 118, 105, 110, 99, 101, // filename and title
@@ -453,13 +452,13 @@ func (self *MapInformation) ToBytes() []byte {
 	//	0,                                                                    // map dark light
 	//}
 	//result := append(pkgBytes, tmp...)
-	indexBytes := cm.Uint16ToBytes(self.Index)
-	titleBytes := cm.StringToBytes(self.Title)
-	miniMapBytes := cm.Uint16ToBytes(self.MiniMap)
-	bigMapBytes := cm.Uint16ToBytes(self.BigMap)
-	musicBytes := cm.Uint16ToBytes(self.Music)
-	lightningBytes := cm.BoolToBytes(self.Lightning)
-	fireBytes := cm.BoolToBytes(self.Fire)
+	indexBytes := com.Uint16ToBytes(self.Index)
+	titleBytes := com.StringToBytes(self.Title)
+	miniMapBytes := com.Uint16ToBytes(self.MiniMap)
+	bigMapBytes := com.Uint16ToBytes(self.BigMap)
+	musicBytes := com.Uint16ToBytes(self.Music)
+	lightningBytes := com.BoolToBytes(self.Lightning)
+	fireBytes := com.BoolToBytes(self.Fire)
 	mapDarkLightBytes := []byte{self.MapDarkLight}
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, indexBytes, titleBytes, miniMapBytes, bigMapBytes, musicBytes, lightningBytes, fireBytes, mapDarkLightBytes} {
@@ -560,12 +559,12 @@ func (self *RandomItemStat) ToBytes() []byte {
 type ItemInfo struct {
 	Index            uint32
 	Name             string
-	Type             cm.ItemType
-	Grade            cm.ItemGrade
-	RequiredType     cm.RequiredType   // default Level
-	RequiredClass    cm.RequiredClass  // default None
-	RequiredGender   cm.RequiredGender // default None
-	Set              cm.ItemSet
+	Type             com.ItemType
+	Grade            com.ItemGrade
+	RequiredType     com.RequiredType   // default Level
+	RequiredClass    com.RequiredClass  // default None
+	RequiredGender   com.RequiredGender // default None
+	Set              com.ItemSet
 	Shape            uint16
 	Weight           byte
 	Light            byte
@@ -629,22 +628,22 @@ type ItemInfo struct {
 
 // TODO
 func (self *ItemInfo) ToBytes() []byte {
-	indexBytes := cm.Uint32ToBytes(self.Index)
-	nameBytes := cm.StringToBytes(self.Name)
+	indexBytes := com.Uint32ToBytes(self.Index)
+	nameBytes := com.StringToBytes(self.Name)
 	typeBytes := []byte{byte(self.Type)}
 	gradeBytes := []byte{byte(self.Grade)}
 	requiredTypeBytes := []byte{byte(self.RequiredType)}
 	requiredClassBytes := []byte{byte(self.RequiredClass)}
 	requiredGenderBytes := []byte{byte(self.RequiredGender)}
 	setBytes := []byte{byte(self.Set)}
-	shapeBytes := cm.Uint16ToBytes(self.Shape)
+	shapeBytes := com.Uint16ToBytes(self.Shape)
 	weightBytes := []byte{self.Weight}
 	lightBytes := []byte{self.Light}
 	requiredAmountBytes := []byte{self.RequiredAmount}
-	imageBytes := cm.Uint16ToBytes(self.Image)
-	durabilityBytes := cm.Uint16ToBytes(self.Durability)
-	priceBytes := cm.Uint32ToBytes(self.Price)
-	stackSizeBytes := cm.Uint32ToBytes(self.StackSize)
+	imageBytes := com.Uint16ToBytes(self.Image)
+	durabilityBytes := com.Uint16ToBytes(self.Durability)
+	priceBytes := com.Uint32ToBytes(self.Price)
+	stackSizeBytes := com.Uint32ToBytes(self.StackSize)
 	minACBytes := []byte{self.MinAC}
 	maxACBytes := []byte{self.MaxAC}
 	minMACBytes := []byte{self.MinMAC}
@@ -657,14 +656,14 @@ func (self *ItemInfo) ToBytes() []byte {
 	maxSCBytes := []byte{self.MaxSC}
 	accuracyBytes := []byte{self.Accuracy}
 	agilityBytes := []byte{self.Agility}
-	hPBytes := cm.Uint16ToBytes(self.HP)
-	mPBytes := cm.Uint16ToBytes(self.MP)
+	hPBytes := com.Uint16ToBytes(self.HP)
+	mPBytes := com.Uint16ToBytes(self.MP)
 	attackSpeedBytes := []byte{byte(self.AttackSpeed)} // TODO int8 可能为负数，先当正数处理
 	luckBytes := []byte{byte(self.Luck)}               // 同上
 	bagWeightBytes := []byte{self.BagWeight}
 	handWeightBytes := []byte{self.HandWeight}
 	wearWeightBytes := []byte{self.WearWeight}
-	startItemBytes := cm.BoolToBytes(self.StartItem)
+	startItemBytes := com.BoolToBytes(self.StartItem)
 	effectBytes := []byte{self.Effect}
 	strongBytes := []byte{self.Strong}
 	magicResistBytes := []byte{self.MagicResist}
@@ -676,26 +675,26 @@ func (self *ItemInfo) ToBytes() []byte {
 	mPrateBytes := []byte{self.MPrate}
 	criticalRateBytes := []byte{self.CriticalRate}
 	criticalDamageBytes := []byte{self.CriticalDamage}
-	needIdentifyBytes := cm.BoolToBytes(self.NeedIdentify)
-	showGroupPickupBytes := cm.BoolToBytes(self.ShowGroupPickup)
-	globalDropNotifyBytes := cm.BoolToBytes(self.GlobalDropNotify)
-	classBasedBytes := cm.BoolToBytes(self.ClassBased)
-	levelBasedBytes := cm.BoolToBytes(self.LevelBased)
-	canMineBytes := cm.BoolToBytes(self.CanMine)
-	canFastRunBytes := cm.BoolToBytes(self.CanFastRun)
-	canAwakeningBytes := cm.BoolToBytes(self.CanAwakening)
+	needIdentifyBytes := com.BoolToBytes(self.NeedIdentify)
+	showGroupPickupBytes := com.BoolToBytes(self.ShowGroupPickup)
+	globalDropNotifyBytes := com.BoolToBytes(self.GlobalDropNotify)
+	classBasedBytes := com.BoolToBytes(self.ClassBased)
+	levelBasedBytes := com.BoolToBytes(self.LevelBased)
+	canMineBytes := com.BoolToBytes(self.CanMine)
+	canFastRunBytes := com.BoolToBytes(self.CanFastRun)
+	canAwakeningBytes := com.BoolToBytes(self.CanAwakening)
 	maxAcRateBytes := []byte{self.MaxAcRate}
 	maxMacRateBytes := []byte{self.MaxMacRate}
 	holyBytes := []byte{self.Holy}
 	freezingBytes := []byte{self.Freezing}
 	poisonAttackBytes := []byte{self.PoisonAttack}
 	hpDrainRateBytes := []byte{self.HpDrainRate}
-	bindBytes := cm.Uint16ToBytes(self.Bind)
+	bindBytes := com.Uint16ToBytes(self.Bind)
 	reflectBytes := []byte{self.Reflect}
-	uniqueBytes := cm.Uint16ToBytes(self.Unique)
+	uniqueBytes := com.Uint16ToBytes(self.Unique)
 	randomStatsIdBytes := []byte{self.RandomStatsId}
 	randomStatsBytes := self.RandomStats.ToBytes()
-	toolTipBytes := cm.StringToBytes(self.ToolTip)
+	toolTipBytes := com.StringToBytes(self.ToolTip)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{indexBytes, nameBytes, typeBytes, gradeBytes, requiredTypeBytes, requiredClassBytes,
 		requiredGenderBytes, setBytes, shapeBytes, weightBytes, lightBytes, requiredAmountBytes, imageBytes,
@@ -742,7 +741,7 @@ type UserItem struct {
 	PoisonAttack   byte
 	AttackSpeed    byte
 	Luck           byte
-	RefinedValue   cm.RefinedValue
+	RefinedValue   com.RefinedValue
 	RefineAdded    byte
 	DuraChanged    bool
 	SoulBoundId    uint32
@@ -762,7 +761,7 @@ func (self *UserItem) ToBytes() []byte {
 }
 
 type ClientMagic struct {
-	Spell       cm.Spell
+	Spell       com.Spell
 	BaseCost    byte
 	LevelCost   byte
 	Icon        byte
@@ -789,16 +788,16 @@ func (self *ClientMagic) ToBytes() []byte {
 	level1Bytes := []byte{byte(self.Level1)}
 	level2Bytes := []byte{byte(self.Level2)}
 	level3Bytes := []byte{byte(self.Level3)}
-	need1Bytes := cm.Uint16ToBytes(self.Need1)
-	need2Bytes := cm.Uint16ToBytes(self.Need2)
-	need3Bytes := cm.Uint16ToBytes(self.Need3)
+	need1Bytes := com.Uint16ToBytes(self.Need1)
+	need2Bytes := com.Uint16ToBytes(self.Need2)
+	need3Bytes := com.Uint16ToBytes(self.Need3)
 	levelBytes := []byte{byte(self.Level)}
 	keyBytes := []byte{byte(self.Key)}
 	rangeBytes := []byte{byte(self.Range)}
-	experienceBytes := cm.Uint16ToBytes(self.Experience)
-	isTempSpellBytes := cm.BoolToBytes(self.IsTempSpell)
-	castTimeBytes := cm.Uint64ToBytes(self.CastTime)
-	delayBytes := cm.Uint64ToBytes(self.Delay)
+	experienceBytes := com.Uint16ToBytes(self.Experience)
+	isTempSpellBytes := com.BoolToBytes(self.IsTempSpell)
+	castTimeBytes := com.Uint64ToBytes(self.CastTime)
+	delayBytes := com.Uint64ToBytes(self.Delay)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{spellBytes, baseCostBytes, levelCostBytes, iconBytes, level1Bytes, level2Bytes, level3Bytes,
 		need1Bytes, need2Bytes, need3Bytes, levelBytes, keyBytes, rangeBytes, experienceBytes, isTempSpellBytes,
@@ -824,17 +823,17 @@ type IntelligentCreatureRules struct {
 }
 
 func (self *IntelligentCreatureRules) ToBytes() []byte {
-	minimalFullnessBytes := cm.Uint32ToBytes(self.MinimalFullness)
-	mousePickupEnabledBytes := cm.BoolToBytes(self.MousePickupEnabled)
-	mousePickupRangeBytes := cm.Uint32ToBytes(self.MousePickupRange)
-	autoPickupEnabledBytes := cm.BoolToBytes(self.AutoPickupEnabled)
-	autoPickupRangeBytes := cm.Uint32ToBytes(self.AutoPickupRange)
-	semiAutoPickupEnabledBytes := cm.BoolToBytes(self.SemiAutoPickupEnabled)
-	semiAutoPickupRangeBytes := cm.Uint32ToBytes(self.SemiAutoPickupRange)
-	canProduceBlackStoneBytes := cm.BoolToBytes(self.CanProduceBlackStone)
-	infoBytes := cm.StringToBytes(self.Info)
-	info1Bytes := cm.StringToBytes(self.Info1)
-	info2Bytes := cm.StringToBytes(self.Info2)
+	minimalFullnessBytes := com.Uint32ToBytes(self.MinimalFullness)
+	mousePickupEnabledBytes := com.BoolToBytes(self.MousePickupEnabled)
+	mousePickupRangeBytes := com.Uint32ToBytes(self.MousePickupRange)
+	autoPickupEnabledBytes := com.BoolToBytes(self.AutoPickupEnabled)
+	autoPickupRangeBytes := com.Uint32ToBytes(self.AutoPickupRange)
+	semiAutoPickupEnabledBytes := com.BoolToBytes(self.SemiAutoPickupEnabled)
+	semiAutoPickupRangeBytes := com.Uint32ToBytes(self.SemiAutoPickupRange)
+	canProduceBlackStoneBytes := com.BoolToBytes(self.CanProduceBlackStone)
+	infoBytes := com.StringToBytes(self.Info)
+	info1Bytes := com.StringToBytes(self.Info1)
+	info2Bytes := com.StringToBytes(self.Info2)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{minimalFullnessBytes, mousePickupEnabledBytes, mousePickupRangeBytes, autoPickupEnabledBytes,
 		autoPickupRangeBytes, semiAutoPickupEnabledBytes, semiAutoPickupRangeBytes, canProduceBlackStoneBytes, infoBytes,
@@ -855,19 +854,19 @@ type IntelligentCreatureItemFilter struct {
 	PetPickupBelts       bool         // default false
 	PetPickupAccessories bool         // default false
 	PetPickupOthers      bool         // default false
-	PickupGrade          cm.ItemGrade // default ItemGrade.None;
+	PickupGrade          com.ItemGrade // default ItemGrade.None;
 }
 
 func (self *IntelligentCreatureItemFilter) ToBytes() []byte {
-	petPickupAllBytes := cm.BoolToBytes(self.PetPickupAll)
-	petPickupGoldBytes := cm.BoolToBytes(self.PetPickupGold)
-	petPickupWeaponsBytes := cm.BoolToBytes(self.PetPickupWeapons)
-	petPickupArmoursBytes := cm.BoolToBytes(self.PetPickupArmours)
-	petPickupHelmetsBytes := cm.BoolToBytes(self.PetPickupHelmets)
-	petPickupBootsBytes := cm.BoolToBytes(self.PetPickupBoots)
-	petPickupBeltsBytes := cm.BoolToBytes(self.PetPickupBelts)
-	petPickupAccessoriesBytes := cm.BoolToBytes(self.PetPickupAccessories)
-	petPickupOthersBytes := cm.BoolToBytes(self.PetPickupOthers)
+	petPickupAllBytes := com.BoolToBytes(self.PetPickupAll)
+	petPickupGoldBytes := com.BoolToBytes(self.PetPickupGold)
+	petPickupWeaponsBytes := com.BoolToBytes(self.PetPickupWeapons)
+	petPickupArmoursBytes := com.BoolToBytes(self.PetPickupArmours)
+	petPickupHelmetsBytes := com.BoolToBytes(self.PetPickupHelmets)
+	petPickupBootsBytes := com.BoolToBytes(self.PetPickupBoots)
+	petPickupBeltsBytes := com.BoolToBytes(self.PetPickupBelts)
+	petPickupAccessoriesBytes := com.BoolToBytes(self.PetPickupAccessories)
+	petPickupOthersBytes := com.BoolToBytes(self.PetPickupOthers)
 	pickupGradeBytes := []byte{byte(self.PickupGrade)}
 	result := make([]byte, 0)
 	for _, r := range [][]byte{petPickupAllBytes, petPickupGoldBytes, petPickupWeaponsBytes, petPickupArmoursBytes,
@@ -879,7 +878,7 @@ func (self *IntelligentCreatureItemFilter) ToBytes() []byte {
 }
 
 type ClientIntelligentCreature struct {
-	PetType          cm.IntelligentCreatureType
+	PetType          com.IntelligentCreatureType
 	Icon             uint32
 	CustomName       string
 	Fullness         uint32
@@ -887,20 +886,20 @@ type ClientIntelligentCreature struct {
 	ExpireTime       uint64                           // long
 	BlackstoneTime   uint64                           // long
 	MaintainFoodTime uint64                           // long
-	PetMode          cm.IntelligentCreaturePickupMode // default SemiAutomatic
+	PetMode          com.IntelligentCreaturePickupMode // default SemiAutomatic
 	CreatureRules    IntelligentCreatureRules
 	Filter           IntelligentCreatureItemFilter
 }
 
 func (self *ClientIntelligentCreature) ToBytes() []byte {
 	petTypeBytes := []byte{byte(self.PetType)}
-	iconBytes := cm.Uint32ToBytes(self.Icon)
-	customNameBytes := cm.StringToBytes(self.CustomName)
-	fullnessBytes := cm.Uint32ToBytes(self.Fullness)
-	slotIndexBytes := cm.Uint32ToBytes(self.SlotIndex)
-	expireTimeBytes := cm.Uint64ToBytes(self.ExpireTime)
-	blackstoneTimeBytes := cm.Uint64ToBytes(self.BlackstoneTime)
-	maintainFoodTimeBytes := cm.Uint64ToBytes(self.MaintainFoodTime)
+	iconBytes := com.Uint32ToBytes(self.Icon)
+	customNameBytes := com.StringToBytes(self.CustomName)
+	fullnessBytes := com.Uint32ToBytes(self.Fullness)
+	slotIndexBytes := com.Uint32ToBytes(self.SlotIndex)
+	expireTimeBytes := com.Uint64ToBytes(self.ExpireTime)
+	blackstoneTimeBytes := com.Uint64ToBytes(self.BlackstoneTime)
+	maintainFoodTimeBytes := com.Uint64ToBytes(self.MaintainFoodTime)
 	petModeBytes := []byte{byte(self.PetMode)}
 	creatureRulesBytes := self.CreatureRules.ToBytes()
 	filterBytes := self.Filter.ToBytes()
@@ -920,11 +919,11 @@ type UserInformation struct {
 	GuildName                 string
 	GuildRank                 string
 	NameColour                uint32
-	Class                     cm.MirClass
-	Gender                    cm.MirGender
+	Class                     com.MirClass
+	Gender                    com.MirGender
 	Level                     uint16
-	Location                  cm.Point
-	Direction                 cm.MirDirection
+	Location                  com.Point
+	Direction                 com.MirDirection
 	Hair                      byte
 	HP                        uint16
 	MP                        uint16
@@ -940,32 +939,32 @@ type UserInformation struct {
 	ExpandedStorageExpiryTime uint64      // DateTime
 	Magics                    interface{} // []ClientMagic
 	IntelligentCreatures      interface{} // []ClientIntelligentCreature // TODO
-	IntelligentCreatureType   cm.IntelligentCreatureType
+	IntelligentCreatureType   com.IntelligentCreatureType
 	CreatureSummoned          bool
 }
 
 func (self *UserInformation) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(USER_INFORMATION)
-	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
-	realIdBytes := cm.Uint32ToBytes(self.RealId)
-	nameBytes := cm.StringToBytes(self.Name)
-	guildNameBytes := cm.StringToBytes(self.GuildName)
-	guildRankBytes := cm.StringToBytes(self.GuildRank)
+	pkgBytes := com.Uint16ToBytes(USER_INFORMATION)
+	objectIdBytes := com.Uint32ToBytes(self.ObjectID)
+	realIdBytes := com.Uint32ToBytes(self.RealId)
+	nameBytes := com.StringToBytes(self.Name)
+	guildNameBytes := com.StringToBytes(self.GuildName)
+	guildRankBytes := com.StringToBytes(self.GuildRank)
 	nameColorBytes := []byte{255, 255, 255, 255}
 	classBytes := []byte{byte(self.Class)}
 	genderBytes := []byte{byte(self.Gender)}
-	levelBytes := cm.Uint16ToBytes(self.Level)
+	levelBytes := com.Uint16ToBytes(self.Level)
 	locationBytes := self.Location.ToBytes()
 	directionBytes := []byte{byte(self.Direction)}
 	hairBytes := []byte{byte(self.Hair)}
-	hpBytes := cm.Uint16ToBytes(self.HP)
-	mpBytes := cm.Uint16ToBytes(self.MP)
-	experienceBytes := cm.Uint64ToBytes(self.Experience)
-	maxExperienceBytes := cm.Uint64ToBytes(self.MaxExperience)
+	hpBytes := com.Uint16ToBytes(self.HP)
+	mpBytes := com.Uint16ToBytes(self.MP)
+	experienceBytes := com.Uint64ToBytes(self.Experience)
+	maxExperienceBytes := com.Uint64ToBytes(self.MaxExperience)
 	levelEffectBytes := []byte{byte(self.LevelEffect)}
 	unknowBytes := []byte{1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
 	intelligentCreatureTypeBytes := []byte{byte(self.IntelligentCreatureType)}
-	creatureSummonedBytes := cm.BoolToBytes(self.CreatureSummoned)
+	creatureSummonedBytes := com.BoolToBytes(self.CreatureSummoned)
 
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, objectIdBytes, realIdBytes, nameBytes, guildNameBytes, guildRankBytes, nameColorBytes, classBytes, genderBytes, levelBytes, locationBytes, directionBytes, hairBytes, hpBytes, mpBytes, experienceBytes, maxExperienceBytes, levelEffectBytes, unknowBytes, intelligentCreatureTypeBytes, creatureSummonedBytes} {
@@ -998,12 +997,12 @@ func (self *UserInformation) ToBytes() []byte {
 }
 
 type UserLocation struct {
-	Location  cm.Point
-	Direction cm.MirDirection
+	Location  com.Point
+	Direction com.MirDirection
 }
 
 func (self *UserLocation) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(USER_LOCATION)
+	pkgBytes := com.Uint16ToBytes(USER_LOCATION)
 	locationBytes := self.Location.ToBytes()
 	directionBytes := []byte{byte(self.Direction)}
 	tmp := append(pkgBytes, locationBytes...)
@@ -1023,13 +1022,13 @@ type ObjectRemove struct {
 
 type ObjectTurn struct {
 	ObjectID  uint32
-	Location  cm.Point
-	Direction cm.MirDirection
+	Location  com.Point
+	Direction com.MirDirection
 }
 
 func (self *ObjectTurn) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(OBJECT_TURN)
-	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	pkgBytes := com.Uint16ToBytes(OBJECT_TURN)
+	objectIdBytes := com.Uint32ToBytes(self.ObjectID)
 	locationBytes := self.Location.ToBytes()
 	directionBytes := []byte{byte(self.Direction)}
 	result := make([]byte, 0)
@@ -1041,13 +1040,13 @@ func (self *ObjectTurn) ToBytes() []byte {
 
 type ObjectWalk struct {
 	ObjectID  uint32
-	Location  cm.Point
-	Direction cm.MirDirection
+	Location  com.Point
+	Direction com.MirDirection
 }
 
 func (self *ObjectWalk) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(OBJECT_WALK)
-	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	pkgBytes := com.Uint16ToBytes(OBJECT_WALK)
+	objectIdBytes := com.Uint32ToBytes(self.ObjectID)
 	locationBytes := self.Location.ToBytes()
 	directionBytes := []byte{byte(self.Direction)}
 	result := make([]byte, 0)
@@ -1059,13 +1058,13 @@ func (self *ObjectWalk) ToBytes() []byte {
 
 type ObjectRun struct {
 	ObjectID  uint32
-	Location  cm.Point
-	Direction cm.MirDirection
+	Location  com.Point
+	Direction com.MirDirection
 }
 
 func (self *ObjectRun) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(OBJECT_RUN)
-	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	pkgBytes := com.Uint16ToBytes(OBJECT_RUN)
+	objectIdBytes := com.Uint32ToBytes(self.ObjectID)
 	locationBytes := self.Location.ToBytes()
 	directionBytes := []byte{byte(self.Direction)}
 	result := make([]byte, 0)
@@ -1077,12 +1076,12 @@ func (self *ObjectRun) ToBytes() []byte {
 
 type Chat struct {
 	Message string
-	Type    cm.ChatType
+	Type    com.ChatType
 }
 
 func (self *Chat) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(CHAT)
-	messageBytes := cm.StringToBytes(self.Message)
+	pkgBytes := com.Uint16ToBytes(CHAT)
+	messageBytes := com.StringToBytes(self.Message)
 	typeBytes := []byte{byte(self.Type)}
 	tmp := append(pkgBytes, messageBytes...)
 	result := append(tmp, typeBytes...)
@@ -1092,13 +1091,13 @@ func (self *Chat) ToBytes() []byte {
 type ObjectChat struct {
 	ObjectID uint32
 	Text     string
-	Type     cm.ChatType
+	Type     com.ChatType
 }
 
 func (self *ObjectChat) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(OBJECT_CHAT)
-	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
-	messageBytes := cm.StringToBytes(self.Text)
+	pkgBytes := com.Uint16ToBytes(OBJECT_CHAT)
+	objectIdBytes := com.Uint32ToBytes(self.ObjectID)
+	messageBytes := com.StringToBytes(self.Text)
 	typeBytes := []byte{byte(self.Type)}
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, objectIdBytes, messageBytes, typeBytes} {
@@ -1117,18 +1116,18 @@ func (self *NewItemInfo) ToBytes() []byte {
 }
 
 type MoveItem struct {
-	Grid    cm.MirGridType
+	Grid    com.MirGridType
 	From    uint32
 	To      uint32
 	Success bool
 }
 
 func (self *MoveItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(MOVE_ITEM)
+	pkgBytes := com.Uint16ToBytes(MOVE_ITEM)
 	gridBytes := []byte{byte(self.Grid)}
-	fromBytes := cm.Uint32ToBytes(self.From)
-	toBytes := cm.Uint32ToBytes(self.To)
-	successBytes := cm.BoolToBytes(self.Success)
+	fromBytes := com.Uint32ToBytes(self.From)
+	toBytes := com.Uint32ToBytes(self.To)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, gridBytes, fromBytes, toBytes, successBytes} {
 		result = append(result, r...)
@@ -1137,18 +1136,18 @@ func (self *MoveItem) ToBytes() []byte {
 }
 
 type EquipItem struct {
-	Grid     cm.MirGridType
+	Grid     com.MirGridType
 	UniqueID uint64
 	To       uint32
 	Success  bool
 }
 
 func (self *EquipItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(EQUIP_ITEM)
+	pkgBytes := com.Uint16ToBytes(EQUIP_ITEM)
 	gridBytes := []byte{byte(self.Grid)}
-	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
-	toBytes := cm.Uint32ToBytes(self.To)
-	successBytes := cm.BoolToBytes(self.Success)
+	uniqueIdBytes := com.Uint64ToBytes(self.UniqueID)
+	toBytes := com.Uint32ToBytes(self.To)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, gridBytes, uniqueIdBytes, toBytes, successBytes} {
 		result = append(result, r...)
@@ -1157,20 +1156,20 @@ func (self *EquipItem) ToBytes() []byte {
 }
 
 type MergeItem struct {
-	GridFrom cm.MirGridType
-	GridTo   cm.MirGridType
+	GridFrom com.MirGridType
+	GridTo   com.MirGridType
 	IDFrom   uint64
 	IDTo     uint64
 	Success  bool
 }
 
 func (self *MergeItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(MERGE_ITEM)
+	pkgBytes := com.Uint16ToBytes(MERGE_ITEM)
 	gridFromBytes := []byte{byte(self.GridFrom)}
 	gridToBytes := []byte{byte(self.GridTo)}
-	idFromBytes := cm.Uint64ToBytes(self.IDFrom)
-	idToBytes := cm.Uint64ToBytes(self.IDTo)
-	successBytes := cm.BoolToBytes(self.Success)
+	idFromBytes := com.Uint64ToBytes(self.IDFrom)
+	idToBytes := com.Uint64ToBytes(self.IDTo)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, gridFromBytes, gridToBytes, idFromBytes, idToBytes, successBytes} {
 		result = append(result, r...)
@@ -1179,18 +1178,18 @@ func (self *MergeItem) ToBytes() []byte {
 }
 
 type RemoveItem struct {
-	Grid     cm.MirGridType
+	Grid     com.MirGridType
 	UniqueID uint64
 	To       uint32
 	Success  bool
 }
 
 func (self *RemoveItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(REMOVE_ITEM)
+	pkgBytes := com.Uint16ToBytes(REMOVE_ITEM)
 	gridBytes := []byte{byte(self.Grid)}
-	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
-	toBytes := cm.Uint32ToBytes(self.To)
-	successBytes := cm.BoolToBytes(self.Success)
+	uniqueIdBytes := com.Uint64ToBytes(self.UniqueID)
+	toBytes := com.Uint32ToBytes(self.To)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, gridBytes, uniqueIdBytes, toBytes, successBytes} {
 		result = append(result, r...)
@@ -1199,20 +1198,20 @@ func (self *RemoveItem) ToBytes() []byte {
 }
 
 type RemoveSlotItem struct {
-	Grid     cm.MirGridType
-	GridTo   cm.MirGridType
+	Grid     com.MirGridType
+	GridTo   com.MirGridType
 	UniqueID uint64
 	To       uint32
 	Success  bool
 }
 
 func (self *RemoveSlotItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(REMOVE_SLOT_ITEM)
+	pkgBytes := com.Uint16ToBytes(REMOVE_SLOT_ITEM)
 	gridBytes := []byte{byte(self.Grid)}
 	gridToBytes := []byte{byte(self.GridTo)}
-	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
-	toBytes := cm.Uint32ToBytes(self.To)
-	successBytes := cm.BoolToBytes(self.Success)
+	uniqueIdBytes := com.Uint64ToBytes(self.UniqueID)
+	toBytes := com.Uint32ToBytes(self.To)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, gridBytes, gridToBytes, uniqueIdBytes, toBytes, successBytes} {
 		result = append(result, r...)
@@ -1227,10 +1226,10 @@ type TakeBackItem struct {
 }
 
 func (self *TakeBackItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(TAKE_BACK_ITEM)
-	fromBytes := cm.Uint32ToBytes(self.From)
-	toBytes := cm.Uint32ToBytes(self.To)
-	successBytes := cm.BoolToBytes(self.Success)
+	pkgBytes := com.Uint16ToBytes(TAKE_BACK_ITEM)
+	fromBytes := com.Uint32ToBytes(self.From)
+	toBytes := com.Uint32ToBytes(self.To)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, fromBytes, toBytes, successBytes} {
 		result = append(result, r...)
@@ -1245,10 +1244,10 @@ type StoreItem struct {
 }
 
 func (self *StoreItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(STORE_ITEM)
-	fromBytes := cm.Uint32ToBytes(self.From)
-	toBytes := cm.Uint32ToBytes(self.To)
-	successBytes := cm.BoolToBytes(self.Success)
+	pkgBytes := com.Uint16ToBytes(STORE_ITEM)
+	fromBytes := com.Uint32ToBytes(self.From)
+	toBytes := com.Uint32ToBytes(self.To)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, fromBytes, toBytes, successBytes} {
 		result = append(result, r...)
@@ -1258,28 +1257,28 @@ func (self *StoreItem) ToBytes() []byte {
 
 type SplitItem struct {
 	Item UserItem
-	Grid cm.MirGridType
+	Grid com.MirGridType
 }
 
 // TODO
 func (self SplitItem) ToBytes() []byte {
-	//pkgBytes := cm.Uint16ToBytes(SPLIT_ITEM)
+	//pkgBytes := com.Uint16ToBytes(SPLIT_ITEM)
 	return nil
 }
 
 type SplitItem1 struct {
-	Grid     cm.MirGridType
+	Grid     com.MirGridType
 	UniqueID uint64
 	Count    uint32
 	Success  bool
 }
 
 func (self *SplitItem1) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(SPLIT_ITEM1)
+	pkgBytes := com.Uint16ToBytes(SPLIT_ITEM1)
 	gridBytes := []byte{byte(self.Grid)}
-	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
-	countBytes := cm.Uint32ToBytes(self.Count)
-	successBytes := cm.BoolToBytes(self.Success)
+	uniqueIdBytes := com.Uint64ToBytes(self.UniqueID)
+	countBytes := com.Uint32ToBytes(self.Count)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, gridBytes, uniqueIdBytes, countBytes, successBytes} {
 		result = append(result, r...)
@@ -1294,10 +1293,10 @@ type DepositRefineItem struct {
 }
 
 func (self *DepositRefineItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(DEPOSIT_REFINE_ITEM)
-	fromBytes := cm.Uint32ToBytes(self.From)
-	toBytes := cm.Uint32ToBytes(self.To)
-	successBytes := cm.BoolToBytes(self.Success)
+	pkgBytes := com.Uint16ToBytes(DEPOSIT_REFINE_ITEM)
+	fromBytes := com.Uint32ToBytes(self.From)
+	toBytes := com.Uint32ToBytes(self.To)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, fromBytes, toBytes, successBytes} {
 		result = append(result, r...)
@@ -1312,10 +1311,10 @@ type RetrieveRefineItem struct {
 }
 
 func (self *RetrieveRefineItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(RETRIEVE_REFINE_ITEM)
-	fromBytes := cm.Uint32ToBytes(self.From)
-	toBytes := cm.Uint32ToBytes(self.To)
-	successBytes := cm.BoolToBytes(self.Success)
+	pkgBytes := com.Uint16ToBytes(RETRIEVE_REFINE_ITEM)
+	fromBytes := com.Uint32ToBytes(self.From)
+	toBytes := com.Uint32ToBytes(self.To)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, fromBytes, toBytes, successBytes} {
 		result = append(result, r...)
@@ -1328,8 +1327,8 @@ type RefineCancel struct {
 }
 
 func (self *RefineCancel) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(REFINE_CANCEL)
-	unlockBytes := cm.BoolToBytes(self.Unlock)
+	pkgBytes := com.Uint16ToBytes(REFINE_CANCEL)
+	unlockBytes := com.BoolToBytes(self.Unlock)
 	return append(pkgBytes, unlockBytes...)
 }
 
@@ -1338,8 +1337,8 @@ type RefineItem struct {
 }
 
 func (self *RefineItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(REFINE_ITEM)
-	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
+	pkgBytes := com.Uint16ToBytes(REFINE_ITEM)
+	uniqueIdBytes := com.Uint64ToBytes(self.UniqueID)
 	return append(pkgBytes, uniqueIdBytes...)
 }
 
@@ -1350,10 +1349,10 @@ type DepositTradeItem struct {
 }
 
 func (self *DepositTradeItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(DEPOSIT_TRADE_ITEM)
-	fromBytes := cm.Uint32ToBytes(self.From)
-	toBytes := cm.Uint32ToBytes(self.To)
-	successBytes := cm.BoolToBytes(self.Success)
+	pkgBytes := com.Uint16ToBytes(DEPOSIT_TRADE_ITEM)
+	fromBytes := com.Uint32ToBytes(self.From)
+	toBytes := com.Uint32ToBytes(self.To)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, fromBytes, toBytes, successBytes} {
 		result = append(result, r...)
@@ -1368,10 +1367,10 @@ type RetrieveTradeItem struct {
 }
 
 func (self *RetrieveTradeItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(RETRIEVE_TRADE_ITEM)
-	fromBytes := cm.Uint32ToBytes(self.From)
-	toBytes := cm.Uint32ToBytes(self.To)
-	successBytes := cm.BoolToBytes(self.Success)
+	pkgBytes := com.Uint16ToBytes(RETRIEVE_TRADE_ITEM)
+	fromBytes := com.Uint32ToBytes(self.From)
+	toBytes := com.Uint32ToBytes(self.To)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, fromBytes, toBytes, successBytes} {
 		result = append(result, r...)
@@ -1385,9 +1384,9 @@ type UseItem struct {
 }
 
 func (self *UseItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(USE_ITEM)
-	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
-	successBytes := cm.BoolToBytes(self.Success)
+	pkgBytes := com.Uint16ToBytes(USE_ITEM)
+	uniqueIdBytes := com.Uint64ToBytes(self.UniqueID)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, uniqueIdBytes, successBytes} {
 		result = append(result, r...)
@@ -1402,10 +1401,10 @@ type DropItem struct {
 }
 
 func (self *DropItem) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(DROP_ITEM)
-	uniqueIdBytes := cm.Uint64ToBytes(self.UniqueID)
-	countBytes := cm.Uint32ToBytes(self.Count)
-	successBytes := cm.BoolToBytes(self.Success)
+	pkgBytes := com.Uint16ToBytes(DROP_ITEM)
+	uniqueIdBytes := com.Uint64ToBytes(self.UniqueID)
+	countBytes := com.Uint32ToBytes(self.Count)
+	successBytes := com.BoolToBytes(self.Success)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, uniqueIdBytes, countBytes, successBytes} {
 		result = append(result, r...)
@@ -1423,12 +1422,12 @@ type PlayerUpdate struct {
 }
 
 func (self *PlayerUpdate) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(PLAYER_UPDATE)
-	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	pkgBytes := com.Uint16ToBytes(PLAYER_UPDATE)
+	objectIdBytes := com.Uint32ToBytes(self.ObjectID)
 	lightBytes := []byte{self.Light}
-	weaponBytes := cm.Uint16ToBytes(self.Weapon)
-	weaponEffectBytes := cm.Uint16ToBytes(self.WeaponEffect)
-	armourBytes := cm.Uint16ToBytes(self.Armour)
+	weaponBytes := com.Uint16ToBytes(self.Weapon)
+	weaponEffectBytes := com.Uint16ToBytes(self.WeaponEffect)
+	armourBytes := com.Uint16ToBytes(self.Armour)
 	wingEffectBytes := []byte{self.WingEffect}
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, objectIdBytes, lightBytes, weaponBytes, weaponEffectBytes, armourBytes, wingEffectBytes} {
@@ -1488,15 +1487,15 @@ type ObjectMonster struct {
 	ObjectID          uint32
 	Name              string
 	NameColour        uint32 // Color
-	Location          cm.Point
-	Image             cm.Monster
-	Direction         cm.MirDirection
+	Location          com.Point
+	Image             com.Monster
+	Direction         com.MirDirection
 	Effect            byte
 	AI                byte
 	Light             byte
 	Dead              bool
 	Skeleton          bool
-	Poison            cm.PoisonType
+	Poison            com.PoisonType
 	Hidden            bool
 	Extra             bool
 	ExtraByte         byte
@@ -1527,24 +1526,24 @@ func (self *ObjectMonster) ToBytes() []byte {
 	0, 0, 0, 0, 0, 0, 0, 0,   shock time
 	0    binding shot
 	*/
-	pkgBytes := cm.Uint16ToBytes(OBJECT_MONSTER)
-	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
-	nameBytes := cm.StringToBytes(self.Name)
-	nameColorBytes := cm.Uint32ToBytes(self.NameColour)
+	pkgBytes := com.Uint16ToBytes(OBJECT_MONSTER)
+	objectIdBytes := com.Uint32ToBytes(self.ObjectID)
+	nameBytes := com.StringToBytes(self.Name)
+	nameColorBytes := com.Uint32ToBytes(self.NameColour)
 	locationBytes := self.Location.ToBytes()
-	imageBytes := cm.Uint16ToBytes(uint16(self.Image))
+	imageBytes := com.Uint16ToBytes(uint16(self.Image))
 	directionBytes := []byte{byte(self.Direction)}
 	effectBytes := []byte{self.Effect}
 	aiBytes := []byte{self.AI}
 	lightBytes := []byte{self.Light}
-	deadBytes := cm.BoolToBytes(self.Dead)
-	skeletonBytes := cm.BoolToBytes(self.Skeleton)
-	poisonBytes := cm.Uint16ToBytes(uint16(self.Poison))
-	hiddenBytes := cm.BoolToBytes(self.Hidden)
-	extraBytes := cm.BoolToBytes(self.Extra)
+	deadBytes := com.BoolToBytes(self.Dead)
+	skeletonBytes := com.BoolToBytes(self.Skeleton)
+	poisonBytes := com.Uint16ToBytes(uint16(self.Poison))
+	hiddenBytes := com.BoolToBytes(self.Hidden)
+	extraBytes := com.BoolToBytes(self.Extra)
 	extraByteBytes := []byte{self.ExtraByte}
-	shockTimeBytes := cm.Uint64ToBytes(self.ShockTime)
-	bindingShotCenterBytes := cm.BoolToBytes(self.BindingShotCenter)
+	shockTimeBytes := com.Uint64ToBytes(self.ShockTime)
+	bindingShotCenterBytes := com.BoolToBytes(self.BindingShotCenter)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, objectIdBytes, nameBytes, nameColorBytes, locationBytes,
 		imageBytes, directionBytes, effectBytes, aiBytes, lightBytes, deadBytes, skeletonBytes, poisonBytes,
@@ -1558,16 +1557,16 @@ func (self *ObjectMonster) ToBytes() []byte {
 
 type ObjectAttack struct {
 	ObjectID  uint32
-	Location  cm.Point
-	Direction cm.MirDirection
-	Spell     cm.Spell
+	Location  com.Point
+	Direction com.MirDirection
+	Spell     com.Spell
 	Level     byte
 	Type      byte
 }
 
 func (self *ObjectAttack) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(OBJECT_ATTACK)
-	objectIdBytes := cm.Uint32ToBytes(self.ObjectID)
+	pkgBytes := com.Uint16ToBytes(OBJECT_ATTACK)
+	objectIdBytes := com.Uint32ToBytes(self.ObjectID)
 	locationBytes := self.Location.ToBytes()
 	directionBytes := []byte{byte(self.Direction)}
 	spellBytes := []byte{byte(self.Spell)}
@@ -1602,9 +1601,9 @@ type HealthChanged struct {
 }
 
 func (self *HealthChanged) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(HEALTH_CHANGED)
-	hpBytes := cm.Uint16ToBytes(self.HP)
-	mpBytes := cm.Uint16ToBytes(self.MP)
+	pkgBytes := com.Uint16ToBytes(HEALTH_CHANGED)
+	hpBytes := com.Uint16ToBytes(self.HP)
+	mpBytes := com.Uint16ToBytes(self.MP)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, hpBytes, mpBytes} {
 		result = append(result, r...)

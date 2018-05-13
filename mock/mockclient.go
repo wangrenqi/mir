@@ -1,11 +1,11 @@
-package main
+package mock
 
 import (
 	"net"
 	"fmt"
 	p "mir/proto"
 	cp "mir/proto/client"
-	cm "mir/common"
+	"mir/com"
 	"time"
 )
 
@@ -55,8 +55,8 @@ func main() {
 	//fmt.Println("new character")
 	//pkg = &p.Packet{Index: cp.NEW_CHARACTER, Data: &cp.NewCharacter{
 	//	Name:   "hello222",
-	//	Gender: cm.MirGender(1),
-	//	Class:  cm.MirClass(2),
+	//	Gender: com.MirGender(1),
+	//	Class:  com.MirClass(2),
 	//}}
 	//send(conn, pkg)
 	//time.Sleep(time.Second)
@@ -72,7 +72,7 @@ func main() {
 	//
 	//// walk
 	fmt.Println("walk")
-	dir := []cm.MirDirection{cm.UP, cm.RIGHT, cm.DOWN, cm.LEFT}
+	dir := []com.MirDirection{com.UP, com.RIGHT, com.DOWN, com.LEFT}
 	for _, d := range dir {
 		//pkg = &p.Packet{cp.WALK, &cp.Walk{cp.Up}}
 		pkg = &p.Packet{Index: cp.WALK, Data: &cp.Walk{d}}

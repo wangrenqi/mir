@@ -4,7 +4,7 @@ import "encoding/binary"
 
 import (
 	"log"
-	cm "mir/common"
+	"mir/com"
 	cp "mir/proto/client"
 )
 
@@ -255,7 +255,7 @@ func (pkg *Packet) ToBytes() []byte {
 // 封包
 func Pack(data []byte) []byte {
 	length := len(data) + 2
-	lenBytes := cm.Uint16ToBytes(uint16(length))
+	lenBytes := com.Uint16ToBytes(uint16(length))
 	return append(lenBytes, data...)
 }
 

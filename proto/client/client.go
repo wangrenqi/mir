@@ -1,7 +1,7 @@
 package client
 
 import (
-	cm "mir/common"
+	"mir/com"
 )
 
 const (
@@ -197,16 +197,16 @@ type NewAccount struct {
 }
 
 func GetNewAccount(bytes []byte) *NewAccount {
-	index, accountId := cm.ReadString(bytes, 0)
-	index, password := cm.ReadString(bytes, index)
+	index, accountId := com.ReadString(bytes, 0)
+	index, password := com.ReadString(bytes, index)
 	// TODO birthday datetime from binary int64
 	return &NewAccount{AccountID: accountId, Password: password}
 }
 
 func (self *NewAccount) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(NEW_ACCOUNT)
-	accountIdBytes := cm.StringToBytes(self.AccountID)
-	passwordBytes := cm.StringToBytes(self.Password)
+	pkgBytes := com.Uint16ToBytes(NEW_ACCOUNT)
+	accountIdBytes := com.StringToBytes(self.AccountID)
+	passwordBytes := com.StringToBytes(self.Password)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, accountIdBytes, passwordBytes} {
 		result = append(result, r...)
@@ -235,15 +235,15 @@ type Login struct {
 }
 
 func GetLogin(bytes []byte) *Login {
-	index, accountId := cm.ReadString(bytes, 0)
-	index, password := cm.ReadString(bytes, index)
+	index, accountId := com.ReadString(bytes, 0)
+	index, password := com.ReadString(bytes, index)
 	return &Login{AccountID: accountId, Password: password}
 }
 
 func (self *Login) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(LOGIN)
-	accountIdBytes := cm.StringToBytes(self.AccountID)
-	passwordBytes := cm.StringToBytes(self.Password)
+	pkgBytes := com.Uint16ToBytes(LOGIN)
+	accountIdBytes := com.StringToBytes(self.AccountID)
+	passwordBytes := com.StringToBytes(self.Password)
 	result := make([]byte, 0)
 	for _, r := range [][]byte{pkgBytes, accountIdBytes, passwordBytes} {
 		result = append(result, r...)
@@ -253,20 +253,20 @@ func (self *Login) ToBytes() []byte {
 
 type NewCharacter struct {
 	Name   string
-	Gender cm.MirGender
-	Class  cm.MirClass
+	Gender com.MirGender
+	Class  com.MirClass
 }
 
 func GetNewCharacter(bytes []byte) *NewCharacter {
-	index, name := cm.ReadString(bytes, 0)
+	index, name := com.ReadString(bytes, 0)
 	gender := bytes[index]
 	class := bytes[index+1]
-	return &NewCharacter{Name: name, Gender: cm.MirGender(gender), Class: cm.MirClass(class)}
+	return &NewCharacter{Name: name, Gender: com.MirGender(gender), Class: com.MirClass(class)}
 }
 
 func (self *NewCharacter) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(NEW_CHARACTER)
-	nameBytes := cm.StringToBytes(self.Name)
+	pkgBytes := com.Uint16ToBytes(NEW_CHARACTER)
+	nameBytes := com.StringToBytes(self.Name)
 	genderBytes := []byte{byte(self.Gender)}
 	classBytes := []byte{byte(self.Class)}
 	result := make([]byte, 0)
@@ -294,13 +294,13 @@ type StartGame struct {
 }
 
 func GetStartGame(bytes []byte) *StartGame {
-	characterIndex := int(cm.BytesToUint32(bytes))
+	characterIndex := int(com.BytesToUint32(bytes))
 	return &StartGame{CharacterIndex: characterIndex}
 }
 
 func (self *StartGame) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(START_GAME)
-	characterIndexBytes := cm.Uint32ToBytes(uint32(self.CharacterIndex))
+	pkgBytes := com.Uint16ToBytes(START_GAME)
+	characterIndexBytes := com.Uint32ToBytes(uint32(self.CharacterIndex))
 	return append(pkgBytes, characterIndexBytes...)
 }
 
@@ -316,9 +316,9 @@ func (self *Logout) ToBytes() []byte {
 	return nil
 }
 
-func validDirection(d cm.MirDirection) bool {
+func validDirection(d com.MirDirection) bool {
 	in := false
-	for _, dir := range []cm.MirDirection{cm.UP, cm.UP_RIGHT, cm.RIGHT, cm.DOWN_RIGHT, cm.DOWN, cm.DOWN_LEFT, cm.LEFT, cm.UP_LEFT} {
+	for _, dir := range []com.MirDirection{com.UP, com.UP_RIGHT, com.RIGHT, com.DOWN_RIGHT, com.DOWN, com.DOWN_LEFT, com.LEFT, com.UP_LEFT} {
 		if d == dir {
 			in = true
 		}
@@ -327,16 +327,16 @@ func validDirection(d cm.MirDirection) bool {
 }
 
 type Turn struct {
-	Direction cm.MirDirection
+	Direction com.MirDirection
 }
 
 func GetTurn(bytes []byte) *Turn {
 	if len(bytes) != 1 {
 		return nil
 	}
-	in := validDirection(cm.MirDirection(bytes[0]))
+	in := validDirection(com.MirDirection(bytes[0]))
 	if in {
-		return &Turn{cm.MirDirection(bytes[0])}
+		return &Turn{com.MirDirection(bytes[0])}
 	}
 	return nil
 }
@@ -346,16 +346,16 @@ func (self *Turn) ToBytes() []byte {
 }
 
 type Walk struct {
-	Direction cm.MirDirection
+	Direction com.MirDirection
 }
 
 func GetWalk(bytes []byte) *Walk {
 	if len(bytes) != 1 {
 		return nil
 	}
-	in := validDirection(cm.MirDirection(bytes[0]))
+	in := validDirection(com.MirDirection(bytes[0]))
 	if in {
-		return &Walk{cm.MirDirection(bytes[0])}
+		return &Walk{com.MirDirection(bytes[0])}
 	}
 	return nil
 }
@@ -367,22 +367,22 @@ func (self *Walk) ToBytes() []byte {
 }
 
 type Run struct {
-	Direction cm.MirDirection
+	Direction com.MirDirection
 }
 
 func GetRun(bytes []byte) *Run {
 	if len(bytes) != 1 {
 		return nil
 	}
-	in := validDirection(cm.MirDirection(bytes[0]))
+	in := validDirection(com.MirDirection(bytes[0]))
 	if in {
-		return &Run{cm.MirDirection(bytes[0])}
+		return &Run{com.MirDirection(bytes[0])}
 	}
 	return nil
 }
 
 func (self *Run) ToBytes() []byte {
-	pkgBytes := cm.Uint16ToBytes(RUN)
+	pkgBytes := com.Uint16ToBytes(RUN)
 	directionBytes := []byte{byte(self.Direction)}
 	return append(pkgBytes, directionBytes...)
 }
@@ -392,13 +392,13 @@ type Chat struct {
 }
 
 func GetChat(bytes []byte) *Chat {
-	_, msg := cm.ReadString(bytes, 0)
+	_, msg := com.ReadString(bytes, 0)
 	return &Chat{Message: msg}
 }
 
 func (self *Chat) ToBytes() []byte {
 	msgBytes := []byte(self.Message)
-	index := cm.Uint16ToBytes(CHAT)
+	index := com.Uint16ToBytes(CHAT)
 	index = append(index, byte(len(msgBytes)))
 	bytes := append(index, msgBytes...)
 	return bytes

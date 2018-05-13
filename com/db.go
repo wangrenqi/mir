@@ -1,17 +1,10 @@
-package orm
+package com
 
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	cm "mir/common"
 )
 
-var dialect = "mysql"
-
-var dbName = "mir"
-var dbUser = "root"
-var dbPassword = "root"
-var dbAddr = "localhost:3306"
 
 func GetDB() *gorm.DB {
 	db, err := gorm.Open(dialect, dbUser+":"+dbPassword+"@tcp("+dbAddr+")/"+dbName+"?charset=utf8&parseTime=True&loc=Local")
@@ -48,7 +41,7 @@ type CharacterInfo struct {
 	CurrentMapIndex  uint32
 	CurrentLocationX int32
 	CurrentLocationY int32
-	Direction        cm.MirDirection
+	Direction        MirDirection
 	//public int BindMapIndex;
 	//public Point BindLocation;
 

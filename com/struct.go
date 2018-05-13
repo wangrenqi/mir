@@ -1,4 +1,44 @@
-package common
+package com
+
+import (
+	"net"
+	"github.com/jinzhu/gorm"
+)
+
+type Client struct {
+	Id        int32
+	Conn      net.Conn
+	ReqChan   <-chan []byte
+	Env       *Environ
+	Status    int
+	Info      map[string]interface{}
+	Player    *PlayerObject
+	AOIEntity *AOIEntity
+}
+
+type AOIEntity struct {
+	Index       uint16
+	MapIndex    uint32
+	X           uint16
+	Y           uint16
+	Connections *map[int32]net.Conn // client id : conn
+	Points      []*Point
+}
+
+type Map struct {
+	Index      uint32
+	Width      uint16
+	Height     uint16
+	Points     *[]Point
+	PointProxy map[string]*Point
+	Objects    *map[string]interface{}
+}
+
+type Environ struct {
+	DB   *gorm.DB
+	Maps *map[uint32]Map
+	AOI  *map[uint32][]AOIEntity
+}
 
 type Point struct {
 	X     int32

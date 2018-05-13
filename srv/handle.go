@@ -3,44 +3,45 @@ package srv
 import (
 	"net"
 	"sync/atomic"
-	"mir/env"
 	p "mir/proto"
 	cp "mir/proto/client"
 	sp "mir/proto/server"
-	"mir/object"
 	"log"
+	"mir/com"
 )
 
-type client struct {
-	id        int32
-	conn      net.Conn
-	reqChan   <-chan []byte
-	env       *env.Environ
-	status    int
-	info      map[string]interface{}
-	player    *object.PlayerObject
-	aoiEntity *env.AOIEntity
-}
-
 var id int32 = 0
-var clients = make(map[int32]*client)
+var clients = make(map[int32]*com.Client)
 // TODO map 换成atomic map
 
-func HandleClient(conn net.Conn, env *env.Environ) {
+func GetClients() map[int32]*com.Client {
+	return clients
+}
+
+func HandleClient(conn net.Conn, env *com.Environ) {
 	reqChan := make(chan []byte, 1024)
-	client := &client{
-		id:        id,
-		conn:      conn,
-		reqChan:   reqChan,
-		env:       env,
-		status:    0,
-		info:      make(map[string]interface{}),
-		player:    nil,
-		aoiEntity: nil,
+	client := &com.Client{
+		Id:        id,
+		Conn:      conn,
+		ReqChan:   reqChan,
+		Env:       env,
+		Status:    0,
+		Info:      make(map[string]interface{}),
+		Player:    nil,
+		AOIEntity: nil,
 	}
 	atomic.AddInt32(&id, 1)
 	clients[id] = client
-	go client.run()
+	go func() {
+		for {
+			select {
+			case bytes := <-client.ReqChan:
+				index, structData := p.BytesToStruct(bytes)
+
+				process(client, &p.Packet{index, structData})
+			}
+		}
+	}()
 
 	conn.Write(p.Pack((&sp.Connected{}).ToBytes()))
 
@@ -55,128 +56,113 @@ func HandleClient(conn net.Conn, env *env.Environ) {
 	}
 }
 
-func GetClients() map[int32]*client {
-	return clients
-}
-
-func (c *client) run() {
-	for {
-		select {
-		case bytes := <-c.reqChan:
-			index, structData := p.BytesToStruct(bytes)
-
-			c.process(&p.Packet{index, structData})
-		}
-	}
-}
-
-func (c *client) process(pkg *p.Packet) {
+func process(c *com.Client, pkg *p.Packet) {
 	if pkg == nil || pkg.Index == -1 {
 		return
 	}
 	switch pkg.Index {
 	case cp.CLIENT_VERSION:
-		c.ClientVersion(pkg)
+		ClientVersion(c, pkg)
 	case cp.DISCONNECT:
-		c.Disconnect(pkg)
+		Disconnect(c, pkg)
 	case cp.KEEPALIVE:
-		c.Keepalive(pkg)
+		Keepalive(c, pkg)
 	case cp.NEW_ACCOUNT:
-		c.NewAccount(pkg)
+		NewAccount(c, pkg)
 	case cp.CHANGE_PASSWORD:
-		c.ChangePassword(pkg)
+		ChangePassword(c, pkg)
 	case cp.LOGIN:
-		c.Login(pkg)
+		Login(c, pkg)
 	case cp.NEW_CHARACTER:
-		c.NewCharacter(pkg)
+		NewCharacter(c, pkg)
 	case cp.DELETE_CHARACTER:
-		c.DeleteCharacter(pkg)
+		DeleteCharacter(c, pkg)
 	case cp.START_GAME:
-		c.StartGame(pkg)
+		StartGame(c, pkg)
 	case cp.LOGOUT:
-		c.Logout(pkg)
+		Logout(c, pkg)
 	case cp.TURN:
-		c.Turn(pkg)
+		Turn(c, pkg)
 	case cp.WALK:
-		c.Walk(pkg)
+		Walk(c, pkg)
 	case cp.RUN:
-		c.Run(pkg)
+		Run(c, pkg)
 	case cp.CHAT:
-		c.Chat(pkg)
+		Chat(c, pkg)
 	case cp.MOVE_ITEM:
-		c.MoveItem(pkg)
+		MoveItem(c, pkg)
 	case cp.STORE_ITEM:
-		c.StoreItem(pkg)
+		StoreItem(c, pkg)
 	case cp.TAKE_BACK_ITEM:
-		c.TakeBackItem(pkg)
+		TakeBackItem(c, pkg)
 	case cp.MERGE_ITEM:
-		c.MergeItem(pkg)
+		MergeItem(c, pkg)
 	case cp.EQUIP_ITEM:
-		c.EquipItem(pkg)
+		EquipItem(c, pkg)
 	case cp.REMOVE_ITEM:
-		c.RemoveItem(pkg)
+		RemoveItem(c, pkg)
 	case cp.REMOVE_SLOT_ITEM:
-		c.RemoveSlotItem(pkg)
+		RemoveSlotItem(c, pkg)
 	case cp.SPLIT_ITEM:
-		c.SplitItem(pkg)
+		SplitItem(c, pkg)
 	case cp.USE_ITEM:
-		c.UseItem(pkg)
+		UseItem(c, pkg)
 	case cp.DROP_ITEM:
-		c.DropItem(pkg)
+		DropItem(c, pkg)
 	case cp.DEPOSIT_REFINE_ITEM:
-		c.DepositRefineItem(pkg)
+		DepositRefineItem(c, pkg)
 	case cp.RETRIEVE_REFINE_ITEM:
-		c.RetrieveRefineItem(pkg)
+		RetrieveRefineItem(c, pkg)
 	case cp.REFINE_CANCEL:
-		c.RefineCancel(pkg)
+		RefineCancel(c, pkg)
 	case cp.REFINE_ITEM:
-		c.RefineItem(pkg)
+		RefineItem(c, pkg)
 	case cp.CHECK_REFINE:
-		c.CheckRefine(pkg)
+		CheckRefine(c, pkg)
 	case cp.REPLACE_WED_RING:
-		c.ReplaceWedRing(pkg)
+		ReplaceWedRing(c, pkg)
 	case cp.DEPOSIT_TRADE_ITEM:
-		c.DepositTradeItem(pkg)
+		DepositTradeItem(c, pkg)
 	case cp.RETRIEVE_TRADE_ITEM:
-		c.RetrieveTradeItem(pkg)
+		RetrieveTradeItem(c, pkg)
 	case cp.DROP_GOLD:
-		c.DropGold(pkg)
+		DropGold(c, pkg)
 	case cp.PICK_UP:
-		c.PickUp(pkg)
+		PickUp(c, pkg)
 	case cp.INSPECT:
-		c.Inspect(pkg)
+		Inspect(c, pkg)
 	case cp.CHANGE_A_MODE:
-		c.ChangeAMode(pkg)
+		ChangeAMode(c, pkg)
 	case cp.CHANGE_P_MODE:
-		c.ChangePMode(pkg)
+		ChangePMode(c, pkg)
 	case cp.CHANGE_TRADE:
-		c.ChangeTrade(pkg)
+		ChangeTrade(c, pkg)
 	case cp.ATTACK:
-		c.Attack(pkg)
+		Attack(c, pkg)
 	case cp.RANGE_ATTACK:
-		c.RangeAttack(pkg)
+		RangeAttack(c, pkg)
 	case cp.HARVEST:
-		c.Harvest(pkg)
+		Harvest(c, pkg)
 	case cp.CALL_NPC:
-		c.CallNPC(pkg)
+		CallNPC(c, pkg)
 	case cp.TALK_MONSTER_NPC:
-		c.TalkMonsterNPC(pkg)
+		TalkMonsterNPC(c, pkg)
 	case cp.BUY_ITEM:
-		c.BuyItem(pkg)
+		BuyItem(c, pkg)
 	case cp.SELL_ITEM:
-		c.SellItem(pkg)
+		SellItem(c, pkg)
 	case cp.CRAFT_ITEM:
-		c.CraftItem(pkg)
+		CraftItem(c, pkg)
 	case cp.REPAIR_ITEM:
-		c.RepairItem(pkg)
+		RepairItem(c, pkg)
 	case cp.BUY_ITEM_BACK:
-		c.BuyItemBack(pkg)
+		BuyItemBack(c, pkg)
 	case cp.S_REPAIR_ITEM:
-		c.SRepairItem(pkg)
+		SRepairItem(c, pkg)
 	case cp.MAGIC_KEY:
-		c.MagicKey(pkg)
+		MagicKey(c, pkg)
 	case cp.MAGIC:
-		c.Magic(pkg)
+		Magic(c, pkg)
 	default:
 		log.Println("unkonw pkg index:", pkg.Index)
 	}

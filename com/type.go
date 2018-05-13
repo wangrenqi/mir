@@ -1,4 +1,4 @@
-package common
+package com
 
 type MirDirection byte
 
