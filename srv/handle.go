@@ -3,13 +3,12 @@ package srv
 import (
 	"net"
 	"sync/atomic"
-	"log"
 	"mir/env"
 	p "mir/proto"
 	cp "mir/proto/client"
 	sp "mir/proto/server"
-	"fmt"
 	"mir/object"
+	"log"
 )
 
 type client struct {
@@ -66,121 +65,119 @@ func (c *client) run() {
 		case bytes := <-c.reqChan:
 			index, structData := p.BytesToStruct(bytes)
 
-			err := c.process(&p.Packet{index, structData})
-			if err != nil {
-				log.Printf("client process packet return err: %v\n", err)
-			}
+			c.process(&p.Packet{index, structData})
 		}
 	}
 }
 
-func (c *client) process(pkg *p.Packet) (err error) {
+func (c *client) process(pkg *p.Packet) {
 	if pkg == nil || pkg.Index == -1 {
-		return nil
+		return
 	}
 	switch pkg.Index {
 	case cp.CLIENT_VERSION:
-		return c.ClientVersion(pkg)
+		c.ClientVersion(pkg)
 	case cp.DISCONNECT:
-		return c.Disconnect(pkg)
+		c.Disconnect(pkg)
 	case cp.KEEPALIVE:
-		return c.Keepalive(pkg)
+		c.Keepalive(pkg)
 	case cp.NEW_ACCOUNT:
-		return c.NewAccount(pkg)
+		c.NewAccount(pkg)
 	case cp.CHANGE_PASSWORD:
-		return c.ChangePassword(pkg)
+		c.ChangePassword(pkg)
 	case cp.LOGIN:
-		return c.Login(pkg)
+		c.Login(pkg)
 	case cp.NEW_CHARACTER:
-		return c.NewCharacter(pkg)
+		c.NewCharacter(pkg)
 	case cp.DELETE_CHARACTER:
-		return c.DeleteCharacter(pkg)
+		c.DeleteCharacter(pkg)
 	case cp.START_GAME:
-		return c.StartGame(pkg)
+		c.StartGame(pkg)
 	case cp.LOGOUT:
-		return c.Logout(pkg)
+		c.Logout(pkg)
 	case cp.TURN:
-		return c.Turn(pkg)
+		c.Turn(pkg)
 	case cp.WALK:
-		return c.Walk(pkg)
+		c.Walk(pkg)
 	case cp.RUN:
-		return c.Run(pkg)
+		c.Run(pkg)
 	case cp.CHAT:
-		return c.Chat(pkg)
+		c.Chat(pkg)
 	case cp.MOVE_ITEM:
-		return c.MoveItem(pkg)
+		c.MoveItem(pkg)
 	case cp.STORE_ITEM:
-		return c.StoreItem(pkg)
+		c.StoreItem(pkg)
 	case cp.TAKE_BACK_ITEM:
-		return c.TakeBackItem(pkg)
+		c.TakeBackItem(pkg)
 	case cp.MERGE_ITEM:
-		return c.MergeItem(pkg)
+		c.MergeItem(pkg)
 	case cp.EQUIP_ITEM:
-		return c.EquipItem(pkg)
+		c.EquipItem(pkg)
 	case cp.REMOVE_ITEM:
-		return c.RemoveItem(pkg)
+		c.RemoveItem(pkg)
 	case cp.REMOVE_SLOT_ITEM:
-		return c.RemoveSlotItem(pkg)
+		c.RemoveSlotItem(pkg)
 	case cp.SPLIT_ITEM:
-		return c.SplitItem(pkg)
+		c.SplitItem(pkg)
 	case cp.USE_ITEM:
-		return c.UseItem(pkg)
+		c.UseItem(pkg)
 	case cp.DROP_ITEM:
-		return c.DropItem(pkg)
+		c.DropItem(pkg)
 	case cp.DEPOSIT_REFINE_ITEM:
-		return c.DepositRefineItem(pkg)
+		c.DepositRefineItem(pkg)
 	case cp.RETRIEVE_REFINE_ITEM:
-		return c.RetrieveRefineItem(pkg)
+		c.RetrieveRefineItem(pkg)
 	case cp.REFINE_CANCEL:
-		return c.RefineCancel(pkg)
+		c.RefineCancel(pkg)
 	case cp.REFINE_ITEM:
-		return c.RefineItem(pkg)
+		c.RefineItem(pkg)
 	case cp.CHECK_REFINE:
-		return c.CheckRefine(pkg)
+		c.CheckRefine(pkg)
 	case cp.REPLACE_WED_RING:
-		return c.ReplaceWedRing(pkg)
+		c.ReplaceWedRing(pkg)
 	case cp.DEPOSIT_TRADE_ITEM:
-		return c.DepositTradeItem(pkg)
+		c.DepositTradeItem(pkg)
 	case cp.RETRIEVE_TRADE_ITEM:
-		return c.RetrieveTradeItem(pkg)
+		c.RetrieveTradeItem(pkg)
 	case cp.DROP_GOLD:
-		return c.DropGold(pkg)
+		c.DropGold(pkg)
 	case cp.PICK_UP:
-		return c.PickUp(pkg)
+		c.PickUp(pkg)
 	case cp.INSPECT:
-		return c.Inspect(pkg)
+		c.Inspect(pkg)
 	case cp.CHANGE_A_MODE:
-		return c.ChangeAMode(pkg)
+		c.ChangeAMode(pkg)
 	case cp.CHANGE_P_MODE:
-		return c.ChangePMode(pkg)
+		c.ChangePMode(pkg)
 	case cp.CHANGE_TRADE:
-		return c.ChangeTrade(pkg)
+		c.ChangeTrade(pkg)
 	case cp.ATTACK:
-		return c.Attack(pkg)
+		c.Attack(pkg)
 	case cp.RANGE_ATTACK:
-		return c.RangeAttack(pkg)
+		c.RangeAttack(pkg)
 	case cp.HARVEST:
-		return c.Harvest(pkg)
+		c.Harvest(pkg)
 	case cp.CALL_NPC:
-		return c.CallNPC(pkg)
+		c.CallNPC(pkg)
 	case cp.TALK_MONSTER_NPC:
-		return c.TalkMonsterNPC(pkg)
+		c.TalkMonsterNPC(pkg)
 	case cp.BUY_ITEM:
-		return c.BuyItem(pkg)
+		c.BuyItem(pkg)
 	case cp.SELL_ITEM:
-		return c.SellItem(pkg)
+		c.SellItem(pkg)
 	case cp.CRAFT_ITEM:
-		return c.CraftItem(pkg)
+		c.CraftItem(pkg)
 	case cp.REPAIR_ITEM:
-		return c.RepairItem(pkg)
+		c.RepairItem(pkg)
 	case cp.BUY_ITEM_BACK:
-		return c.BuyItemBack(pkg)
+		c.BuyItemBack(pkg)
 	case cp.S_REPAIR_ITEM:
-		return c.SRepairItem(pkg)
+		c.SRepairItem(pkg)
 	case cp.MAGIC_KEY:
-		return c.MagicKey(pkg)
+		c.MagicKey(pkg)
 	case cp.MAGIC:
-		return c.Magic(pkg)
+		c.Magic(pkg)
+	default:
+		log.Println("unkonw pkg index:", pkg.Index)
 	}
-	return fmt.Errorf("unknow pkg index: %d", pkg.Index)
 }

@@ -56,24 +56,21 @@ func Broadcast(this *client, pkg Packet) {
 	//否则sendToNearly
 }
 
-func (c *client) ClientVersion(pkg *p.Packet) error {
+func (c *client) ClientVersion(pkg *p.Packet) {
 	// TODO check client version
 	SendTo(c.conn, &sp.ClientVersion{Result: byte(1)})
 	c.status = LOGIN
-	return nil
 }
 
-func (c *client) Disconnect(pkg *p.Packet) error {
+func (c *client) Disconnect(pkg *p.Packet) {
 
-	return nil
 }
-func (c *client) Keepalive(pkg *p.Packet) error {
+func (c *client) Keepalive(pkg *p.Packet) {
 
-	return nil
 }
-func (c *client) NewAccount(pkg *p.Packet) error {
+func (c *client) NewAccount(pkg *p.Packet) {
 	if c.status != LOGIN {
-		return nil
+		return
 	}
 	accountId := pkg.Data.(*cp.NewAccount).AccountID
 	password := pkg.Data.(*cp.NewAccount).Password
@@ -81,19 +78,16 @@ func (c *client) NewAccount(pkg *p.Packet) error {
 	c.env.DB.First(&account, "account_id = ?", accountId)
 	if account.AccountID == accountId {
 		SendTo(c.conn, &sp.NewAccount{Result: byte(7)})
-		return nil
 	}
 	c.env.DB.Create(&orm.AccountInfo{
 		AccountID: accountId,
 		Password:  password,
 	})
 	SendTo(c.conn, &sp.NewAccount{Result: byte(8)})
-	return nil
 }
 
-func (c *client) ChangePassword(packet *p.Packet) error {
+func (c *client) ChangePassword(packet *p.Packet) {
 
-	return nil
 }
 
 func toSelectInfos(infos []orm.CharacterInfo) []sp.SelectInfo {
@@ -111,9 +105,9 @@ func toSelectInfos(infos []orm.CharacterInfo) []sp.SelectInfo {
 	return result
 }
 
-func (c *client) Login(pkg *p.Packet) error {
+func (c *client) Login(pkg *p.Packet) {
 	if c.status != LOGIN {
-		return nil
+		return
 	}
 	// check accountId and password
 	accountId := pkg.Data.(*cp.Login).AccountID
@@ -123,7 +117,7 @@ func (c *client) Login(pkg *p.Packet) error {
 	if account.AccountID == "" {
 		// login failed
 		SendTo(c.conn, &sp.Login{Result: byte(4)})
-		return nil
+		return
 	}
 	c.status = SELECT
 	c.info["AccountID"] = accountId
@@ -133,12 +127,11 @@ func (c *client) Login(pkg *p.Packet) error {
 	c.env.DB.Model(&account).Related(&characters)
 	selectInfos := toSelectInfos(characters)
 	SendTo(c.conn, &sp.LoginSuccess{Characters: selectInfos})
-	return nil
 }
 
-func (c *client) NewCharacter(pkg *p.Packet) error {
+func (c *client) NewCharacter(pkg *p.Packet) {
 	if c.status != SELECT {
-		return nil
+		return
 	}
 	name := pkg.Data.(*cp.NewCharacter).Name
 	gender := pkg.Data.(*cp.NewCharacter).Gender
@@ -148,7 +141,7 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 	if character.Name != "" {
 		// 已经存在角色名name
 		SendTo(c.conn, &sp.NewCharacter{Result: 5})
-		return nil
+		return
 	}
 	// TODO check gender class max...
 	startPoint := env.GetStartPoint()
@@ -177,17 +170,15 @@ func (c *client) NewCharacter(pkg *p.Packet) error {
 		Gender: gender,
 		//AccountID: c.info["accountId"].(uint),
 	}})
-	return nil
 }
 
-func (c *client) DeleteCharacter(pkg *p.Packet) error {
+func (c *client) DeleteCharacter(pkg *p.Packet) {
 
-	return nil
 }
 
-func (c *client) StartGame(pkg *p.Packet) error {
+func (c *client) StartGame(pkg *p.Packet) {
 	if c.status != SELECT {
-		return nil
+		return
 	}
 
 	index := pkg.Data.(*cp.StartGame).CharacterIndex
@@ -195,7 +186,7 @@ func (c *client) StartGame(pkg *p.Packet) error {
 	var character orm.CharacterInfo
 	c.env.DB.Where(&orm.CharacterInfo{Index: uint32(index), AccountInfoID: accountInfoId}).First(&character)
 	if character.AccountInfoID == 0 || character.Index == 0 {
-		return nil
+		return
 	}
 	// TODO
 	//aoiEntity := env.GetAOIEntity(character.CurrentMapIndex, cm.Point{X: character.CurrentLocationX, Y: character.CurrentLocationY})
@@ -259,29 +250,26 @@ func (c *client) StartGame(pkg *p.Packet) error {
 		CreatureSummoned:          false,                                                                  //bool
 	})
 	c.status = GAME
-	return nil
 }
 
-func (c *client) Logout(pkg *p.Packet) error {
+func (c *client) Logout(pkg *p.Packet) {
 
-	return nil
 }
 
-func (c *client) Turn(pkg *p.Packet) error {
+func (c *client) Turn(pkg *p.Packet) {
 	if c.status != GAME {
-		return nil
+		return
 	}
 	if byte(pkg.Data.(*cp.Turn).Direction) == 100 {
-		return nil
+		return
 	}
 	Broadcast(c, &sp.ObjectTurn{ObjectID: c.player.ObjectID, Direction: pkg.Data.(*cp.Turn).Direction, Location: c.player.CurrentLocation})
 	SendTo(c.conn, &sp.UserLocation{Direction: pkg.Data.(*cp.Turn).Direction, Location: c.player.CurrentLocation})
-	return nil
 }
 
-func (c *client) Walk(pkg *p.Packet) error {
+func (c *client) Walk(pkg *p.Packet) {
 	if c.status != GAME {
-		return nil
+		return
 	}
 	if !c.player.CanWalk() || !c.player.CanMove() {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
@@ -298,12 +286,11 @@ func (c *client) Walk(pkg *p.Packet) error {
 	// 广播给附近玩家，在其他client player视角里，本client player 就是object player
 	SendTo(c.conn, &sp.UserLocation{targetPoint, targetDirection})
 	Broadcast(c, &sp.ObjectWalk{ObjectID: c.player.ObjectID, Direction: targetDirection, Location: targetPoint})
-	return nil
 }
 
-func (c *client) Run(pkg *p.Packet) error {
+func (c *client) Run(pkg *p.Packet) {
 	if c.status != GAME {
-		return nil
+		return
 	}
 	if !c.player.CanMove() || !c.player.CanMove() || !c.player.CanRun() {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
@@ -330,53 +317,51 @@ func (c *client) Run(pkg *p.Packet) error {
 		SendTo(c.conn, &sp.UserLocation{playerLocation, targetDirection})
 		Broadcast(c, &sp.UserLocation{c.player.CurrentLocation, targetDirection})
 	}
-	return nil
 }
 
-func (c *client) Chat(pkg *p.Packet) error {
+func (c *client) Chat(pkg *p.Packet) {
 	if c.status != GAME {
-		return nil
+		return
 	}
 	msg := pkg.Data.(*cp.Chat).Message
 	// TODO switch case msg type
 	Broadcast(c, &sp.Chat{Message: msg, Type: cm.CT_NORMAL})
-	return nil
 }
 
-func (c *client) MoveItem(pkg *p.Packet) error           { return nil }
-func (c *client) StoreItem(pkg *p.Packet) error          { return nil }
-func (c *client) TakeBackItem(pkg *p.Packet) error       { return nil }
-func (c *client) MergeItem(pkg *p.Packet) error          { return nil }
-func (c *client) EquipItem(pkg *p.Packet) error          { return nil }
-func (c *client) RemoveItem(pkg *p.Packet) error         { return nil }
-func (c *client) RemoveSlotItem(pkg *p.Packet) error     { return nil }
-func (c *client) SplitItem(pkg *p.Packet) error          { return nil }
-func (c *client) UseItem(pkg *p.Packet) error            { return nil }
-func (c *client) DropItem(pkg *p.Packet) error           { return nil }
-func (c *client) DepositRefineItem(pkg *p.Packet) error  { return nil }
-func (c *client) RetrieveRefineItem(pkg *p.Packet) error { return nil }
-func (c *client) RefineCancel(pkg *p.Packet) error       { return nil }
-func (c *client) RefineItem(pkg *p.Packet) error         { return nil }
-func (c *client) CheckRefine(pkg *p.Packet) error        { return nil }
-func (c *client) ReplaceWedRing(pkg *p.Packet) error     { return nil }
-func (c *client) DepositTradeItem(pkg *p.Packet) error   { return nil }
-func (c *client) RetrieveTradeItem(pkg *p.Packet) error  { return nil }
-func (c *client) DropGold(pkg *p.Packet) error           { return nil }
-func (c *client) PickUp(pkg *p.Packet) error             { return nil }
-func (c *client) Inspect(pkg *p.Packet) error            { return nil }
-func (c *client) ChangeAMode(pkg *p.Packet) error        { return nil }
-func (c *client) ChangePMode(pkg *p.Packet) error        { return nil }
-func (c *client) ChangeTrade(pkg *p.Packet) error        { return nil }
-func (c *client) Attack(pkg *p.Packet) error             { return nil }
-func (c *client) RangeAttack(pkg *p.Packet) error        { return nil }
-func (c *client) Harvest(pkg *p.Packet) error            { return nil }
-func (c *client) CallNPC(pkg *p.Packet) error            { return nil }
-func (c *client) TalkMonsterNPC(pkg *p.Packet) error     { return nil }
-func (c *client) BuyItem(pkg *p.Packet) error            { return nil }
-func (c *client) SellItem(pkg *p.Packet) error           { return nil }
-func (c *client) CraftItem(pkg *p.Packet) error          { return nil }
-func (c *client) RepairItem(pkg *p.Packet) error         { return nil }
-func (c *client) BuyItemBack(pkg *p.Packet) error        { return nil }
-func (c *client) SRepairItem(pkg *p.Packet) error        { return nil }
-func (c *client) MagicKey(pkg *p.Packet) error           { return nil }
-func (c *client) Magic(pkg *p.Packet) error              { return nil }
+func (c *client) MoveItem(pkg *p.Packet)           {}
+func (c *client) StoreItem(pkg *p.Packet)          {}
+func (c *client) TakeBackItem(pkg *p.Packet)       {}
+func (c *client) MergeItem(pkg *p.Packet)          {}
+func (c *client) EquipItem(pkg *p.Packet)          {}
+func (c *client) RemoveItem(pkg *p.Packet)         {}
+func (c *client) RemoveSlotItem(pkg *p.Packet)     {}
+func (c *client) SplitItem(pkg *p.Packet)          {}
+func (c *client) UseItem(pkg *p.Packet)            {}
+func (c *client) DropItem(pkg *p.Packet)           {}
+func (c *client) DepositRefineItem(pkg *p.Packet)  {}
+func (c *client) RetrieveRefineItem(pkg *p.Packet) {}
+func (c *client) RefineCancel(pkg *p.Packet)       {}
+func (c *client) RefineItem(pkg *p.Packet)         {}
+func (c *client) CheckRefine(pkg *p.Packet)        {}
+func (c *client) ReplaceWedRing(pkg *p.Packet)     {}
+func (c *client) DepositTradeItem(pkg *p.Packet)   {}
+func (c *client) RetrieveTradeItem(pkg *p.Packet)  {}
+func (c *client) DropGold(pkg *p.Packet)           {}
+func (c *client) PickUp(pkg *p.Packet)             {}
+func (c *client) Inspect(pkg *p.Packet)            {}
+func (c *client) ChangeAMode(pkg *p.Packet)        {}
+func (c *client) ChangePMode(pkg *p.Packet)        {}
+func (c *client) ChangeTrade(pkg *p.Packet)        {}
+func (c *client) Attack(pkg *p.Packet)             {}
+func (c *client) RangeAttack(pkg *p.Packet)        {}
+func (c *client) Harvest(pkg *p.Packet)            {}
+func (c *client) CallNPC(pkg *p.Packet)            {}
+func (c *client) TalkMonsterNPC(pkg *p.Packet)     {}
+func (c *client) BuyItem(pkg *p.Packet)            {}
+func (c *client) SellItem(pkg *p.Packet)           {}
+func (c *client) CraftItem(pkg *p.Packet)          {}
+func (c *client) RepairItem(pkg *p.Packet)         {}
+func (c *client) BuyItemBack(pkg *p.Packet)        {}
+func (c *client) SRepairItem(pkg *p.Packet)        {}
+func (c *client) MagicKey(pkg *p.Packet)           {}
+func (c *client) Magic(pkg *p.Packet)              {}
