@@ -1510,7 +1510,7 @@ func (self *ObjectMonster) ToBytes() []byte {
 	nameBytes := cm.StringToBytes(self.Name)
 	nameColorBytes := cm.Uint32ToBytes(self.NameColour)
 	locationBytes := self.Location.ToBytes()
-	imageBytes := []byte{byte(self.Image)}
+	imageBytes := cm.Uint16ToBytes(uint16(self.Image))
 	directionBytes := []byte{byte(self.Direction)}
 	effectBytes := []byte{self.Effect}
 	aiBytes := []byte{self.AI}

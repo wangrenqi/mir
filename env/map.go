@@ -3,7 +3,6 @@ package env
 import (
 	"path/filepath"
 	"io/ioutil"
-	"log"
 	cm "mir/common"
 	"github.com/jinzhu/gorm"
 	"mir/orm"
@@ -40,8 +39,8 @@ func GetMaps(path string) *map[uint32]Map {
 	if err != nil {
 		panic(err)
 	}
-	typ := FindType(bytes)
-	log.Println("map typ ->", typ)
+	//typ := FindType(bytes)
+	//log.Println("map typ ->", typ)
 	tmp := GetMapV1(bytes)
 
 	//saveToFile(tmp)

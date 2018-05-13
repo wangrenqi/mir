@@ -83,6 +83,8 @@ func (a AOIEntity) GetNearlyPlayerConnections() []net.Conn {
 	return nil
 }
 
-func (self AOIEntity) ValidPoint(point cm.Point) bool {
-	return true
+func (self AOIEntity) ValidPoint(m Map, point cm.Point) bool {
+	// TODO check aoi has monster NPC object
+	p := m.PointProxy[string(point.X)+","+string(point.Y)]
+	return p.Valid
 }

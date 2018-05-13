@@ -251,6 +251,7 @@ func (c *client) StartGame(pkg *p.Packet) {
 		IntelligentCreatureType:   1,                                                                      //cm.IntelligentCreatureType
 		CreatureSummoned:          false,                                                                  //bool
 	})
+
 	c.status = GAME
 }
 
@@ -275,12 +276,15 @@ func (c *client) Walk(pkg *p.Packet) {
 	}
 	if !c.player.CanWalk() || !c.player.CanMove() {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
+		return
 	}
-	//playerMap := (*c.env.Maps)[c.player.CurrentMapIndex]
+	playerMap := (*c.env.Maps)[c.player.CurrentMapIndex]
 	targetDirection := pkg.Data.(*cp.Walk).Direction
 	targetPoint := c.player.CurrentLocation.Move(targetDirection, 1)
-	if !c.aoiEntity.ValidPoint(targetPoint) {
-		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
+	if !c.aoiEntity.ValidPoint(playerMap, targetPoint) {
+		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, targetDirection})
+		Broadcast(c, &sp.ObjectTurn{c.player.ObjectID, c.player.CurrentLocation, targetDirection})
+		return
 	}
 	// TODO ...剩下的各种判断
 	c.player.CurrentLocation = targetPoint
@@ -296,8 +300,9 @@ func (c *client) Run(pkg *p.Packet) {
 	}
 	if !c.player.CanMove() || !c.player.CanMove() || !c.player.CanRun() {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
+		return
 	}
-	//playerMap := (*c.env.Maps)[c.player.CurrentMapIndex]
+	playerMap := (*c.env.Maps)[c.player.CurrentMapIndex]
 	playerLocation := c.player.CurrentLocation
 	targetDirection := pkg.Data.(*cp.Run).Direction
 	targetPoint := c.player.CurrentLocation.Move(targetDirection, 1)
@@ -305,7 +310,7 @@ func (c *client) Run(pkg *p.Packet) {
 	for i := 1; i <= steps; i ++ {
 		// TODO check point
 		targetPoint = c.player.CurrentLocation.Move(targetDirection, 1)
-		if !c.aoiEntity.ValidPoint(targetPoint) {
+		if !c.aoiEntity.ValidPoint(playerMap, targetPoint) {
 			targetPoint = c.player.CurrentLocation
 			break
 		}
