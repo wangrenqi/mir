@@ -5,7 +5,6 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
-
 func GetDB() *gorm.DB {
 	db, err := gorm.Open(dialect, dbUser+":"+dbPassword+"@tcp("+dbAddr+")/"+dbName+"?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {

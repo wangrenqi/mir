@@ -7,15 +7,12 @@ import (
 	"mir/com"
 )
 
-//var addr = "127.0.0.1:7000"
-var addr = "192.168.0.110:7000"
-
 func main() {
 
 	e := com.InitEnviron()
 	defer e.DB.Close()
 
-	listener, err := net.Listen("tcp", addr)
+	listener, err := net.Listen("tcp", com.Addr)
 	defer listener.Close()
 	if err != nil {
 		os.Exit(-1)
