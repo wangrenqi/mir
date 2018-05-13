@@ -7,8 +7,8 @@ import (
 	"mir/srv"
 )
 
-var addr = "127.0.0.1:7000"
-//var addr = "192.168.0.103:7000"
+//var addr = "127.0.0.1:7000"
+var addr = "192.168.0.110:7000"
 
 func main() {
 

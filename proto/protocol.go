@@ -131,6 +131,9 @@ func BytesToStruct(bytes []byte) (int, interface{}) {
 		data = &Null{}
 		log.Println("未知的client packet index:", index)
 	}
+	if data == nil {
+		data = &Null{}
+	}
 	return index, data
 }
 

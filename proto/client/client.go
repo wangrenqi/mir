@@ -316,12 +316,28 @@ func (self *Logout) ToBytes() []byte {
 	return nil
 }
 
+func validDirection(d cm.MirDirection) bool {
+	in := false
+	for _, dir := range []cm.MirDirection{cm.UP, cm.UP_RIGHT, cm.RIGHT, cm.DOWN_RIGHT, cm.DOWN, cm.DOWN_LEFT, cm.LEFT, cm.UP_LEFT} {
+		if d == dir {
+			in = true
+		}
+	}
+	return in
+}
+
 type Turn struct {
 	Direction cm.MirDirection
 }
 
 func GetTurn(bytes []byte) *Turn {
-
+	if len(bytes) != 1 {
+		return nil
+	}
+	in := validDirection(cm.MirDirection(bytes[0]))
+	if in {
+		return &Turn{cm.MirDirection(bytes[0])}
+	}
 	return nil
 }
 
@@ -337,12 +353,7 @@ func GetWalk(bytes []byte) *Walk {
 	if len(bytes) != 1 {
 		return nil
 	}
-	in := false
-	for _, dir := range []cm.MirDirection{cm.UP, cm.UP_RIGHT, cm.RIGHT, cm.DOWN_RIGHT, cm.DOWN, cm.DOWN_LEFT, cm.LEFT, cm.UP_LEFT} {
-		if cm.MirDirection(bytes[0]) == dir {
-			in = true
-		}
-	}
+	in := validDirection(cm.MirDirection(bytes[0]))
 	if in {
 		return &Walk{cm.MirDirection(bytes[0])}
 	}
@@ -360,12 +371,20 @@ type Run struct {
 }
 
 func GetRun(bytes []byte) *Run {
-
+	if len(bytes) != 1 {
+		return nil
+	}
+	in := validDirection(cm.MirDirection(bytes[0]))
+	if in {
+		return &Run{cm.MirDirection(bytes[0])}
+	}
 	return nil
 }
 
 func (self *Run) ToBytes() []byte {
-	return nil
+	pkgBytes := cm.Uint16ToBytes(RUN)
+	directionBytes := []byte{byte(self.Direction)}
+	return append(pkgBytes, directionBytes...)
 }
 
 type Chat struct {

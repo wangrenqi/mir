@@ -197,9 +197,10 @@ func (c *client) StartGame(pkg *p.Packet) error {
 	if character.AccountInfoID == 0 || character.Index == 0 {
 		return nil
 	}
-	aoiEntity := env.GetAOIEntity(character.CurrentMapIndex, cm.Point{X: character.CurrentLocationX, Y: character.CurrentLocationY})
-	aoiEntity.Connections[c.id] = c.conn
-	c.aoiEntity = aoiEntity
+	// TODO
+	//aoiEntity := env.GetAOIEntity(character.CurrentMapIndex, cm.Point{X: character.CurrentLocationX, Y: character.CurrentLocationY})
+	//aoiEntity.Connections[c.id] = c.conn
+	//c.aoiEntity = aoiEntity
 	c.player = &object.PlayerObject{
 		MapObject: object.MapObject{
 			ObjectID:        character.Index, // TODO 应该取map object id，随地图object 数量递增
@@ -237,7 +238,7 @@ func (c *client) StartGame(pkg *p.Packet) error {
 		Class:                     cm.MirClass(character.Class),                                           //cm.MirClass
 		Gender:                    cm.MirGender(character.Gender),                                         //cm.MirGender
 		Level:                     character.Level,                                                        //uint16
-		Location:                  cm.Point{X: character.CurrentLocationY, Y: character.CurrentLocationY}, //Point
+		Location:                  cm.Point{X: character.CurrentLocationX, Y: character.CurrentLocationY}, //Point
 		Direction:                 1,                                                                      //cm.MirDirection
 		Hair:                      1,                                                                      //byte
 		HP:                        character.HP,                                                           //uint16
@@ -270,6 +271,9 @@ func (c *client) Turn(pkg *p.Packet) error {
 	if c.status != GAME {
 		return nil
 	}
+	if byte(pkg.Data.(*cp.Turn).Direction) == 100 {
+		return nil
+	}
 	Broadcast(c, &sp.ObjectTurn{ObjectID: c.player.ObjectID, Direction: pkg.Data.(*cp.Turn).Direction, Location: c.player.CurrentLocation})
 	SendTo(c.conn, &sp.UserLocation{Direction: pkg.Data.(*cp.Turn).Direction, Location: c.player.CurrentLocation})
 	return nil
@@ -289,8 +293,10 @@ func (c *client) Walk(pkg *p.Packet) error {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
 	}
 	// TODO ...剩下的各种判断
-
+	c.player.CurrentLocation = targetPoint
+	c.player.Direction = targetDirection
 	// 广播给附近玩家，在其他client player视角里，本client player 就是object player
+	SendTo(c.conn, &sp.UserLocation{targetPoint, targetDirection})
 	Broadcast(c, &sp.ObjectWalk{ObjectID: c.player.ObjectID, Direction: targetDirection, Location: targetPoint})
 	return nil
 }
@@ -302,17 +308,27 @@ func (c *client) Run(pkg *p.Packet) error {
 	if !c.player.CanMove() || !c.player.CanMove() || !c.player.CanRun() {
 		SendTo(c.conn, &sp.UserLocation{c.player.CurrentLocation, c.player.Direction})
 	}
+	playerMap := (*c.env.Maps)[c.player.CurrentMapIndex]
 	playerLocation := c.player.CurrentLocation
 	targetDirection := pkg.Data.(*cp.Run).Direction
-	targetPoint := c.player.CurrentLocation
+	targetPoint := c.player.CurrentLocation.Move(targetDirection, 1)
 	steps := 2
 	for i := 1; i <= steps; i ++ {
-		targetPoint = playerLocation.Move(targetDirection, 1)
 		// TODO check point
-		SendTo(c.conn, &sp.UserLocation{targetPoint, targetDirection})
+		targetPoint = c.player.CurrentLocation.Move(targetDirection, 1)
+		if !playerMap.ValidPoint(targetPoint) {
+			targetPoint = c.player.CurrentLocation
+			break
+		}
+		c.player.CurrentLocation = targetPoint
+		c.player.Direction = targetDirection
 	}
-	if targetPoint != c.player.CurrentLocation {
+	if playerLocation != targetPoint {
+		SendTo(c.conn, &sp.UserLocation{targetPoint, targetDirection})
 		Broadcast(c, &sp.ObjectRun{c.player.ObjectID, targetPoint, targetDirection})
+	} else {
+		SendTo(c.conn, &sp.UserLocation{playerLocation, targetDirection})
+		Broadcast(c, &sp.UserLocation{c.player.CurrentLocation, targetDirection})
 	}
 	return nil
 }
