@@ -21,8 +21,11 @@ type Packet interface {
 	ToBytes() []byte
 }
 
-func SendTo(conn net.Conn, pkg Packet) {
-	bytes := p.Pack(pkg.ToBytes())
+func SendTo(conn net.Conn, pkgs ...Packet) {
+	bytes := make([]byte, 0)
+	for _, pkg := range pkgs {
+		bytes = append(bytes, p.Pack(pkg.ToBytes())...)
+	}
 	log.Println("send to client bytes:", bytes)
 	conn.Write(bytes)
 }
@@ -248,25 +251,46 @@ func StartGame(c *com.Client, pkg *p.Packet) {
 		IntelligentCreatureType:   1,                                                                       //com.IntelligentCreatureType
 		CreatureSummoned:          false,                                                                   //bool
 	})
-	SendTo(c.Conn, &sp.ObjectMonster{
-		ObjectID:          51,                                                                              //uint32
-		Name:              "test",                                                                          //string
-		NameColour:        4294967295,                                                                      // 255, 255, 255, 255 uint32 // Color
-		Location:          com.Point{X: character.CurrentLocationX + 1, Y: character.CurrentLocationY + 1}, //com.Point
-		Image:             com.Monster(11),                                                                 //com.Monster
-		Direction:         com.MirDirection(5),                                                             //com.MirDirection
-		Effect:            1,                                                                               //byte
-		AI:                1,                                                                               //byte
-		Light:             byte(1),                                                                         //byte
-		Dead:              false,                                                                           //bool
-		Skeleton:          false,                                                                           //bool
-		Poison:            com.PoisonType(0),                                                               //com.PoisonType
-		Hidden:            false,                                                                           //bool
-		Extra:             false,                                                                           //bool
-		ExtraByte:         0,                                                                               //byte
-		ShockTime:         1,                                                                               //uint64 // long
-		BindingShotCenter: false,                                                                           //bool
-	})
+	SendTo(c.Conn,
+		&sp.ObjectMonster{
+			ObjectID:          50,                                                                              //uint32
+			Name:              "111",                                                                           //string
+			NameColour:        4294967295,                                                                      // 255, 255, 255, 255 uint32 // Color
+			Location:          com.Point{X: character.CurrentLocationX + 2, Y: character.CurrentLocationY + 2}, //com.Point
+			Image:             com.Monster(11),                                                                 //com.Monster
+			Direction:         com.MirDirection(5),                                                             //com.MirDirection
+			Effect:            1,                                                                               //byte
+			AI:                1,                                                                               //byte
+			Light:             byte(1),                                                                         //byte
+			Dead:              false,                                                                           //bool
+			Skeleton:          false,                                                                           //bool
+			Poison:            com.PoisonType(0),                                                               //com.PoisonType
+			Hidden:            false,                                                                           //bool
+			Extra:             false,                                                                           //bool
+			ExtraByte:         0,                                                                               //byte
+			ShockTime:         1,                                                                               //uint64 // long
+			BindingShotCenter: false,                                                                           //bool
+		},
+		&sp.ObjectMonster{
+			ObjectID:          51,                                                                              //uint32
+			Name:              "test",                                                                          //string
+			NameColour:        4294967295,                                                                      // 255, 255, 255, 255 uint32 // Color
+			Location:          com.Point{X: character.CurrentLocationX + 1, Y: character.CurrentLocationY + 1}, //com.Point
+			Image:             com.Monster(11),                                                                 //com.Monster
+			Direction:         com.MirDirection(5),                                                             //com.MirDirection
+			Effect:            1,                                                                               //byte
+			AI:                1,                                                                               //byte
+			Light:             byte(1),                                                                         //byte
+			Dead:              false,                                                                           //bool
+			Skeleton:          false,                                                                           //bool
+			Poison:            com.PoisonType(0),                                                               //com.PoisonType
+			Hidden:            false,                                                                           //bool
+			Extra:             false,                                                                           //bool
+			ExtraByte:         0,                                                                               //byte
+			ShockTime:         1,                                                                               //uint64 // long
+			BindingShotCenter: false,                                                                           //bool
+		},
+	)
 	c.Status = GAME
 }
 
