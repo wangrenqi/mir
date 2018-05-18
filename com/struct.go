@@ -3,6 +3,7 @@ package com
 import (
 	"net"
 	"github.com/jinzhu/gorm"
+	"github.com/robfig/cron"
 )
 
 type Client struct {
@@ -38,6 +39,7 @@ type Environ struct {
 	DB   *gorm.DB
 	Maps *map[uint32]Map
 	AOI  *map[uint32][]AOIEntity
+	Cron *cron.Cron
 }
 
 type Point struct {

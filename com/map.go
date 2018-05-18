@@ -5,16 +5,18 @@ import (
 	"io/ioutil"
 	"sync/atomic"
 	"net"
+	"github.com/jinzhu/gorm"
 )
 
 var objectId uint32 = 0
+var Maps map[uint32]Map
 
 const WIDTH = 20
 
 func InitEnviron() *Environ {
 	db := GetDB()
 	db.AutoMigrate(&AccountInfo{}, &CharacterInfo{}, &RespawnInfo{}, &MonsterInfo{})
-	maps := GetMaps(MapFilesPath)
+	maps := InitMaps(MapFilesPath)
 	aoi := make(map[uint32][]AOIEntity)
 	for i, m := range *maps {
 		m.Index = i
@@ -31,7 +33,7 @@ func GetMapObjectId() uint32 {
 	return res
 }
 
-func GetMaps(path string) *map[uint32]Map {
+func InitMaps(path string) *map[uint32]Map {
 	// TODO for map in path, loop read map and return []Map
 	fileBytes, err := filepath.Abs(path + "/0.map")
 	if err != nil {
@@ -48,9 +50,13 @@ func GetMaps(path string) *map[uint32]Map {
 	//saveToFile(tmp)
 
 	index := uint32(12289) // TODO
-	maps := make(map[uint32]Map)
-	maps[index] = tmp
-	return &maps
+	Maps = make(map[uint32]Map)
+	Maps[index] = tmp
+	return &Maps
+}
+
+func GetMaps() *map[uint32]Map {
+	return &Maps
 }
 
 func SaveToFile(tmp Map) {
@@ -201,4 +207,79 @@ func GetAOIEntity(aoi []AOIEntity, p Point) *AOIEntity {
 		}
 	}
 	return nil
+}
+
+func monsterInfoToMonsterObject(info MonsterInfo, mapInfo Map) MonsterObject {
+	obj := MonsterObject{}
+	obj.ObjectID = GetMapObjectId()
+	obj.Name = info.Name
+	//CurrentMap Map
+	//ExplosionInflictedTime int64 ??
+	//ExplosionInflictedStage int64 ??
+	//SpawnThread int32 ??
+	obj.MonsterIndex = info.MonsterIndex
+	obj.CurrentMapIndex = mapInfo.Index
+	obj.CurrentLocation = Point{}
+	obj.Direction = MirDirection(RandomInt(0, 7))
+	obj.Level = info.Level
+	obj.Health = uint32(info.HP)
+	obj.MaxHealth = uint32(info.HP)
+	obj.PercentHealth = 100
+	return obj
+}
+
+func LoadNPC(m *Map, db *gorm.DB) {
+	// TODO
+}
+
+var MapRespawnCount map[uint32]map[uint32]uint32 // MapIndex MonsterIndex MonsterCount
+
+func LoadMonster(m *Map, db *gorm.DB) {
+	MapRespawnCount = make(map[uint32]map[uint32]uint32)
+	var respawnInfos []RespawnInfo
+	db.Where(&RespawnInfo{MapIndex: m.Index}).Find(&respawnInfos)
+
+	var monsterObjects []MonsterObject
+	(*m.Objects)["monster"] = monsterObjects
+	for _, respawnInfo := range respawnInfos {
+		respawnCount := respawnInfo.Count
+		var monsterInfo MonsterInfo
+		db.Where(&MonsterInfo{Index: monsterInfo.MonsterIndex}).Find(&monsterInfo)
+		if monsterInfo.Index == 0 {
+			continue
+		}
+		MapAddMonster(m.Index, respawnInfo, respawnCount, db)
+	}
+}
+
+func GetMapExistedMonsterCount(mapIndex uint32, monsterIndex uint32) uint32 {
+	return MapRespawnCount[mapIndex][monsterIndex]
+}
+
+func GetMapRespawnInfos(mapIndex uint32, db *gorm.DB) []RespawnInfo {
+	var respawnInfos []RespawnInfo
+	db.Where(&RespawnInfo{MapIndex: mapIndex}).Find(&respawnInfos)
+	return respawnInfos
+}
+
+func MapAddMonster(mapIndex uint32, respawnInfo RespawnInfo, addCount uint32, db *gorm.DB) {
+	// TODO spawn time
+	// if not spawn time then pass
+	m := Maps[mapIndex]
+	monsterObjects := (*m.Objects)["monster"].([]MonsterObject)
+	var monsterInfo MonsterInfo
+	db.Where(&MonsterInfo{MonsterIndex: respawnInfo.MonsterIndex}).Find(&monsterInfo)
+	monsterObject := monsterInfoToMonsterObject(monsterInfo, m)
+	for i := uint32(0); i < addCount; i++ {
+		randPoint := GetRandomPoint(&m, Point{X: respawnInfo.LocationX, Y: respawnInfo.LocationY}, respawnInfo.Spread)
+		monsterObject.MapObject.CurrentLocation = *randPoint
+		randPoint.Valid = false
+		monsterObjects = append(monsterObjects, monsterObject)
+	}
+	existedCount := uint32(len(monsterObjects))
+	monsterCount := MapRespawnCount[m.Index]
+	if monsterCount == nil {
+		MapRespawnCount[m.Index] = make(map[uint32]uint32)
+	}
+	MapRespawnCount[m.Index][monsterInfo.Index] = existedCount + addCount
 }

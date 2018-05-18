@@ -18,6 +18,19 @@ func GetClients() map[int32]*com.Client {
 	return clients
 }
 
+func GetClientsAOIs() []*com.AOIEntity {
+	visited := make(map[*com.AOIEntity]bool)
+	aois := make([]*com.AOIEntity, 0)
+	for _, client := range GetClients() {
+		aoi := client.AOIEntity
+		if visited[aoi] {
+			continue
+		}
+		aois = append(aois, aoi)
+	}
+	return aois
+}
+
 func HandleClient(conn net.Conn, env *com.Environ) {
 	reqChan := make(chan []byte, 1024)
 	client := &com.Client{
