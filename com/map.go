@@ -140,6 +140,7 @@ func GetRandomPoint(m *Map, center Point, spread uint32) *Point {
 		randInt := RandomInt(0, mapLen)
 		p := points[randInt]
 		if p.Valid {
+			p.Valid = false
 			return p
 		}
 	}
@@ -334,4 +335,19 @@ func MapAddMonster(mapIndex uint32, respawnInfo RespawnInfo, addCount uint32, db
 	}
 	MapRespawnCount[m.Index][monsterInfo.Index] = existedCount + addCount
 	(*m.Objects)["monster"] = monsterObjects
+}
+
+func GetMapMonsterObject(mapIndex uint32, point Point) MonsterObject {
+	m := (*GetMaps())[mapIndex]
+	monsters := (*m.Objects)["monster"].([]MonsterObject)
+	for _, obj := range monsters {
+		if point.X == obj.CurrentLocation.X && point.Y == obj.CurrentLocation.Y {
+			return obj
+		}
+	}
+	return MonsterObject{}
+}
+
+func GetMapNPCObject(mapIndex uint32, point Point) NPCObject {
+	return NPCObject{}
 }

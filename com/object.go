@@ -45,3 +45,6 @@ type MonsterObject struct {
 	Image        uint16
 	// TODO
 }
+
+type NPCObject struct {
+}
