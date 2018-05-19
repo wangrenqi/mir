@@ -74,6 +74,7 @@ type MonsterInfo struct {
 	Index        uint32 `gorm:"primary_key"`
 	MonsterIndex uint32
 	Name         string
+	Image        uint16
 	Level        uint16
 	HP           uint16
 	Experience   uint32

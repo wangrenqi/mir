@@ -10,6 +10,7 @@ import (
 
 var objectId uint32 = 0
 var Maps map[uint32]Map
+var AOIs map[uint32][]AOIEntity
 
 const WIDTH = 20
 
@@ -23,6 +24,7 @@ func InitEnviron() *Environ {
 		LoadNPC(&m, db)
 		LoadMonster(&m, db)
 		aoi[i] = InitAOIEntities(&m)
+		AOIs = aoi
 	}
 	return &Environ{DB: db, Maps: maps, AOI: &aoi}
 }
@@ -125,27 +127,71 @@ func GetStartPoint() Point {
 }
 
 func GetRandomPoint(m *Map, center Point, spread uint32) *Point {
-	// TODO !!!优化算法 根据给定点，取该点spread范围内所有点，而不是map上所有点
-	points := *m.Points
+	points := make([]*Point, 0)
+	for i := center.X - int32(spread); i < center.X+int32(spread); i ++ {
+		for j := center.Y - int32(spread); j < center.Y+int32(spread); j ++ {
+			p := m.PointProxy[string(i)+","+string(j)]
+			points = append(points, p)
+		}
+	}
+	// TODO check that point has not object
 	mapLen := len(points)
 	for {
 		randInt := RandomInt(0, mapLen)
 		p := points[randInt]
 		if p.Valid {
-			return &p
+			return p
 		}
 	}
 }
 
-// TODO 返回a的conn以及附近8个aoi area 的conn
-func (a AOIEntity) GetNearlyPlayerConnections() []net.Conn {
-	return nil
+// 返回a的conn以及附近8个aoi area 的conn
+func (this AOIEntity) GetNearlyPlayerConnections() []net.Conn {
+	aois := this.GetNearlyEightAOIs()
+	conns := make([]net.Conn, 0)
+	for _, aoi := range aois {
+		for _, conn := range *aoi.Connections {
+			conns = append(conns, conn)
+		}
+	}
+	return conns
 }
 
-func (self AOIEntity) ValidPoint(m Map, point Point) bool {
+func (this AOIEntity) ValidPoint(m Map, point Point) bool {
 	// TODO check aoi has monster NPC object
 	p := m.PointProxy[string(point.X)+","+string(point.Y)]
 	return p.Valid
+}
+
+// 根据一个 aoi 返回附近8个 aoi
+func (this AOIEntity) GetNearlyEightAOIs() []AOIEntity {
+	aois := make([]AOIEntity, 0)
+	for _, a := range AOIs[this.MapIndex] {
+		if (a.X == this.X-20 && a.Y == this.Y-20) || (a.X == this.X && a.Y == this.Y-20) || (a.X == this.X+20 && a.Y == this.Y-20) {
+			aois = append(aois, a)
+		}
+		if (a.X == this.X-20 && a.Y == this.Y) || (a.X == this.X+20 && a.Y == this.Y) {
+			aois = append(aois, a)
+		}
+		if (a.X == this.X-20 && a.Y == this.Y+20) || (a.X == this.X && a.Y == this.Y+20) || (a.X == this.X+20 && a.Y == this.Y+20) {
+			aois = append(aois, a)
+		}
+	}
+	return aois
+}
+
+// 返回 aoi 所有 monster object
+func (this AOIEntity) GetMonsterObjects() []MonsterObject {
+	maps := GetMaps()
+	thisMap := (*maps)[this.MapIndex]
+	monsterObjects := (*thisMap.Objects)["monster"].([]MonsterObject)
+	res := make([]MonsterObject, 0)
+	for _, m := range monsterObjects {
+		if m.CurrentLocation.X > int32(this.X) && m.CurrentLocation.Y > int32(this.Y) && m.CurrentLocation.X < int32(this.X)+WIDTH && m.CurrentLocation.Y < int32(this.Y)+WIDTH {
+			res = append(res, m)
+		}
+	}
+	return res
 }
 
 func points() []*Point {
@@ -170,11 +216,11 @@ func InitAOIEntities(m *Map) []AOIEntity {
 	} else {
 		rows = int(m.Height)/WIDTH + 1
 	}
-	aoi := make([]AOIEntity, 0)
+	aois := make([]AOIEntity, 0)
 	index := uint16(0)
 	for i := 0; i < columns; i++ {
 		for j := 0; j < rows; j ++ {
-			aoi = append(aoi, AOIEntity{
+			aois = append(aois, AOIEntity{
 				Index:       index,
 				MapIndex:    m.Index,
 				X:           uint16(i * WIDTH),
@@ -187,14 +233,14 @@ func InitAOIEntities(m *Map) []AOIEntity {
 	}
 	for x := 0; x < int(m.Width); x ++ {
 		for y := 0; y < int(m.Height); y ++ {
-			for _, a := range aoi {
+			for _, a := range aois {
 				if x > int(a.X) && x < int(a.X)+WIDTH && y > int(a.Y) && y < int(a.Y)+WIDTH {
 					a.Points = append(a.Points, m.PointProxy[string(x)+","+string(y)])
 				}
 			}
 		}
 	}
-	return aoi
+	return aois
 }
 
 // 获得point 所在的aoi
@@ -209,10 +255,12 @@ func GetAOIEntity(aoi []AOIEntity, p Point) *AOIEntity {
 	return nil
 }
 
-func monsterInfoToMonsterObject(info MonsterInfo, mapInfo Map) MonsterObject {
-	obj := MonsterObject{}
+// 把 db 中的 monster info 转成内存中的 monster object
+func MonsterInfoToMonsterObject(info MonsterInfo, mapInfo Map) *MonsterObject {
+	obj := &MonsterObject{}
 	obj.ObjectID = GetMapObjectId()
 	obj.Name = info.Name
+	obj.Image = info.Image
 	//CurrentMap Map
 	//ExplosionInflictedTime int64 ??
 	//ExplosionInflictedStage int64 ??
@@ -253,6 +301,9 @@ func LoadMonster(m *Map, db *gorm.DB) {
 }
 
 func GetMapExistedMonsterCount(mapIndex uint32, monsterIndex uint32) uint32 {
+	if MapRespawnCount[mapIndex] == nil {
+		return 0
+	}
 	return MapRespawnCount[mapIndex][monsterIndex]
 }
 
@@ -269,12 +320,12 @@ func MapAddMonster(mapIndex uint32, respawnInfo RespawnInfo, addCount uint32, db
 	monsterObjects := (*m.Objects)["monster"].([]MonsterObject)
 	var monsterInfo MonsterInfo
 	db.Where(&MonsterInfo{MonsterIndex: respawnInfo.MonsterIndex}).Find(&monsterInfo)
-	monsterObject := monsterInfoToMonsterObject(monsterInfo, m)
 	for i := uint32(0); i < addCount; i++ {
 		randPoint := GetRandomPoint(&m, Point{X: respawnInfo.LocationX, Y: respawnInfo.LocationY}, respawnInfo.Spread)
+		monsterObject := MonsterInfoToMonsterObject(monsterInfo, m)
 		monsterObject.MapObject.CurrentLocation = *randPoint
-		randPoint.Valid = false
-		monsterObjects = append(monsterObjects, monsterObject)
+		//randPoint.Valid = false
+		monsterObjects = append(monsterObjects, *monsterObject)
 	}
 	existedCount := uint32(len(monsterObjects))
 	monsterCount := MapRespawnCount[m.Index]
@@ -282,4 +333,5 @@ func MapAddMonster(mapIndex uint32, respawnInfo RespawnInfo, addCount uint32, db
 		MapRespawnCount[m.Index] = make(map[uint32]uint32)
 	}
 	MapRespawnCount[m.Index][monsterInfo.Index] = existedCount + addCount
+	(*m.Objects)["monster"] = monsterObjects
 }

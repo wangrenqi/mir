@@ -845,15 +845,15 @@ func (self *IntelligentCreatureRules) ToBytes() []byte {
 }
 
 type IntelligentCreatureItemFilter struct {
-	PetPickupAll         bool         // default true
-	PetPickupGold        bool         // default false
-	PetPickupWeapons     bool         // default false
-	PetPickupArmours     bool         // default false
-	PetPickupHelmets     bool         // default false
-	PetPickupBoots       bool         // default false
-	PetPickupBelts       bool         // default false
-	PetPickupAccessories bool         // default false
-	PetPickupOthers      bool         // default false
+	PetPickupAll         bool          // default true
+	PetPickupGold        bool          // default false
+	PetPickupWeapons     bool          // default false
+	PetPickupArmours     bool          // default false
+	PetPickupHelmets     bool          // default false
+	PetPickupBoots       bool          // default false
+	PetPickupBelts       bool          // default false
+	PetPickupAccessories bool          // default false
+	PetPickupOthers      bool          // default false
 	PickupGrade          com.ItemGrade // default ItemGrade.None;
 }
 
@@ -883,9 +883,9 @@ type ClientIntelligentCreature struct {
 	CustomName       string
 	Fullness         uint32
 	SlotIndex        uint32
-	ExpireTime       uint64                           // long
-	BlackstoneTime   uint64                           // long
-	MaintainFoodTime uint64                           // long
+	ExpireTime       uint64                            // long
+	BlackstoneTime   uint64                            // long
+	MaintainFoodTime uint64                            // long
 	PetMode          com.IntelligentCreaturePickupMode // default SemiAutomatic
 	CreatureRules    IntelligentCreatureRules
 	Filter           IntelligentCreatureItemFilter
@@ -1501,6 +1501,30 @@ type ObjectMonster struct {
 	ExtraByte         byte
 	ShockTime         uint64 // long
 	BindingShotCenter bool
+}
+
+// 把 内存中 monster object 转成 protocol object monster
+// 为了避免循环引用放在这里
+func MonsterObjectToObjectMonster(obj com.MonsterObject) *ObjectMonster {
+	return &ObjectMonster{
+		ObjectID:          obj.ObjectID,           // uint32
+		Name:              obj.Name,               // string
+		NameColour:        4294967295,             // uint32 // Color
+		Location:          obj.CurrentLocation,    // com.Point
+		Image:             com.Monster(obj.Image), // com.Monster
+		Direction:         obj.Direction,          // com.MirDirection
+		Effect:            1,                      // TODO byte
+		AI:                1,                      // TODO byte
+		Light:             byte(0),                // byte
+		Dead:              false,                  // bool
+		Skeleton:          false,                  // bool
+		Poison:            com.PoisonType(0),      // com.PoisonType
+		Hidden:            false,                  // bool
+		Extra:             false,                  // bool
+		ExtraByte:         0,                      // byte
+		ShockTime:         1,                      // uint64 // long
+		BindingShotCenter: false,                  // bool
+	}
 }
 
 func (self *ObjectMonster) ToBytes() []byte {

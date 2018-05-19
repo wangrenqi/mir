@@ -4,7 +4,6 @@ import (
 	"encoding/binary"
 	"log"
 	"math/rand"
-	"time"
 )
 
 // 根据传入的索引 返回读完string后所在bytes 的下一个索引 及string
@@ -68,6 +67,5 @@ func BytesToUint64(bytes []byte) uint64 {
 }
 
 func RandomInt(min, max int) int {
-	rand.Seed(time.Now().Unix())
 	return rand.Intn(max-min) + min
 }

@@ -42,5 +42,6 @@ func (self *PlayerObject) CanRun() bool {
 type MonsterObject struct {
 	MapObject
 	MonsterIndex uint32
+	Image        uint16
 	// TODO
 }
