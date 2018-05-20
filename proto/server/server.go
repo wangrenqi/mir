@@ -556,210 +556,6 @@ func (self *RandomItemStat) ToBytes() []byte {
 	}
 }
 
-type ItemInfo struct {
-	Index            uint32
-	Name             string
-	Type             com.ItemType
-	Grade            com.ItemGrade
-	RequiredType     com.RequiredType   // default Level
-	RequiredClass    com.RequiredClass  // default None
-	RequiredGender   com.RequiredGender // default None
-	Set              com.ItemSet
-	Shape            uint16
-	Weight           byte
-	Light            byte
-	RequiredAmount   byte
-	Image            uint16
-	Durability       uint16
-	Price            uint32
-	StackSize        uint32 //default 1;
-	MinAC            byte
-	MaxAC            byte
-	MinMAC           byte
-	MaxMAC           byte
-	MinDC            byte
-	MaxDC            byte
-	MinMC            byte
-	MaxMC            byte
-	MinSC            byte
-	MaxSC            byte
-	Accuracy         byte
-	Agility          byte
-	HP               uint16
-	MP               uint16
-	AttackSpeed      int8 // 需要是负数
-	Luck             int8
-	BagWeight        byte
-	HandWeight       byte
-	WearWeight       byte
-	StartItem        bool
-	Effect           byte
-	Strong           byte
-	MagicResist      byte
-	PoisonResist     byte
-	HealthRecovery   byte
-	SpellRecovery    byte
-	PoisonRecovery   byte
-	HPrate           byte
-	MPrate           byte
-	CriticalRate     byte
-	CriticalDamage   byte
-	NeedIdentify     bool
-	ShowGroupPickup  bool
-	GlobalDropNotify bool
-	ClassBased       bool
-	LevelBased       bool
-	CanMine          bool
-	CanFastRun       bool
-	CanAwakening     bool
-	MaxAcRate        byte
-	MaxMacRate       byte
-	Holy             byte
-	Freezing         byte
-	PoisonAttack     byte
-	HpDrainRate      byte
-	Bind             uint16 // BindMode 这个枚举太大了，直接用uint16 // default none
-	Reflect          byte
-	Unique           uint16 // SpecialItemMode ?? // default None;
-	RandomStatsId    byte
-	RandomStats      RandomItemStat
-	ToolTip          string //default ""
-}
-
-// TODO
-func (self *ItemInfo) ToBytes() []byte {
-	indexBytes := com.Uint32ToBytes(self.Index)
-	nameBytes := com.StringToBytes(self.Name)
-	typeBytes := []byte{byte(self.Type)}
-	gradeBytes := []byte{byte(self.Grade)}
-	requiredTypeBytes := []byte{byte(self.RequiredType)}
-	requiredClassBytes := []byte{byte(self.RequiredClass)}
-	requiredGenderBytes := []byte{byte(self.RequiredGender)}
-	setBytes := []byte{byte(self.Set)}
-	shapeBytes := com.Uint16ToBytes(self.Shape)
-	weightBytes := []byte{self.Weight}
-	lightBytes := []byte{self.Light}
-	requiredAmountBytes := []byte{self.RequiredAmount}
-	imageBytes := com.Uint16ToBytes(self.Image)
-	durabilityBytes := com.Uint16ToBytes(self.Durability)
-	priceBytes := com.Uint32ToBytes(self.Price)
-	stackSizeBytes := com.Uint32ToBytes(self.StackSize)
-	minACBytes := []byte{self.MinAC}
-	maxACBytes := []byte{self.MaxAC}
-	minMACBytes := []byte{self.MinMAC}
-	maxMACBytes := []byte{self.MaxMAC}
-	minDCBytes := []byte{self.MinDC}
-	maxDCBytes := []byte{self.MaxDC}
-	minMCBytes := []byte{self.MinMC}
-	maxMCBytes := []byte{self.MaxMC}
-	minSCBytes := []byte{self.MinSC}
-	maxSCBytes := []byte{self.MaxSC}
-	accuracyBytes := []byte{self.Accuracy}
-	agilityBytes := []byte{self.Agility}
-	hPBytes := com.Uint16ToBytes(self.HP)
-	mPBytes := com.Uint16ToBytes(self.MP)
-	attackSpeedBytes := []byte{byte(self.AttackSpeed)} // TODO int8 可能为负数，先当正数处理
-	luckBytes := []byte{byte(self.Luck)}               // 同上
-	bagWeightBytes := []byte{self.BagWeight}
-	handWeightBytes := []byte{self.HandWeight}
-	wearWeightBytes := []byte{self.WearWeight}
-	startItemBytes := com.BoolToBytes(self.StartItem)
-	effectBytes := []byte{self.Effect}
-	strongBytes := []byte{self.Strong}
-	magicResistBytes := []byte{self.MagicResist}
-	poisonResistBytes := []byte{self.PoisonResist}
-	healthRecoveryBytes := []byte{self.HealthRecovery}
-	spellRecoveryBytes := []byte{self.SpellRecovery}
-	poisonRecoveryBytes := []byte{self.PoisonRecovery}
-	hPrateBytes := []byte{self.HPrate}
-	mPrateBytes := []byte{self.MPrate}
-	criticalRateBytes := []byte{self.CriticalRate}
-	criticalDamageBytes := []byte{self.CriticalDamage}
-	needIdentifyBytes := com.BoolToBytes(self.NeedIdentify)
-	showGroupPickupBytes := com.BoolToBytes(self.ShowGroupPickup)
-	globalDropNotifyBytes := com.BoolToBytes(self.GlobalDropNotify)
-	classBasedBytes := com.BoolToBytes(self.ClassBased)
-	levelBasedBytes := com.BoolToBytes(self.LevelBased)
-	canMineBytes := com.BoolToBytes(self.CanMine)
-	canFastRunBytes := com.BoolToBytes(self.CanFastRun)
-	canAwakeningBytes := com.BoolToBytes(self.CanAwakening)
-	maxAcRateBytes := []byte{self.MaxAcRate}
-	maxMacRateBytes := []byte{self.MaxMacRate}
-	holyBytes := []byte{self.Holy}
-	freezingBytes := []byte{self.Freezing}
-	poisonAttackBytes := []byte{self.PoisonAttack}
-	hpDrainRateBytes := []byte{self.HpDrainRate}
-	bindBytes := com.Uint16ToBytes(self.Bind)
-	reflectBytes := []byte{self.Reflect}
-	uniqueBytes := com.Uint16ToBytes(self.Unique)
-	randomStatsIdBytes := []byte{self.RandomStatsId}
-	randomStatsBytes := self.RandomStats.ToBytes()
-	toolTipBytes := com.StringToBytes(self.ToolTip)
-	result := make([]byte, 0)
-	for _, r := range [][]byte{indexBytes, nameBytes, typeBytes, gradeBytes, requiredTypeBytes, requiredClassBytes,
-		requiredGenderBytes, setBytes, shapeBytes, weightBytes, lightBytes, requiredAmountBytes, imageBytes,
-		durabilityBytes, priceBytes, stackSizeBytes, minACBytes, maxACBytes, minMACBytes, maxMACBytes, minDCBytes,
-		maxDCBytes, minMCBytes, maxMCBytes, minSCBytes, maxSCBytes, accuracyBytes, agilityBytes, hPBytes, mPBytes,
-		attackSpeedBytes, luckBytes, bagWeightBytes, handWeightBytes, wearWeightBytes, startItemBytes, effectBytes,
-		strongBytes, magicResistBytes, poisonResistBytes, healthRecoveryBytes, spellRecoveryBytes, poisonRecoveryBytes,
-		hPrateBytes, mPrateBytes, criticalRateBytes, criticalDamageBytes, needIdentifyBytes, showGroupPickupBytes,
-		globalDropNotifyBytes, classBasedBytes, levelBasedBytes, canMineBytes, canFastRunBytes, canAwakeningBytes,
-		maxAcRateBytes, maxMacRateBytes, holyBytes, freezingBytes, poisonAttackBytes, hpDrainRateBytes, bindBytes,
-		reflectBytes, uniqueBytes, randomStatsIdBytes, randomStatsBytes, toolTipBytes,
-	} {
-		result = append(result, r...)
-	}
-	return result
-}
-
-type UserItem struct {
-	UniqueID       uint64
-	ItemIndex      uint32
-	Info           ItemInfo
-	CurrentDura    uint16
-	MaxDura        uint16
-	Count          uint32
-	GemCount       uint32
-	AC             byte
-	MAC            byte
-	DC             byte
-	MC             byte
-	SC             byte
-	Accuracy       byte
-	Agility        byte
-	HP             byte
-	MP             byte
-	Strong         byte
-	MagicResist    byte
-	PoisonResist   byte
-	HealthRecovery byte
-	ManaRecovery   byte
-	PoisonRecovery byte
-	CriticalRate   byte
-	CriticalDamage byte
-	Freezing       byte
-	PoisonAttack   byte
-	AttackSpeed    byte
-	Luck           byte
-	RefinedValue   com.RefinedValue
-	RefineAdded    byte
-	DuraChanged    bool
-	SoulBoundId    uint32
-	Identified     bool
-	Cursed         bool
-	WeddingRing    uint32
-	//public UserItem[] Slots = new UserItem[5];
-	//public DateTime BuybackExpiryDate;
-	//public ExpireInfo ExpireInfo;
-	//public RentalInformation RentalInformation;
-	//public Awake Awake = new Awake();
-}
-
-// TODO
-func (self *UserItem) ToBytes() []byte {
-	return nil
-}
-
 type ClientMagic struct {
 	Spell       com.Spell
 	BaseCost    byte
@@ -962,12 +758,16 @@ func (self *UserInformation) ToBytes() []byte {
 	experienceBytes := com.Uint64ToBytes(self.Experience)
 	maxExperienceBytes := com.Uint64ToBytes(self.MaxExperience)
 	levelEffectBytes := []byte{byte(self.LevelEffect)}
-	unknowBytes := []byte{1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	//unknowBytes := []byte{1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	unknowBytes1 := []byte{1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 1, 32, 0, 0, 0, 0, 0, 0, 0, 248, 0, 0, 0, 158, 95, 232, 128, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+	goldBytes := com.Uint32ToBytes(self.Gold)
+	creditBytes := com.Uint32ToBytes(self.Credit)
+	unknowBytes2 := []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 99, 0}
 	intelligentCreatureTypeBytes := []byte{byte(self.IntelligentCreatureType)}
 	creatureSummonedBytes := com.BoolToBytes(self.CreatureSummoned)
 
 	result := make([]byte, 0)
-	for _, r := range [][]byte{pkgBytes, objectIdBytes, realIdBytes, nameBytes, guildNameBytes, guildRankBytes, nameColorBytes, classBytes, genderBytes, levelBytes, locationBytes, directionBytes, hairBytes, hpBytes, mpBytes, experienceBytes, maxExperienceBytes, levelEffectBytes, unknowBytes, intelligentCreatureTypeBytes, creatureSummonedBytes} {
+	for _, r := range [][]byte{pkgBytes, objectIdBytes, realIdBytes, nameBytes, guildNameBytes, guildRankBytes, nameColorBytes, classBytes, genderBytes, levelBytes, locationBytes, directionBytes, hairBytes, hpBytes, mpBytes, experienceBytes, maxExperienceBytes, levelEffectBytes, unknowBytes1, goldBytes, creditBytes, unknowBytes2, intelligentCreatureTypeBytes, creatureSummonedBytes} {
 		result = append(result, r...)
 	}
 	return result
@@ -989,11 +789,41 @@ func (self *UserInformation) ToBytes() []byte {
 	//	0, 0, 0, 0, 0, 0, 0, 0,    // experience
 	//	100, 0, 0, 0, 0, 0, 0, 0,  // max experience
 	//	0,                         // level effect
-	//	1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	//	1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	//       0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 	//	99, // intelligent creature type
 	//	0,  // creature summoned
 	//}...)
 	//return result
+
+	// {{ 10, 1,		length
+	// 18, 0, 			pkgIndex
+	// 165, 7, 0, 0,	object id
+	// 7, 0, 0, 0,		real id
+	// 3, 49, 49, 49, 	name
+	// 0,
+	// 0,
+	// 255, 255, 255, 255,
+	// 0,
+	// 0,
+	// 255, 255,
+	// 29, 1, 0, 0, 97, 2, 0, 0,
+	// 2,
+	// 1,
+	// 255, 255,
+	// 255, 255,
+	// 3, 0, 0, 0, 0, 0, 0, 0,
+	// 0, 0, 0, 0, 0, 0, 0, 0,
+	// 0,
+	// 1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 1, 32, 0, 0, 0, 0, 0, 0, 0, 248, 0, 0, 0, 158, 95, 232, 128, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+	// 123, 214, 16, 0, 		gold
+	// 215, 136, 1, 0, 			credit
+	// 0, 						HasExpandedStorage
+	// 0, 0, 0, 0, 0, 0, 0, 0, 	ExpandedStorageExpiryTime
+	// 0, 0, 0, 0, 0, 0, 0, 0,  ???  Magics([]ClientMagic)  IntelligentCreatures([]ClientIntelligentCreature )
+	// 99,						IntelligentCreatureType
+	// 0, 						CreatureSummoned
+	// }}
 }
 
 type UserLocation struct {
@@ -1107,12 +937,38 @@ func (self *ObjectChat) ToBytes() []byte {
 }
 
 type NewItemInfo struct {
-	Info ItemInfo
+	Info com.ItemInfo
 }
 
 // TODO
 func (self *NewItemInfo) ToBytes() []byte {
-	return nil
+	// {{ 94, 0,
+	// 27, 0,			pkg index
+	// 248, 0, 0, 0, 	index
+	// 12, 68, 114, 97, 103, 111, 110, 83, 108, 97, 121, 101, 114,		name
+	// 1,				item type
+	// 2, 				item grade
+	// 0,				required type
+	// 7,				required class
+	// 3,				required gender
+	// 0,				item set
+	// 29, 0, 			shape
+	// 92, 				weight
+	// 0,				light
+	// 40,				required amount
+	// 57, 0, 			image
+	// 232, 128,		durability
+	// 1, 0, 0, 0,		price
+	// 248, 36, 1, 		stack size
+	// 0, 0, 0, 0, 0, 5, 40, 0, 0, 0, 0, 0, 	MinAC ~ Agility
+	// 0, 0, 			hp
+	// 0, 0, 			mp
+	// 0, 				attack speed
+	// 0,				luck
+	// 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	bag weight ~ MPrate
+	// 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 	CriticalRate ~ HpDrainRate
+	// 0, 1, 1, 0, }}   ???
+	return []byte{27, 0, 248, 0, 0, 0, 12, 68, 114, 97, 103, 111, 110, 83, 108, 97, 121, 101, 114, 1, 2, 0, 7, 3, 0, 29, 0, 92, 0, 40, 57, 0, 232, 128, 1, 0, 0, 0, 248, 36, 1, 0, 0, 0, 0, 0, 5, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0}
 }
 
 type MoveItem struct {
@@ -1256,7 +1112,7 @@ func (self *StoreItem) ToBytes() []byte {
 }
 
 type SplitItem struct {
-	Item UserItem
+	Item com.UserItem
 	Grid com.MirGridType
 }
 

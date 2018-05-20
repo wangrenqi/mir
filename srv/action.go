@@ -221,6 +221,9 @@ func StartGame(c *com.Client, pkg *p.Packet) {
 		MapDarkLight: byte(0), //byte
 	})
 	// TODO
+	SendTo(c.Conn, &sp.NewItemInfo{})
+
+	// TODO
 	SendTo(c.Conn, &sp.UserInformation{
 		ObjectID:                  1,                                                                       //uint32
 		RealId:                    character.Index,                                                         //uint32

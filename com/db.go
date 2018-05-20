@@ -56,6 +56,12 @@ type CharacterInfo struct {
 	//public AttackMode AMode;
 	//public PetMode PMode;
 	// ...
+
+	//Inventory []UserItem
+	//Equipment []UserItem
+	//Trade 			[]UserItem
+	//QuestInventory	[]UserItem
+	//Refine			[]UserItem
 }
 
 // many maps to many monster types
