@@ -1,9 +1,9 @@
 package com
 
 import (
-	"net"
 	"github.com/jinzhu/gorm"
 	"github.com/robfig/cron"
+	"net"
 )
 
 type Client struct {
@@ -351,17 +351,15 @@ func (self *ItemInfo) ToBytes() []byte {
 	} {
 		result = append(result, r...)
 	}
-	return result
+	return []byte{248, 0, 0, 0, 12, 68, 114, 97, 103, 111, 110, 83, 108, 97, 121, 101, 114, 1, 2, 0, 7, 3, 0, 29, 0, 92, 0, 40, 57, 0, 232, 128, 1, 0, 0, 0, 248, 36, 1, 0, 0, 0, 0, 0, 5, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0}
 }
 
 type UserItem struct {
-	UniqueID       uint64
-	ItemIndex      uint32
-	Info           ItemInfo
+	UniqueID  uint64
+	ItemIndex uint32
 	CurrentDura    uint16
 	MaxDura        uint16
 	Count          uint32
-	GemCount       uint32
 	AC             byte
 	MAC            byte
 	DC             byte
@@ -371,6 +369,12 @@ type UserItem struct {
 	Agility        byte
 	HP             byte
 	MP             byte
+	AttackSpeed    byte
+	Luck           byte
+	SoulBoundId    uint32
+	Bools          byte
+	Identified     bool
+	Cursed         bool
 	Strong         byte
 	MagicResist    byte
 	PoisonResist   byte
@@ -381,15 +385,12 @@ type UserItem struct {
 	CriticalDamage byte
 	Freezing       byte
 	PoisonAttack   byte
-	AttackSpeed    byte
-	Luck           byte
-	RefinedValue   RefinedValue
-	RefineAdded    byte
-	DuraChanged    bool
-	SoulBoundId    uint32
-	Identified     bool
-	Cursed         bool
-	WeddingRing    uint32
+
+	//GemCount       uint32
+	//RefinedValue   RefinedValue
+	//RefineAdded    byte
+	//DuraChanged    bool
+	//WeddingRing    uint32
 	//public UserItem[] Slots = new UserItem[5];
 	//public DateTime BuybackExpiryDate;
 	//public ExpireInfo ExpireInfo;
@@ -397,7 +398,58 @@ type UserItem struct {
 	//public Awake Awake = new Awake();
 }
 
-// TODO
+type UserItems []UserItem
+
+func (this UserItems) ToBytes() []byte {
+	res := make([]byte, 0)
+	for _, item := range this {
+		res = append(res, item.ToBytes()...)
+	}
+	return res
+}
+
+// TODO test
 func (self *UserItem) ToBytes() []byte {
-	return nil
+	UniqueID := Uint64ToBytes(self.UniqueID)
+	ItemIndex := Uint32ToBytes(self.ItemIndex)
+	CurrentDura := Uint16ToBytes(self.CurrentDura) // uint16
+	MaxDura := Uint16ToBytes(self.MaxDura)         // uint16
+	Count := Uint32ToBytes(self.Count)             // uint32
+	AC := []byte{self.AC}                          // byte
+	MAC := []byte{self.MAC}                        // byte
+	DC := []byte{self.DC}                          // byte
+	MC := []byte{self.MC}                          // byte
+	SC := []byte{self.SC}                          // byte
+	Accuracy := []byte{self.Accuracy}              // byte
+	Agility := []byte{self.Agility}                // byte
+	HP := []byte{self.HP}                          // byte
+	MP := []byte{self.MP}                          // byte
+	AttackSpeed := []byte{self.AttackSpeed}        // byte
+	Luck := []byte{self.Luck}                      // byte
+	SoulBoundId := Uint32ToBytes(self.SoulBoundId)
+	Bools := []byte{self.Bools}
+	Identified := BoolToBytes(self.Identified)
+	Cursed := BoolToBytes(self.Cursed)            // bool
+	Strong := []byte{self.Strong}                 // byte
+	MagicResist := []byte{self.MagicResist}       // byte
+	PoisonResist := []byte{self.PoisonResist}     // byte
+	HealthRecovery := []byte{self.HealthRecovery} // byte
+	ManaRecovery := []byte{self.ManaRecovery}     // byte
+	PoisonRecovery := []byte{self.PoisonRecovery} // byte
+	CriticalRate := []byte{self.CriticalRate}     // byte
+	CriticalDamage := []byte{self.CriticalDamage} // byte
+	Freezing := []byte{self.Freezing}             // byte
+	PoisonAttack := []byte{self.PoisonAttack}     // byte
+
+	endBytes := []byte{255, 255, 255, 255, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 1}
+
+	res := make([]byte, 0)
+	for _, bytes := range [][]byte{
+		UniqueID, ItemIndex, CurrentDura, MaxDura, Count, AC, MAC, DC, MC, SC, Accuracy, Agility, HP, MP, AttackSpeed,
+		Luck, SoulBoundId, Bools, Identified, Cursed, Strong, MagicResist, PoisonResist, HealthRecovery, ManaRecovery,
+		PoisonRecovery, CriticalRate, CriticalDamage, Freezing, PoisonAttack, endBytes,
+	} {
+		res = append(res, bytes...)
+	}
+	return res
 }

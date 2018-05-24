@@ -5,7 +5,7 @@ import (
 )
 
 const (
-	CLIENT_VERSION   = iota
+	CLIENT_VERSION = iota
 	DISCONNECT
 	KEEPALIVE
 	NEW_ACCOUNT

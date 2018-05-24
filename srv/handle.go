@@ -1,17 +1,18 @@
 package srv
 
 import (
-	"net"
-	"sync/atomic"
+	"log"
+	"mir/com"
 	p "mir/proto"
 	cp "mir/proto/client"
 	sp "mir/proto/server"
-	"log"
-	"mir/com"
+	"net"
+	"sync/atomic"
 )
 
 var id int32 = 0
 var clients = make(map[int32]*com.Client)
+
 // TODO map 换成atomic map
 
 func GetClients() map[int32]*com.Client {

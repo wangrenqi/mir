@@ -1,16 +1,16 @@
 package main
 
 import (
-	"net"
 	"fmt"
+	"mir/com"
 	p "mir/proto"
 	cp "mir/proto/client"
-	"mir/com"
+	"net"
 	"time"
 )
 
-//var host = "192.168.0.105"
-var host = "127.0.0.1"
+var host = "192.168.0.108"
+//var host = "127.0.0.1"
 
 func send(conn net.Conn, pkg *p.Packet) {
 	bytes := pkg.ToBytes()

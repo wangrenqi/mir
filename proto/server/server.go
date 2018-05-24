@@ -2,11 +2,10 @@ package server
 
 import (
 	"mir/com"
-	"log"
 )
 
 const (
-	CONNECTED                 = iota
+	CONNECTED = iota
 	CLIENT_VERSION
 	DISCONNECT
 	KEEPALIVE
@@ -420,7 +419,7 @@ type StartGameDelay struct {
 type LightSetting byte
 
 const (
-	NORMAL  LightSetting = iota
+	NORMAL LightSetting = iota
 	DAWN
 	DAY
 	EVENING
@@ -758,16 +757,59 @@ func (self *UserInformation) ToBytes() []byte {
 	experienceBytes := com.Uint64ToBytes(self.Experience)
 	maxExperienceBytes := com.Uint64ToBytes(self.MaxExperience)
 	levelEffectBytes := []byte{byte(self.LevelEffect)}
-	//unknowBytes := []byte{1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
-	unknowBytes1 := []byte{1, 46, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 14, 0, 0, 0, 1, 32, 0, 0, 0, 0, 0, 0, 0, 248, 0, 0, 0, 158, 95, 232, 128, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}
+
 	goldBytes := com.Uint32ToBytes(self.Gold)
 	creditBytes := com.Uint32ToBytes(self.Credit)
 	unknowBytes2 := []byte{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 99, 0}
 	intelligentCreatureTypeBytes := []byte{byte(self.IntelligentCreatureType)}
 	creatureSummonedBytes := com.BoolToBytes(self.CreatureSummoned)
 
+	userItemsBytes := make([]byte, 0)
+	//i := self.Inventory.([]com.UserItem)
+	//e := self.Equipment.([]com.UserItem)
+	//q := self.QuestInventory.([]com.UserItem)
+	//inventoryBytes := (com.UserItems(i)).ToBytes()
+	//equipmentBytes := (com.UserItems(e)).ToBytes()
+	//questInventoryBytes := (com.UserItems(q)).ToBytes()
+	userItemsBytes = []byte{
+		1,
+		46, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+
+		//1, 32, 0, 0, 0, 0, 0, 0, 0, 	// unique id
+		//248, 0, 0, 0, 				// item index
+		//152, 95, 					// current dura
+		//232, 128, 					// max dura
+		//1, 0, 0, 0, 				// count
+		//0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		//255, 255, 255, 255, 		// SoulBoundId
+		//1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		//0, 0, 0, 0, 				// count
+		//0, 0, 0, 0, 				// GemCount
+		//0, 0, 0, 0, 0, 255, 255, 255, 255,
+		//0, 0, 1,
+
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0,
+
+		1, 14, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0,
+
+		1, 40, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, }
+
 	result := make([]byte, 0)
-	for _, r := range [][]byte{pkgBytes, objectIdBytes, realIdBytes, nameBytes, guildNameBytes, guildRankBytes, nameColorBytes, classBytes, genderBytes, levelBytes, locationBytes, directionBytes, hairBytes, hpBytes, mpBytes, experienceBytes, maxExperienceBytes, levelEffectBytes, unknowBytes1, goldBytes, creditBytes, unknowBytes2, intelligentCreatureTypeBytes, creatureSummonedBytes} {
+	for _, r := range [][]byte{pkgBytes, objectIdBytes, realIdBytes, nameBytes, guildNameBytes, guildRankBytes,
+		nameColorBytes, classBytes, genderBytes, levelBytes, locationBytes, directionBytes, hairBytes, hpBytes,
+		mpBytes, experienceBytes, maxExperienceBytes, levelEffectBytes,
+		userItemsBytes, goldBytes, creditBytes,
+		unknowBytes2, intelligentCreatureTypeBytes, creatureSummonedBytes} {
 		result = append(result, r...)
 	}
 	return result
@@ -968,7 +1010,11 @@ func (self *NewItemInfo) ToBytes() []byte {
 	// 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 	bag weight ~ MPrate
 	// 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 	CriticalRate ~ HpDrainRate
 	// 0, 1, 1, 0, }}   ???
-	return []byte{27, 0, 248, 0, 0, 0, 12, 68, 114, 97, 103, 111, 110, 83, 108, 97, 121, 101, 114, 1, 2, 0, 7, 3, 0, 29, 0, 92, 0, 40, 57, 0, 232, 128, 1, 0, 0, 0, 248, 36, 1, 0, 0, 0, 0, 0, 5, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0}
+	//return []byte{27, 0, 248, 0, 0, 0, 12, 68, 114, 97, 103, 111, 110, 83, 108, 97, 121, 101, 114, 1, 2, 0, 7, 3, 0, 29, 0, 92, 0, 40, 57, 0, 232, 128, 1, 0, 0, 0, 248, 36, 1, 0, 0, 0, 0, 0, 5, 40, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 0}
+	pkgBytes := com.Uint16ToBytes(NEW_ITEM_INFO)
+	itemInfoBytes := self.Info.ToBytes()
+	pkgBytes = append(pkgBytes, itemInfoBytes...)
+	return pkgBytes
 }
 
 type MoveItem struct {
@@ -1384,28 +1430,6 @@ func MonsterObjectToObjectMonster(obj com.MonsterObject) *ObjectMonster {
 }
 
 func (self *ObjectMonster) ToBytes() []byte {
-	// TODO test
-	/*
-	59, 0,
-	173, 4, 0, 0,   object id
-	4, 68, 101, 101, 114,    name
-	255, 255, 255, 255,  color
-	30, 1, 0, 0,    location
-	82, 2, 0, 0,
-	4, 0,   image
-	4,   direction
-	0,   effect
-	2,   ai
-	0,  light
-	0,   dead
-	0,  skeleton
-	0, 0,  poison
-	0,  hidden
-	0,  extra
-	0,  extra byte
-	0, 0, 0, 0, 0, 0, 0, 0,   shock time
-	0    binding shot
-	*/
 	pkgBytes := com.Uint16ToBytes(OBJECT_MONSTER)
 	objectIdBytes := com.Uint32ToBytes(self.ObjectID)
 	nameBytes := com.StringToBytes(self.Name)
@@ -1429,7 +1453,6 @@ func (self *ObjectMonster) ToBytes() []byte {
 		imageBytes, directionBytes, effectBytes, aiBytes, lightBytes, deadBytes, skeletonBytes, poisonBytes,
 		hiddenBytes, extraBytes, extraByteBytes, shockTimeBytes, bindingShotCenterBytes,
 	} {
-		log.Println(r)
 		result = append(result, r...)
 	}
 	return result

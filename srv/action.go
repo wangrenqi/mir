@@ -1,11 +1,11 @@
 package srv
 
 import (
+	"log"
+	"mir/com"
 	p "mir/proto"
 	cp "mir/proto/client"
 	sp "mir/proto/server"
-	"mir/com"
-	"log"
 	"net"
 )
 
@@ -220,11 +220,81 @@ func StartGame(c *com.Client, pkg *p.Packet) {
 		Fire:         false,   //bool
 		MapDarkLight: byte(0), //byte
 	})
-	// TODO
-	SendTo(c.Conn, &sp.NewItemInfo{})
 
 	// TODO
-	SendTo(c.Conn, &sp.UserInformation{
+	itemInfo := com.ItemInfo{
+		Index:            uint32(248),                              // uint32
+		Name:             "DragonSlayer",                           // string
+		Type:             com.ItemType(1),                          // ItemType
+		Grade:            com.ItemGrade(2),                         // ItemGrade
+		RequiredType:     com.RequiredType(0),                      // RequiredType   // default Level
+		RequiredClass:    com.RequiredClass(7),                     // RequiredClass  // default None
+		RequiredGender:   com.RequiredGender(3),                    // RequiredGender // default None
+		Set:              com.ItemSet(0),                           // ItemSet
+		Shape:            com.BytesToUint16([]byte{29, 0}),         // uint16
+		Weight:           92,                                       // byte
+		Light:            0,                                        // byte
+		RequiredAmount:   40,                                       // byte
+		Image:            com.BytesToUint16([]byte{57, 0}),         // uint16
+		Durability:       com.BytesToUint16([]byte{232, 128}),      // uint16
+		Price:            com.BytesToUint32([]byte{1, 0, 0, 0}),    // uint32
+		StackSize:        com.BytesToUint32([]byte{248, 36, 1, 0}), // uint32 //default 1;
+		MinAC:            0,                                        // byte
+		MaxAC:            0,                                        // byte
+		MinMAC:           0,                                        // byte
+		MaxMAC:           0,                                        // byte
+		MinDC:            5,                                        // byte
+		MaxDC:            40,                                       // byte
+		MinMC:            0,                                        // byte
+		MaxMC:            0,                                        // byte
+		MinSC:            0,                                        // byte
+		MaxSC:            0,                                        // byte
+		Accuracy:         0,                                        // byte
+		Agility:          0,                                        // byte
+		HP:               uint16(0),                                // uint16
+		MP:               uint16(0),                                // uint16
+		AttackSpeed:      0,                                        // int8 // 需要是负数
+		Luck:             0,                                        // int8
+		BagWeight:        0,                                        // byte
+		HandWeight:       0,                                        // byte
+		WearWeight:       0,                                        // byte
+		StartItem:        false,                                    // bool
+		Effect:           0,                                        // byte
+		Strong:           0,                                        // byte
+		MagicResist:      0,                                        // byte
+		PoisonResist:     0,                                        // byte
+		HealthRecovery:   0,                                        // byte
+		SpellRecovery:    0,                                        // byte
+		PoisonRecovery:   0,                                        // byte
+		HPrate:           0,                                        // byte
+		MPrate:           0,                                        // byte
+		CriticalRate:     0,                                        // byte
+		CriticalDamage:   0,                                        // byte
+		NeedIdentify:     false,                                    // bool
+		ShowGroupPickup:  false,                                    // bool
+		GlobalDropNotify: false,                                    // bool
+		ClassBased:       false,                                    // bool
+		LevelBased:       false,                                    // bool
+		CanMine:          false,                                    // bool
+		CanFastRun:       false,                                    // bool
+		CanAwakening:     false,                                    // bool
+		MaxAcRate:        0,                                        // byte
+		MaxMacRate:       0,                                        // byte
+		Holy:             0,                                        // byte
+		Freezing:         0,                                        // byte
+		PoisonAttack:     0,                                        // byte
+		HpDrainRate:      0,                                        // byte
+		Bind:             uint16(0),                                // uint16 // BindMode 这个枚举太大了，直接用uint16 // default none
+		Reflect:          0,                                        // byte
+		Unique:           uint16(0),                                // uint16 // SpecialItemMode ?? // default None;
+		RandomStatsId:    0,                                        // byte
+		//RandomStats      : , // RandomItemStat
+		//ToolTip          : , // string //default ""
+	}
+	SendTo(c.Conn, &sp.NewItemInfo{Info: itemInfo})
+
+	// TODO
+	userInformation := &sp.UserInformation{
 		ObjectID:                  1,                                                                       //uint32
 		RealId:                    character.Index,                                                         //uint32
 		Name:                      character.Name,                                                          //string
@@ -242,18 +312,53 @@ func StartGame(c *com.Client, pkg *p.Packet) {
 		Experience:                1,                                                                       //uint64
 		MaxExperience:             1,                                                                       //uint64
 		LevelEffect:               1,                                                                       //LevelEffects
-		Inventory:                 1,                                                                       //interface{} // []UserItem
-		Equipment:                 1,                                                                       //interface{} // []UserItem
-		QuestInventory:            1,                                                                       //interface{} // []UserItem
-		Gold:                      1,                                                                       //uint32
-		Credit:                    1,                                                                       //uint32
+
+		Gold:                      666,                                                                     //uint32
+		Credit:                    555,                                                                     //uint32
 		HasExpandedStorage:        false,                                                                   //bool
 		ExpandedStorageExpiryTime: 1,                                                                       //uint64      // DateTime
 		Magics:                    1,                                                                       //interface{} // []ClientMagic
 		IntelligentCreatures:      1,                                                                       //interface{} // []ClientIntelligentCreature
 		IntelligentCreatureType:   1,                                                                       //com.IntelligentCreatureType
 		CreatureSummoned:          false,                                                                   //bool
+	}
+	inventory := make([]com.UserItem, 0)
+	inventory = append(inventory, com.UserItem{
+		UniqueID:       132,                                            // uint64
+		ItemIndex:      248,                                           // uint32
+		CurrentDura:    com.BytesToUint16([]byte{152, 95}),            // uint16
+		MaxDura:        com.BytesToUint16([]byte{232, 128}),           // uint16
+		Count:          uint32(1),                                     // uint32
+		AC:             0,                                             // byte
+		MAC:            0,                                             // byte
+		DC:             0,                                             // byte
+		MC:             0,                                             // byte
+		SC:             0,                                             // byte
+		Accuracy:       0,                                             // byte
+		Agility:        0,                                             // byte
+		HP:             0,                                             // byte
+		MP:             0,                                             // byte
+		AttackSpeed:    0,                                             // byte
+		Luck:           0,                                             // byte
+		SoulBoundId:    com.BytesToUint32([]byte{255, 255, 255, 255}), // uint32
+		Bools:          1,                                             // byte
+		Identified:     false,                                         // bool
+		Cursed:         false,                                         // bool
+		Strong:         0,                                             // byte
+		MagicResist:    0,                                             // byte
+		PoisonResist:   0,                                             // byte
+		HealthRecovery: 0,                                             // byte
+		ManaRecovery:   0,                                             // byte
+		PoisonRecovery: 0,                                             // byte
+		CriticalRate:   0,                                             // byte
+		CriticalDamage: 0,                                             // byte
+		Freezing:       0,                                             // byte
+		PoisonAttack:   0,                                             // byte
 	})
+	userInformation.Inventory = inventory
+	userInformation.Equipment = make([]com.UserItem, 0)
+	userInformation.QuestInventory = make([]com.UserItem, 0)
+	SendTo(c.Conn, userInformation)
 
 	aois := make([]com.AOIEntity, 0)
 	aois = append(aois, *c.AOIEntity)
@@ -323,7 +428,7 @@ func Run(c *com.Client, pkg *p.Packet) {
 	targetDirection := pkg.Data.(*cp.Run).Direction
 	targetPoint := c.Player.CurrentLocation.Move(targetDirection, 1)
 	steps := 2
-	for i := 1; i <= steps; i ++ {
+	for i := 1; i <= steps; i++ {
 		// TODO check point
 		targetPoint = c.Player.CurrentLocation.Move(targetDirection, 1)
 		if !c.AOIEntity.ValidPoint(playerMap, targetPoint) {

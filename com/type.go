@@ -3,7 +3,7 @@ package com
 type MirDirection byte
 
 const (
-	UP         MirDirection = iota
+	UP MirDirection = iota
 	UP_RIGHT
 	RIGHT
 	DOWN_RIGHT
@@ -16,14 +16,14 @@ const (
 type MirGender byte
 
 const (
-	MALE   MirGender = iota
+	MALE MirGender = iota
 	FEMALE
 )
 
 type MirClass byte
 
 const (
-	WARRIOR  MirClass = iota
+	WARRIOR MirClass = iota
 	WIZARD
 	TAOIST
 	ASSASSIN
@@ -41,7 +41,7 @@ const (
 type ItemType byte
 
 const (
-	IT_NOTHING           ItemType = iota
+	IT_NOTHING ItemType = iota
 	IT_WEAPON
 	IT_ARMOUR
 	IT_HELMET
@@ -83,7 +83,7 @@ const (
 type RequiredType byte
 
 const (
-	RT_LEVEL     RequiredType = iota
+	RT_LEVEL RequiredType = iota
 	RT_MAX_AC
 	RT_MAX_MAC
 	RT_MAX_DC
@@ -101,10 +101,10 @@ type RequiredClass byte
 
 const (
 	_          RequiredClass = iota
-	RC_WARRIOR  // 1  // 因为与上面MirClass 重名 加上前缀RC
-	RC_WIZARD   // 2
-	_           // 3
-	RC_TAOIST   // 4
+	RC_WARRIOR               // 1  // 因为与上面MirClass 重名 加上前缀RC
+	RC_WIZARD                // 2
+	_                        // 3
+	RC_TAOIST                // 4
 	//Assassin  // 8
 	//Archer  	// 16
 )
@@ -113,14 +113,14 @@ type RequiredGender byte
 
 const (
 	_         RequiredGender = iota
-	RG_MALE    // 1  // 因为与上面MirGender 重名 加上前缀RG
-	RG_FEMALE  // 2
+	RG_MALE                  // 1  // 因为与上面MirGender 重名 加上前缀RG
+	RG_FEMALE                // 2
 )
 
 type ItemSet byte
 
 const (
-	IS_NONE         ItemSet = iota
+	IS_NONE ItemSet = iota
 	IS_SPIRIT
 	IS_RECALL
 	IS_RED_ORCHID
@@ -204,9 +204,8 @@ const (
 
 type IntelligentCreatureType byte
 
-const
-(
-	ICT_BABY_PIG      IntelligentCreatureType = iota
+const (
+	ICT_BABY_PIG IntelligentCreatureType = iota
 	ICT_CHICK
 	ICT_KITTEN
 	ICT_BABY_SKELETON
@@ -220,20 +219,20 @@ const
 	ICT_BABY_MONKEY
 	ICT_ANGRY_BIRD
 	ICT_FOXEY
-	ICT_NONE          = 99
+	ICT_NONE = 99
 )
 
 type IntelligentCreaturePickupMode byte
 
 const (
-	ICP_Automatic     IntelligentCreaturePickupMode = iota
+	ICP_Automatic IntelligentCreaturePickupMode = iota
 	ICP_SemiAutomatic
 )
 
 type ChatType byte
 
 const (
-	CT_NORMAL       ChatType = iota
+	CT_NORMAL ChatType = iota
 	CT_SHOUT
 	CT_SYSTEM
 	CT_HINT
@@ -254,7 +253,7 @@ const (
 type ItemGrade byte
 
 const (
-	IG_NONE      ItemGrade = iota
+	IG_NONE ItemGrade = iota
 	IG_COMMON
 	IG_RARE
 	IG_LEGENDARY
@@ -370,7 +369,7 @@ const (
 type MirGridType byte
 
 const (
-	MGT_NONE            MirGridType = iota
+	MGT_NONE MirGridType = iota
 	MGT_INVENTORY
 	MGT_EQUIPMENT
 	MGT_TRADE
@@ -395,7 +394,7 @@ const (
 type Monster uint16
 
 const (
-	GUARD          Monster = iota
+	GUARD Monster = iota
 	TAOIST_GUARD
 	GUARD2
 	HEN

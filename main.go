@@ -1,10 +1,10 @@
 package main
 
 import (
+	"mir/com"
+	"mir/srv"
 	"net"
 	"os"
-	"mir/srv"
-	"mir/com"
 )
 
 func main() {

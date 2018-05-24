@@ -1,14 +1,15 @@
 package com
 
 import (
-	"path/filepath"
-	"io/ioutil"
-	"sync/atomic"
-	"net"
 	"github.com/jinzhu/gorm"
+	"io/ioutil"
+	"net"
+	"path/filepath"
+	"sync/atomic"
 )
 
 var objectId uint32 = 0
+var itemUniqueId uint64
 var Maps map[uint32]Map
 var AOIs map[uint32][]AOIEntity
 
@@ -32,6 +33,12 @@ func InitEnviron() *Environ {
 func GetMapObjectId() uint32 {
 	res := objectId
 	atomic.AddUint32(&objectId, 1)
+	return res
+}
+
+func GetItemUniqueId() uint64 {
+	res := itemUniqueId
+	atomic.AddUint64(&itemUniqueId, 1)
 	return res
 }
 
@@ -99,8 +106,8 @@ func GetMapV1(bytes []byte) Map {
 	offset = 54
 	index := 0
 	points := make([]Point, int(width)*int(height))
-	for i := 0; i < int(width); i ++ {
-		for j := 0; j < int(height); j ++ {
+	for i := 0; i < int(width); i++ {
+		for j := 0; j < int(height); j++ {
 			valid := true
 
 			if (BytesToUint32(bytes[offset:offset+4])^0xAA38AA38)&0x20000000 != 0 {
@@ -112,7 +119,7 @@ func GetMapV1(bytes []byte) Map {
 			p := Point{X: int32(i), Y: int32(j), Valid: valid}
 			pointProxy[string(i)+","+string(j)] = &p
 			points[index] = p
-			index ++
+			index++
 			offset += 15
 		}
 	}
@@ -128,8 +135,8 @@ func GetStartPoint() Point {
 
 func GetRandomPoint(m *Map, center Point, spread uint32) *Point {
 	points := make([]*Point, 0)
-	for i := center.X - int32(spread); i < center.X+int32(spread); i ++ {
-		for j := center.Y - int32(spread); j < center.Y+int32(spread); j ++ {
+	for i := center.X - int32(spread); i < center.X+int32(spread); i++ {
+		for j := center.Y - int32(spread); j < center.Y+int32(spread); j++ {
 			p := m.PointProxy[string(i)+","+string(j)]
 			points = append(points, p)
 		}
@@ -220,7 +227,7 @@ func InitAOIEntities(m *Map) []AOIEntity {
 	aois := make([]AOIEntity, 0)
 	index := uint16(0)
 	for i := 0; i < columns; i++ {
-		for j := 0; j < rows; j ++ {
+		for j := 0; j < rows; j++ {
 			aois = append(aois, AOIEntity{
 				Index:       index,
 				MapIndex:    m.Index,
@@ -232,8 +239,8 @@ func InitAOIEntities(m *Map) []AOIEntity {
 			index = index + 1
 		}
 	}
-	for x := 0; x < int(m.Width); x ++ {
-		for y := 0; y < int(m.Height); y ++ {
+	for x := 0; x < int(m.Width); x++ {
+		for y := 0; y < int(m.Height); y++ {
 			for _, a := range aois {
 				if x > int(a.X) && x < int(a.X)+WIDTH && y > int(a.Y) && y < int(a.Y)+WIDTH {
 					a.Points = append(a.Points, m.PointProxy[string(x)+","+string(y)])
